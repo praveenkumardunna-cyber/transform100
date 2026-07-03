@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0,viewport-fit=cover" name="viewport"/>
+<title>Checklist — Transform 100</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-gray":"#F8FAFC","surface":"#f9f9ff","surface-container-lowest":"#ffffff","surface-container-low":"#f3f3fa","surface-container":"#ededf5","surface-container-high":"#e8e7ef","on-surface":"#1a1b21","on-surface-variant":"#3c4a43","primary":"#006c51","on-primary":"#ffffff","primary-container":"#2dd4a4","on-primary-container":"#005740","wellness-teal":"#2DD4A4","progress-blue":"#4D9FFF","achievement-gold":"#E8A020","strict-red":"#FF5E5B","border-subtle":"#E2E8F0","inverse-surface":"#2e3036","inverse-on-surface":"#f0f0f8"}}}}</script>
+<style>
+.ms{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}
+.ms-f{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.gh{background:rgba(255,255,255,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.gn{background:rgba(249,249,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.item-row{transition:all .2s;cursor:pointer}
+.item-row.done{opacity:.55}
+.item-row.done .item-name{text-decoration:line-through;color:var(--color-on-surface-variant)}
+.check-circle{width:28px;height:28px;border-radius:50%;border:2px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.check-circle.checked{background:#006c51;border-color:#006c51}
+.check-circle.missed{background:#FF5E5B;border-color:#FF5E5B}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fu .3s ease-out forwards}
+@keyframes bounce-in{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.bounce-in{animation:bounce-in .25s ease-out}
+body{min-height:max(844px,100dvh)}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:#E2E8F0;border-radius:10px}
+</style>
+</head>
+<body class="bg-surface-gray text-on-surface" style="font-family:Inter,system-ui,sans-serif">
+
+<header class="fixed top-0 w-full z-50 gh border-b border-border-subtle h-16 flex items-center justify-between px-5 max-w-lg mx-auto left-0 right-0">
+  <div class="flex items-center gap-3">
+    <a href="index.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center transition-colors">
+      <span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span>
+    </a>
+    <div>
+      <div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest leading-none">Monday 6 Jul · Day 1</div>
+      <div class="text-[14px] font-semibold text-on-surface">Daily Checklist</div>
+    </div>
+  </div>
+  <div id="score-badge" class="font-mono font-bold text-[14px] text-primary bg-primary/10 px-3 py-1.5 rounded-full">0 / 27</div>
+</header>
+
+<main class="pt-20 pb-28 max-w-lg mx-auto px-4">
+
+  <!-- Score ring -->
+  <div class="bg-white rounded-[24px] border border-border-subtle shadow-sm p-5 mb-4 fu">
+    <div class="flex items-center gap-5">
+      <div class="relative w-24 h-24 flex-shrink-0">
+        <svg width="96" height="96" viewBox="0 0 96 96">
+          <circle cx="48" cy="48" r="40" fill="none" stroke="#E2E8F0" stroke-width="7"/>
+          <circle id="score-ring" cx="48" cy="48" r="40" fill="none" stroke="url(#sg)" stroke-width="7" stroke-dasharray="251.3" stroke-dashoffset="251.3" stroke-linecap="round" transform="rotate(-90 48 48)"/>
+          <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#2DD4A4"/><stop offset="100%" style="stop-color:#006c51"/></linearGradient></defs>
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <div id="score-pct" class="font-bold text-[22px] text-primary leading-none">0%</div>
+          <div class="font-mono text-[9px] text-on-surface-variant mt-0.5">score</div>
+        </div>
+      </div>
+      <div class="flex-1">
+        <div class="font-semibold text-[15px] mb-1">Today's discipline score</div>
+        <div class="text-[12px] text-on-surface-variant leading-relaxed mb-3">Tap ✓ for done, × for missed. 90 seconds to fill. Your score builds the pattern that gets you to 75 kg.</div>
+        <div class="flex gap-3">
+          <div class="text-center"><div id="count-done" class="font-mono font-bold text-[18px] text-wellness-teal">0</div><div class="text-[9px] text-on-surface-variant uppercase">Done</div></div>
+          <div class="text-center"><div id="count-miss" class="font-mono font-bold text-[18px] text-strict-red">0</div><div class="text-[9px] text-on-surface-variant uppercase">Missed</div></div>
+          <div class="text-center"><div id="count-left" class="font-mono font-bold text-[18px] text-on-surface-variant">27</div><div class="text-[9px] text-on-surface-variant uppercase">Left</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instruction -->
+  <div class="flex gap-3 mb-4 bg-primary/5 border border-primary/15 rounded-[16px] px-4 py-3">
+    <span class="material-symbols-outlined ms text-primary text-[18px] flex-shrink-0 mt-0.5">info</span>
+    <p class="text-[12px] text-on-surface-variant">Tap once → <span class="text-wellness-teal font-semibold">Done ✓</span> · Tap twice → <span class="text-strict-red font-semibold">Missed ✗</span> · Tap three times → reset</p>
+  </div>
+
+  <!-- Checklist items by category -->
+  <div class="space-y-3 fu" style="animation-delay:.05s">
+
+    <!-- MORNING category -->
+    <div class="bg-white rounded-[20px] border border-border-subtle overflow-hidden">
+      <div class="px-4 py-2.5 bg-surface-container-low border-b border-border-subtle flex items-center justify-between">
+        <div class="flex items-center gap-2"><span class="text-[14px]">🌅</span><span class="font-mono text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Morning</span></div>
+        <span class="font-mono text-[10px] text-on-surface-variant">8:00 – 9:40 AM</span>
+      </div>
+      <div class="divide-y divide-border-subtle">
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="1" onclick="toggle(1)">
+          <div class="check-circle" id="c1"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci1">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Morning water — 2 glasses (400ml)</div><div class="text-[11px] text-on-surface-variant">Before phone, before food · warm</div></div>
+          <div class="flex-shrink-0 text-right"><div class="font-mono text-[10px] text-on-surface-variant">8:00 AM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="2" onclick="toggle(2)">
+          <div class="check-circle" id="c2"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci2">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Morning drink — methi+ginger+turmeric+amla</div><div class="text-[11px] text-on-surface-variant">Warm · empty stomach · no honey</div></div>
+          <div class="flex-shrink-0 text-right"><div class="font-mono text-[10px] text-achievement-gold font-bold">8:10 AM</div><div class="text-[9px] text-achievement-gold font-mono">KEY</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="3" onclick="toggle(3)">
+          <div class="check-circle" id="c3"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci3">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">10-min morning stretch</div><div class="text-[11px] text-on-surface-variant">Neck rolls → stretch → side bends → twists → cat-cow</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">8:20 AM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="4" onclick="toggle(4)">
+          <div class="check-circle" id="c4"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci4">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Pre-breakfast water (250ml)</div><div class="text-[11px] text-on-surface-variant">20 min before eating</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">8:50 AM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="5" onclick="toggle(5)">
+          <div class="check-circle" id="c5"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci5">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Breakfast — protein first</div><div class="text-[11px] text-on-surface-variant">Egg curry FIRST · idli cap 2</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">9:10 AM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="6" onclick="toggle(6)">
+          <div class="check-circle" id="c6"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci6">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Post-breakfast walk (10 min)</div><div class="text-[11px] text-on-surface-variant">Within 30 min of finishing · indoors OK</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">9:40 AM</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MID-MORNING -->
+    <div class="bg-white rounded-[20px] border border-border-subtle overflow-hidden">
+      <div class="px-4 py-2.5 bg-surface-container-low border-b border-border-subtle flex items-center justify-between">
+        <div class="flex items-center gap-2"><span class="text-[14px]">☀️</span><span class="font-mono text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Mid-morning</span></div>
+        <span class="font-mono text-[10px] text-on-surface-variant">10:30 AM – 12:40 PM</span>
+      </div>
+      <div class="divide-y divide-border-subtle">
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="7" onclick="toggle(7)">
+          <div class="check-circle" id="c7"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci7">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Mid-morning water (250ml)</div><div class="text-[11px] text-on-surface-variant">Running total: ~900ml</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">10:30 AM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="8" onclick="toggle(8)">
+          <div class="check-circle" id="c8"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci8">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Morning snack — Roasted Chana 25g</div><div class="text-[11px] text-on-surface-variant">Pre-portioned bowl · lemon + green chilli</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">11:00 AM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="9" onclick="toggle(9)">
+          <div class="check-circle" id="c9"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci9">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Green tea / black coffee — no sugar</div><div class="text-[11px] text-on-surface-variant">Max 1 cup · never after 2 PM</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">11:30 AM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="10" onclick="toggle(10)">
+          <div class="check-circle" id="c10"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci10">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Pre-lunch water (250ml)</div><div class="text-[11px] text-on-surface-variant">20 min before lunch · total ~1.15L</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">12:40 PM</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTERNOON -->
+    <div class="bg-white rounded-[20px] border border-border-subtle overflow-hidden">
+      <div class="px-4 py-2.5 bg-surface-container-low border-b border-border-subtle flex items-center justify-between">
+        <div class="flex items-center gap-2"><span class="text-[14px]">🌤️</span><span class="font-mono text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Afternoon</span></div>
+        <span class="font-mono text-[10px] text-on-surface-variant">1:00 PM – 5:00 PM</span>
+      </div>
+      <div class="divide-y divide-border-subtle">
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="11" onclick="toggle(11)">
+          <div class="check-circle" id="c11"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci11">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Lunch — rasam first, ¾ cup rice</div><div class="text-[11px] text-on-surface-variant">Plate order: rasam→rice→dal→veg→protein→curd</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">1:00 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="12" onclick="toggle(12)">
+          <div class="check-circle" id="c12"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci12">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Post-lunch walk (10 min)</div><div class="text-[11px] text-on-surface-variant">Eliminates 3 PM crash · glucose −22%</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-achievement-gold font-bold">1:45 PM</div><div class="text-[9px] text-achievement-gold font-mono">KEY</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="13" onclick="toggle(13)">
+          <div class="check-circle" id="c13"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci13">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Afternoon drink — Majjiga 200ml</div><div class="text-[11px] text-on-surface-variant">Room temp · homemade · Mon/Wed/Fri/Sun</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">2:00 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="14" onclick="toggle(14)">
+          <div class="check-circle" id="c14"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci14">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Afternoon water (250ml)</div><div class="text-[11px] text-on-surface-variant">Most dehydrated at 3–4 PM · total ~1.65L</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">3:30 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="15" onclick="toggle(15)">
+          <div class="check-circle" id="c15"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci15">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Pre-snack water (250ml)</div><div class="text-[11px] text-on-surface-variant">Pre-hydrates for treadmill · total ~1.9L</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">5:00 PM</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENING -->
+    <div class="bg-white rounded-[20px] border border-border-subtle overflow-hidden">
+      <div class="px-4 py-2.5 bg-surface-container-low border-b border-border-subtle flex items-center justify-between">
+        <div class="flex items-center gap-2"><span class="text-[14px]">🌆</span><span class="font-mono text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Evening</span></div>
+        <span class="font-mono text-[10px] text-on-surface-variant">5:30 PM – 8:35 PM</span>
+      </div>
+      <div class="divide-y divide-border-subtle">
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="16" onclick="toggle(16)">
+          <div class="check-circle" id="c16"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci16">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Evening snack — Makhana Masala 25g</div><div class="text-[11px] text-on-surface-variant">Pre-portioned · ready before craving peaks</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">5:30 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="17" onclick="toggle(17)">
+          <div class="check-circle" id="c17"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci17">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Treadmill — 7 km/h · 35 min</div><div class="text-[11px] text-on-surface-variant">Warm-up 4 min → 28 min at 7 → cool-down 3 min</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-achievement-gold font-bold">6:00 PM</div><div class="text-[9px] text-achievement-gold font-mono">KEY</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="18" onclick="toggle(18)">
+          <div class="check-circle" id="c18"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci18">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Post-treadmill water — room temp only</div><div class="text-[11px] text-on-surface-variant">300–500ml · sip slowly · NO cold water</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">6:45 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="19" onclick="toggle(19)">
+          <div class="check-circle" id="c19"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci19">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Golden milk — turmeric + black pepper</div><div class="text-[11px] text-on-surface-variant">200ml warm milk · no sugar · no honey</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">6:55 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="20" onclick="toggle(20)">
+          <div class="check-circle" id="c20"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci20">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Pre-dinner water + salad</div><div class="text-[11px] text-on-surface-variant">250ml + cucumber-tomato-onion salad</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">7:30 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="21" onclick="toggle(21)">
+          <div class="check-circle" id="c21"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci21">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Dinner — done by 8:30 PM</div><div class="text-[11px] text-on-surface-variant">2 chapathi + egg curry + salad · hard stop 8:30</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-strict-red font-bold">7:50 PM</div><div class="text-[9px] text-strict-red font-mono">STOP</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="22" onclick="toggle(22)">
+          <div class="check-circle" id="c22"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci22">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Post-dinner walk (10 min)</div><div class="text-[11px] text-on-surface-variant">Writes HbA1c down every single night</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-achievement-gold font-bold">8:35 PM</div><div class="text-[9px] text-achievement-gold font-mono">KEY</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NIGHT -->
+    <div class="bg-white rounded-[20px] border border-border-subtle overflow-hidden">
+      <div class="px-4 py-2.5 bg-surface-container-low border-b border-border-subtle flex items-center justify-between">
+        <div class="flex items-center gap-2"><span class="text-[14px]">🌙</span><span class="font-mono text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Night</span></div>
+        <span class="font-mono text-[10px] text-on-surface-variant">8:50 PM – 10:30 PM</span>
+      </div>
+      <div class="divide-y divide-border-subtle">
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="23" onclick="toggle(23)">
+          <div class="check-circle" id="c23"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci23">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Core exercises / belly breathing</div><div class="text-[11px] text-on-surface-variant">Mon/Wed/Fri: core · other days: breathing</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">8:50 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="24" onclick="toggle(24)">
+          <div class="check-circle" id="c24"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci24">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Checklist filled (this one! ✓)</div><div class="text-[11px] text-on-surface-variant">90 seconds · builds the pattern</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">9:10 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="25" onclick="toggle(25)">
+          <div class="check-circle" id="c25"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci25">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Chamomile / ashwagandha tea</div><div class="text-[11px] text-on-surface-variant">No sugar · lowers cortisol (belly fat driver)</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">9:15 PM</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="26" onclick="toggle(26)">
+          <div class="check-circle" id="c26"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci26">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Screens off — all of them</div><div class="text-[11px] text-on-surface-variant">Phone · laptop · TV · blue light kills melatonin</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-strict-red font-bold">10:00 PM</div><div class="text-[9px] text-strict-red font-mono">MUST</div></div>
+        </div>
+        <div class="item-row flex items-center gap-3 px-4 py-3.5" data-id="27" onclick="toggle(27)">
+          <div class="check-circle" id="c27"><span class="material-symbols-outlined ms-f text-white text-[16px] hidden" id="ci27">check</span></div>
+          <div class="flex-1 min-w-0"><div class="item-name text-[13px] font-medium">Sleep by 10:30 PM</div><div class="text-[11px] text-on-surface-variant">7–7.5 hrs · fat processed during sleep</div></div>
+          <div class="flex-shrink-0"><div class="font-mono text-[10px] text-on-surface-variant">10:30 PM</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save button -->
+    <button onclick="saveScore()" class="w-full bg-primary text-white font-semibold text-[14px] py-4 rounded-[16px] flex items-center justify-center gap-2 hover:bg-primary/90 active:scale-98 transition-all shadow-lg">
+      <span class="material-symbols-outlined ms text-[20px]">save</span>
+      Save today's score
+    </button>
+
+  </div>
+</main>
+
+<nav class="fixed bottom-0 w-full z-50 gn border-t border-border-subtle rounded-t-2xl h-20 pb-3 px-2 flex justify-around items-center max-w-lg mx-auto left-0 right-0">
+  <a href="index.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">dashboard</span><span class="text-[9px] font-mono uppercase tracking-tighter">Home</span></a>
+  <a href="schedule.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">today</span><span class="text-[9px] font-mono uppercase tracking-tighter">Schedule</span></a>
+  <a href="meals.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">restaurant</span><span class="text-[9px] font-mono uppercase tracking-tighter">Meals</span></a>
+  <a href="tracker.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">analytics</span><span class="text-[9px] font-mono uppercase tracking-tighter">Tracker</span></a>
+  <a href="more.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">apps</span><span class="text-[9px] font-mono uppercase tracking-tighter">More</span></a>
+</nav>
+
+<script>
+const state={};const total=27;
+function toggle(id){
+  const s=state[id]||0;
+  const ns=(s+1)%3;
+  state[id]=ns;
+  const row=document.querySelector(`[data-id="${id}"]`);
+  const circle=document.getElementById('c'+id);
+  const icon=document.getElementById('ci'+id);
+  row.classList.remove('done');
+  circle.classList.remove('checked','missed','bg-strict-red','border-strict-red');
+  icon.classList.add('hidden');
+  icon.textContent='check';
+  if(ns===1){
+    row.classList.add('done');
+    circle.classList.add('checked');
+    icon.classList.remove('hidden');
+    icon.classList.add('bounce-in');
+    setTimeout(()=>icon.classList.remove('bounce-in'),300);
+  } else if(ns===2){
+    row.classList.add('done');
+    circle.style.background='#FF5E5B';
+    circle.style.borderColor='#FF5E5B';
+    icon.textContent='close';
+    icon.classList.remove('hidden');
+  } else {
+    circle.style.background='';circle.style.borderColor='';
+  }
+  updateScore();
+}
+function updateScore(){
+  let done=0,miss=0,left=0;
+  for(let i=1;i<=total;i++){
+    const s=state[i]||0;
+    if(s===1)done++;else if(s===2)miss++;else left++;
+  }
+  const pct=Math.round(done/total*100);
+  document.getElementById('score-pct').textContent=pct+'%';
+  document.getElementById('score-badge').textContent=done+' / '+total;
+  document.getElementById('count-done').textContent=done;
+  document.getElementById('count-miss').textContent=miss;
+  document.getElementById('count-left').textContent=left;
+  const offset=251.3*(1-done/total);
+  document.getElementById('score-ring').style.strokeDashoffset=offset;
+  const badge=document.getElementById('score-badge');
+  if(pct>=85){badge.className='font-mono font-bold text-[14px] text-wellness-teal bg-wellness-teal/10 px-3 py-1.5 rounded-full';}
+  else if(pct>=70){badge.className='font-mono font-bold text-[14px] text-achievement-gold bg-achievement-gold/10 px-3 py-1.5 rounded-full';}
+  else{badge.className='font-mono font-bold text-[14px] text-primary bg-primary/10 px-3 py-1.5 rounded-full';}
+}
+function saveScore(){
+  let done=0;for(let i=1;i<=total;i++){if((state[i]||0)===1)done++;}
+  const pct=Math.round(done/total*100);
+  const msg=pct>=85?'Excellent! '+pct+'% — on track for 75 kg':pct>=70?pct+'% — good day. Fix: '+getMisses()+' tomorrow':''+pct+'% — review the misses and reset at the next meal.';
+  alert('Day 1 score: '+pct+'%\n\n'+msg+'\n\nScore saved! Great job tracking.');
+}
+function getMisses(){
+  const labels={12:'post-lunch walk',17:'treadmill',26:'screens off'};
+  return Object.entries(labels).filter(([k])=>(state[k]||0)===2).map(([,v])=>v).join(', ')||'nothing major';
+}
+function saveScore(){
+  let done=0;for(let i=1;i<=total;i++){if((state[i]||0)===1)done++;}
+  const pct=Math.round(done/total*100);
+  // Save to localStorage with today's date key
+  const key='t100_'+new Date().toISOString().slice(0,10);
+  const data={state:{...state},done,pct,ts:Date.now()};
+  try{localStorage.setItem(key,JSON.stringify(data));}catch(e){}
+  // Update tracker heatmap data
+  try{
+    const allKeys=Object.keys(localStorage).filter(k=>k.startsWith('t100_')).sort();
+    localStorage.setItem('t100_keys',JSON.stringify(allKeys));
+  }catch(e){}
+  const msg=pct>=85?'Excellent! '+pct+'% — on track for 75 kg 💪':pct>=70?pct+'% — good day. Improve: '+getMisses()+' tomorrow':''+pct+'% — reset at next meal, not next week.';
+  alert('Day score saved: '+pct+'%
+
+'+msg);
+}
+// Load today's saved state on startup
+(function loadToday(){
+  const key='t100_'+new Date().toISOString().slice(0,10);
+  try{
+    const saved=localStorage.getItem(key);
+    if(saved){
+      const data=JSON.parse(saved);
+      Object.assign(state,data.state);
+      for(let i=1;i<=total;i++){
+        if(state[i]){
+          // Re-render saved state
+          const row=document.querySelector('[data-id="'+i+'"]');
+          const circle=document.getElementById('c'+i);
+          const icon=document.getElementById('ci'+i);
+          if(!row||!circle||!icon) continue;
+          if(state[i]===1){
+            row.classList.add('done');circle.classList.add('checked');icon.classList.remove('hidden');
+          } else if(state[i]===2){
+            row.classList.add('done');circle.style.background='#FF5E5B';circle.style.borderColor='#FF5E5B';icon.textContent='close';icon.classList.remove('hidden');
+          }
+        }
+      }
+      updateScore();
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

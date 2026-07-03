@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0,viewport-fit=cover" name="viewport"/>
+<title>Exercises — Transform 100</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-gray":"#F8FAFC","surface-container-low":"#f3f3fa","surface-container":"#ededf5","on-surface":"#1a1b21","on-surface-variant":"#3c4a43","primary":"#006c51","on-primary":"#ffffff","primary-container":"#2dd4a4","on-primary-container":"#005740","wellness-teal":"#2DD4A4","progress-blue":"#4D9FFF","achievement-gold":"#E8A020","strict-red":"#FF5E5B","border-subtle":"#E2E8F0"}}}}</script>
+<style>.ms{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}.ms-f{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}.gh{background:rgba(255,255,255,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.gn{background:rgba(249,249,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.tab-btn{transition:all .2s;cursor:pointer}.tab-btn.active{background:#006c51;color:#fff}.ex-section{display:none}.ex-section.active{display:block}body{min-height:max(844px,100dvh)}</style>
+</head>
+<body class="bg-surface-gray text-on-surface" style="font-family:Inter,system-ui,sans-serif">
+<header class="fixed top-0 w-full z-50 gh border-b border-border-subtle h-16 flex items-center justify-between px-5 max-w-lg mx-auto left-0 right-0">
+  <div class="flex items-center gap-3">
+    <a href="more.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span></a>
+    <div><div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">10 min morning + 10 min evening</div><div class="text-[14px] font-semibold">Stretches & Core</div></div>
+  </div>
+</header>
+<main class="pt-20 pb-28 max-w-lg mx-auto px-4">
+  <div class="flex gap-2 mb-4">
+    <button onclick="setTab('morning')" id="t-morning" class="tab-btn active flex-1 py-2 rounded-xl text-[12px] font-semibold border border-border-subtle">🌅 Morning (10 min)</button>
+    <button onclick="setTab('core')" id="t-core" class="tab-btn flex-1 py-2 rounded-xl text-[12px] font-semibold bg-white border border-border-subtle text-on-surface-variant">💪 Core (10–15 min)</button>
+    <button onclick="setTab('breath')" id="t-breath" class="tab-btn flex-1 py-2 rounded-xl text-[12px] font-semibold bg-white border border-border-subtle text-on-surface-variant">🫁 Breathing</button>
+  </div>
+
+  <!-- MORNING -->
+  <div id="s-morning" class="ex-section active space-y-3">
+    <div class="bg-primary/5 rounded-[20px] border border-primary/15 p-4 mb-2">
+      <p class="text-[12px] text-on-surface-variant"><strong class="text-primary">Do before breakfast daily</strong> — activates circulation, wakes core, reduces morning stiffness. Every day including Sunday. 5 exercises × 2 min each.</p>
+    </div>
+    <div class="space-y-2.5">
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 text-[18px]">🔄</div><div class="flex-1"><div class="flex items-center justify-between"><div class="font-semibold text-[13px]">1. Neck Rolls + Shoulder Shrugs</div><span class="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">2 min</span></div><div class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">Roll neck full circle — 5× clockwise, 5× anticlockwise. Then shrug shoulders to ears, hold 3 sec, release. Releases overnight neck tension. Good if you wake up foggy.</div></div></div></div>
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-progress-blue/10 flex items-center justify-center flex-shrink-0 text-[18px]">🙆</div><div class="flex-1"><div class="flex items-center justify-between"><div class="font-semibold text-[13px]">2. Full-Body Overhead Stretch</div><span class="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">2 min</span></div><div class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">Feet shoulder-width. Interlace fingers, push arms up, palms to ceiling. Inhale up, exhale release. Hold 10 sec, 5 reps. Opens chest — especially important for bronchitis, improves lung capacity.</div><span class="text-[10px] bg-progress-blue/10 text-progress-blue px-2 py-0.5 rounded-full font-mono mt-1 inline-block">Lung health ↑</span></div></div></div>
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-wellness-teal/10 flex items-center justify-center flex-shrink-0 text-[18px]">↔️</div><div class="flex-1"><div class="flex items-center justify-between"><div class="font-semibold text-[13px]">3. Standing Side Bends</div><span class="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">2 min</span></div><div class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">Slide hand down thigh toward knee as you bend sideways — stretch opposite side of waist. Hold 5 sec, switch. 10 per side. Directly stretches obliques (belly sides).</div><span class="text-[10px] bg-wellness-teal/10 text-wellness-teal px-2 py-0.5 rounded-full font-mono mt-1 inline-block">Waist ↓</span></div></div></div>
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-achievement-gold/10 flex items-center justify-center flex-shrink-0 text-[18px]">🔃</div><div class="flex-1"><div class="flex items-center justify-between"><div class="font-semibold text-[13px]">4. Standing Torso Twists</div><span class="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">2 min</span></div><div class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">Feet shoulder-width, arms straight at shoulder height. Twist upper body left (hold 2 sec), return, then right. 15 per side. Directly rotates core muscles — tightens belly even before weight is lost.</div></div></div></div>
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 text-[18px]">🐱</div><div class="flex-1"><div class="flex items-center justify-between"><div class="font-semibold text-[13px]">5. Cat-Cow Spinal Stretch</div><span class="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">2 min</span></div><div class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">On all fours (hands under shoulders, knees under hips). Inhale: arch back down, look up (cow). Exhale: round spine up (cat). 10 slow reps. Mobilises spine, activates deep core. Best move for desk workers.</div><span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-mono mt-1 inline-block">Spine + core</span></div></div></div>
+    </div>
+  </div>
+
+  <!-- CORE -->
+  <div id="s-core" class="ex-section space-y-3">
+    <div class="bg-primary/5 rounded-[20px] border border-primary/15 p-4 mb-2">
+      <p class="text-[12px] text-on-surface-variant"><strong class="text-primary">5 days/week · 2–3 hrs after a meal</strong> · Can do same days as treadmill at different time. Start: 2 sets. By Wk 4: 3 sets. By Wk 8: feels easy.</p>
+    </div>
+    <div class="space-y-2.5">
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-strict-red/10 flex items-center justify-center flex-shrink-0 text-[18px]">🏋️</div><div class="flex-1"><div class="flex items-center justify-between"><div class="font-semibold text-[13px]">Plank Hold</div><div class="flex gap-1.5"><span class="font-mono text-[10px] bg-surface-container px-2 py-0.5 rounded-full">30–60 sec</span><span class="font-mono text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full">2–3 sets</span></div></div><div class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">Forearms on floor, body straight, core tight. Hold 30 sec (Wk 1–2) → 45 sec (Wk 3–4) → 60 sec (Wk 5+). Most efficient belly-flattening exercise. Works transverse abdominis (deep layer).</div></div></div></div>
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-achievement-gold/10 flex items-center justify-center flex-shrink-0 text-[18px]">🚴</div><div class="flex-1"><div class="flex items-center justify-between"><div class="font-semibold text-[13px]">Bicycle Crunches</div><div class="flex gap-1.5"><span class="font-mono text-[10px] bg-surface-container px-2 py-0.5 rounded-full">15 per side</span><span class="font-mono text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full">2–3 sets</span></div></div><div class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">Lie on back, hands behind head. Alternate elbow to opposite knee in cycling motion. Slow and controlled. Works obliques + rectus abdominis simultaneously — highest belly-fat relevance of any crunch variant.</div></div></div></div>
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-progress-blue/10 flex items-center justify-center flex-shrink-0 text-[18px]">🦵</div><div class="flex-1"><div class="flex items-center justify-between"><div class="font-semibold text-[13px]">Leg Raises</div><div class="flex gap-1.5"><span class="font-mono text-[10px] bg-surface-container px-2 py-0.5 rounded-full">10–15 reps</span><span class="font-mono text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full">2–3 sets</span></div></div><div class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">Lie flat. Lift both legs to 90°, slowly lower without touching floor. Lower abs + hip flexors. Best exercise for lower belly pouch specifically. Start with knees bent if needed in Wk 1.</div></div></div></div>
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-wellness-teal/10 flex items-center justify-center flex-shrink-0 text-[18px]">🧎</div><div class="flex-1"><div class="flex items-center justify-between"><div class="font-semibold text-[13px]">Seated Knee Pulls</div><div class="flex gap-1.5"><span class="font-mono text-[10px] bg-surface-container px-2 py-0.5 rounded-full">15 per side</span><span class="font-mono text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full">2 sets</span></div></div><div class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">Sit on edge of chair/bed, lean back slightly. Pull one knee to chest, return. Alternate. Works the same lower belly area as leg raises but lower intensity — good for days when energy is low.</div></div></div></div>
+    </div>
+  </div>
+
+  <!-- BREATHING -->
+  <div id="s-breath" class="ex-section space-y-3">
+    <div class="bg-primary/5 rounded-[20px] border border-primary/15 p-4 mb-2">
+      <p class="text-[12px] text-on-surface-variant"><strong class="text-primary">5 minutes · any time</strong> — especially on non-core nights. Activates parasympathetic nervous system, lowers cortisol (belly fat driver), improves sleep quality.</p>
+    </div>
+    <div class="space-y-2.5">
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="font-semibold text-[13px] mb-2">Diaphragmatic Breathing — 5 min</div><div class="text-[12px] text-on-surface-variant leading-relaxed">Lie flat or sit comfortably. One hand on chest, one on belly. Inhale for 4 counts — belly should rise, chest should NOT. Exhale for 6 counts. 10 cycles. The extended exhale activates vagus nerve and lowers cortisol within minutes.</div><div class="mt-2 bg-primary/5 rounded-lg px-3 py-2 text-[11px] text-primary font-medium">🎯 Cortisol = main visceral belly fat driver. This breathing lowers it directly.</div></div>
+      <div class="bg-white rounded-[20px] border border-border-subtle p-4"><div class="font-semibold text-[13px] mb-2">4-7-8 Breathing for Sleep</div><div class="text-[12px] text-on-surface-variant leading-relaxed">Before sleep. Inhale 4 counts → hold 7 counts → exhale 8 counts. Repeat 4 cycles. Activates sleep onset. Best on nights when you had a late treadmill session and the body is still warm.</div></div>
+    </div>
+  </div>
+
+</main>
+<nav class="fixed bottom-0 w-full z-50 gn border-t border-border-subtle rounded-t-2xl h-20 pb-3 px-2 flex justify-around items-center max-w-lg mx-auto left-0 right-0">
+  <a href="index.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">dashboard</span><span class="text-[9px] font-mono uppercase tracking-tighter">Home</span></a>
+  <a href="schedule.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">today</span><span class="text-[9px] font-mono uppercase tracking-tighter">Schedule</span></a>
+  <a href="meals.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">restaurant</span><span class="text-[9px] font-mono uppercase tracking-tighter">Meals</span></a>
+  <a href="tracker.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">analytics</span><span class="text-[9px] font-mono uppercase tracking-tighter">Tracker</span></a>
+  <a href="more.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">apps</span><span class="text-[9px] font-mono uppercase tracking-tighter">More</span></a>
+</nav>
+<script>
+function setTab(t){
+  ['morning','core','breath'].forEach(id=>{
+    document.getElementById('t-'+id).classList.remove('active');
+    document.getElementById('t-'+id).classList.add('bg-white','text-on-surface-variant');
+    document.getElementById('s-'+id).classList.remove('active');
+  });
+  document.getElementById('t-'+t).classList.add('active');
+  document.getElementById('t-'+t).classList.remove('bg-white','text-on-surface-variant');
+  document.getElementById('s-'+t).classList.add('active');
+}
+</script>
+</body>
+</html>

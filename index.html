@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0,viewport-fit=cover" name="viewport"/>
+<title>Home — Transform 100</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-gray":"#F8FAFC","surface":"#f9f9ff","surface-container-lowest":"#ffffff","surface-container-low":"#f3f3fa","surface-container":"#ededf5","surface-container-high":"#e8e7ef","on-surface":"#1a1b21","on-surface-variant":"#3c4a43","primary":"#006c51","on-primary":"#ffffff","primary-container":"#2dd4a4","on-primary-container":"#005740","secondary":"#005fad","secondary-container":"#4b9dfd","wellness-teal":"#2DD4A4","progress-blue":"#4D9FFF","achievement-gold":"#E8A020","strict-red":"#FF5E5B","border-subtle":"#E2E8F0","inverse-surface":"#2e3036","inverse-on-surface":"#f0f0f8"}}}}</script>
+<style>
+.ms{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}
+.ms-f{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.gh{background:rgba(255,255,255,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.gn{background:rgba(249,249,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.lc{transition:transform .2s,box-shadow .2s,border-color .2s}
+.lc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,108,81,.08);border-color:rgba(45,212,164,.4)}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fu .4s ease-out forwards}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:.3}}
+.pd{animation:pd 1.6s ease-in-out infinite}
+@keyframes pulse-ring{0%{transform:scale(.95);opacity:.7}70%{transform:scale(1.05);opacity:0}100%{transform:scale(.95);opacity:0}}
+.pulse-ring{animation:pulse-ring 2s ease-out infinite}
+body{min-height:max(844px,100dvh)}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:#E2E8F0;border-radius:10px}
+.custom-scroll::-webkit-scrollbar{height:3px}
+</style>
+</head>
+<body class="bg-surface-gray text-on-surface" style="font-family:Inter,system-ui,sans-serif">
+
+<!-- HEADER -->
+<header class="fixed top-0 w-full z-50 gh border-b border-border-subtle h-16 flex items-center justify-between px-5 max-w-lg mx-auto left-0 right-0">
+  <div class="flex items-center gap-3">
+    <div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center shadow-sm border-2 border-white font-bold text-sm text-on-primary-container" id="hdr-avatar">PK</div>
+    <div>
+      <div class="text-[10px] font-mono font-semibold text-on-surface-variant uppercase tracking-widest leading-none">Transform 100</div>
+      <div class="text-[13px] font-semibold text-on-surface leading-snug" id="hdr-greeting">Good morning, Praveen 👋</div>
+    </div>
+  </div>
+  <div class="flex gap-1">
+    <a href="checklist.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center transition-colors" title="Today's checklist">
+      <span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">edit_note</span>
+    </a>
+    <a href="settings.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center transition-colors" title="Settings">
+      <span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">settings</span>
+    </a>
+  </div>
+</header>
+
+<main class="pt-20 pb-28 max-w-lg mx-auto px-4 space-y-4">
+
+  <!-- ① HERO: Day / Week / Progress -->
+  <div class="bg-primary rounded-[24px] overflow-hidden shadow-lg fu">
+    <div class="px-5 pt-5 pb-0 relative">
+      <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/5 rounded-full pointer-events-none"></div>
+      <div class="absolute right-6 bottom-4 w-24 h-24 bg-white/4 rounded-full pointer-events-none"></div>
+      <div class="relative z-10 flex items-start justify-between mb-3">
+        <div>
+          <div class="text-white/60 font-mono text-[10px] uppercase tracking-widest mb-1">Mission active</div>
+          <div class="text-white font-bold text-[26px] leading-none" id="hero-day">Day 1 <span class="text-white/40 font-normal text-[17px]">of 100</span></div>
+          <div class="text-white/70 text-[12px] mt-1 font-mono" id="hero-week">Week 1 of 15</div>
+          <div class="text-white/50 text-[11px] mt-0.5" id="hero-date">Monday, 6 Jul 2026</div>
+        </div>
+        <!-- Progress ring -->
+        <div class="relative w-[68px] h-[68px]">
+          <svg width="68" height="68" viewBox="0 0 68 68">
+            <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#2DD4A4"/><stop offset="100%" style="stop-color:#63fcc9"/></linearGradient></defs>
+            <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="5"/>
+            <circle id="prog-ring" cx="34" cy="34" r="28" fill="none" stroke="url(#rg)" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="175.0" stroke-linecap="round" transform="rotate(-90 34 34)"/>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <div class="text-white font-bold text-[15px] leading-none" id="prog-pct">1%</div>
+            <div class="text-white/50 text-[8px] mt-0.5 font-mono">done</div>
+          </div>
+        </div>
+      </div>
+      <!-- Day progress bar -->
+      <div class="relative z-10 mb-3">
+        <div class="flex justify-between text-white/40 text-[10px] font-mono mb-1">
+          <span id="bar-start">6 Jul</span><span id="bar-left">89 days left</span><span id="bar-end">14 Oct</span>
+        </div>
+        <div class="h-1.5 bg-white/15 rounded-full overflow-hidden">
+          <div id="prog-bar" class="h-full bg-wellness-teal/80 rounded-full" style="width:1%"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Stats strip: yesterday · this week · all-time -->
+    <div class="grid grid-cols-3 divide-x divide-white/10 bg-black/10">
+      <div class="py-3 text-center">
+        <div id="score-yest" class="font-mono font-bold text-[18px] text-wellness-teal">—</div>
+        <div class="text-[9px] text-white/50 uppercase tracking-wide mt-0.5">Yesterday</div>
+      </div>
+      <div class="py-3 text-center">
+        <div id="score-week" class="font-mono font-bold text-[18px] text-progress-blue">—</div>
+        <div class="text-[9px] text-white/50 uppercase tracking-wide mt-0.5">This week</div>
+      </div>
+      <div class="py-3 text-center">
+        <div id="score-all" class="font-mono font-bold text-[18px] text-white">—</div>
+        <div class="text-[9px] text-white/50 uppercase tracking-wide mt-0.5">All-time avg</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② YESTERDAY ALERT — shown only when score logged -->
+  <div id="yest-alert" class="hidden fu" style="animation-delay:.03s">
+    <!-- filled by JS -->
+  </div>
+
+  <!-- ③ MISSED YESTERDAY BANNER — shown if yesterday had misses -->
+  <div id="miss-yest-banner" class="hidden bg-achievement-gold/8 border border-achievement-gold/30 rounded-[20px] p-4 fu" style="animation-delay:.05s">
+    <div class="flex items-start gap-3">
+      <span class="material-symbols-outlined ms text-achievement-gold text-[20px] flex-shrink-0 mt-0.5">warning</span>
+      <div class="flex-1">
+        <div class="font-semibold text-[13px] text-achievement-gold mb-1" id="miss-yest-title">You missed 3 items yesterday</div>
+        <div class="text-[12px] text-on-surface-variant leading-relaxed" id="miss-yest-body">Post-lunch walk · Screens off · Pre-dinner water — make sure these happen today.</div>
+        <a href="checklist.html" class="mt-2 inline-flex items-center gap-1 text-[11px] text-primary font-semibold">Open today's checklist <span class="material-symbols-outlined ms text-[14px]">arrow_forward</span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ NEXT EVENT — dynamic based on current time -->
+  <div class="bg-primary rounded-[24px] p-5 relative overflow-hidden shadow-md fu" id="next-event-card" style="animation-delay:.08s">
+    <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-white/5 rounded-full pointer-events-none"></div>
+    <div class="relative z-10">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-2 h-2 rounded-full bg-wellness-teal pd"></div>
+        <span class="text-white/60 font-mono text-[10px] uppercase tracking-widest">Next event</span>
+        <span class="ml-auto font-mono text-[10px] bg-white/15 text-white px-2.5 py-0.5 rounded-full" id="next-time-left">loading...</span>
+      </div>
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <div class="text-white font-bold text-[16px] leading-snug" id="next-name">Morning Water 💧</div>
+          <div class="text-white/70 text-[12px] mt-1 leading-relaxed" id="next-desc">2 glasses warm water — 400ml. Before phone, before food.</div>
+          <div class="mt-2.5">
+            <span class="bg-white/15 text-white font-mono text-[11px] px-3 py-1 rounded-full" id="next-tag">8:00 AM</span>
+          </div>
+        </div>
+        <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0 text-2xl" id="next-emoji">💧</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ FREQUENTLY MISSED — intelligence card -->
+  <div id="miss-freq-section" class="hidden fu" style="animation-delay:.1s">
+    <div class="bg-white rounded-[24px] border border-border-subtle shadow-sm p-5">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="material-symbols-outlined ms text-achievement-gold text-[20px]">insights</span>
+        <span class="font-semibold text-[14px]">Most frequently missed</span>
+        <span class="ml-auto text-[10px] font-mono text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full" id="miss-freq-range">This week</span>
+      </div>
+      <div id="miss-freq-list" class="space-y-2.5 mb-4"></div>
+      <!-- Impact of top miss -->
+      <div id="miss-impact" class="bg-strict-red/5 border border-strict-red/15 rounded-[16px] px-4 py-3">
+        <div class="text-[11px] font-mono text-strict-red font-bold uppercase tracking-wide mb-1" id="miss-impact-title">Why this matters</div>
+        <div class="text-[12px] text-on-surface-variant leading-relaxed" id="miss-impact-body">Miss data builds after your first checklist entry.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ THIS WEEK DAILY STRIP -->
+  <div class="bg-white rounded-[24px] border border-border-subtle shadow-sm p-5 fu" style="animation-delay:.12s">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined ms text-progress-blue text-[20px]">calendar_view_week</span>
+        <span class="font-semibold text-[14px]">This week</span>
+      </div>
+      <a href="tracker.html" class="text-[12px] text-primary font-semibold">Full tracker →</a>
+    </div>
+    <!-- Day dots with scores -->
+    <div class="flex gap-1.5 overflow-x-auto pb-1 custom-scroll" id="week-strip">
+      <!-- filled by JS -->
+    </div>
+    <!-- Today's meals compact view -->
+    <div class="mt-4 space-y-1.5" id="today-meals">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- ⑦ WEIGHT PROGRESS -->
+  <div class="bg-white rounded-[24px] border border-border-subtle shadow-sm p-5 fu" style="animation-delay:.15s">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined ms text-primary text-[20px]">monitor_weight</span>
+        <span class="font-semibold text-[14px]">Weight journey</span>
+      </div>
+      <a href="weight.html" class="text-[12px] text-primary font-semibold">Log weight →</a>
+    </div>
+    <div class="flex items-center gap-3 mb-3">
+      <div class="text-center">
+        <div class="font-mono font-bold text-[17px] text-on-surface" id="wt-start-disp">82.3</div>
+        <div class="text-[9px] text-on-surface-variant font-mono uppercase">Start</div>
+      </div>
+      <div class="flex-1 relative">
+        <div class="h-3 bg-surface-container rounded-full overflow-hidden">
+          <div id="wt-bar" class="h-full bg-gradient-to-r from-wellness-teal to-progress-blue rounded-full" style="width:0%"></div>
+        </div>
+        <div class="flex justify-between text-[9px] text-on-surface-variant font-mono mt-1">
+          <span id="wt-pct-label">0% done</span>
+          <span id="wt-last-label">—</span>
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="font-mono font-bold text-[17px] text-primary" id="wt-target-disp">75.0</div>
+        <div class="text-[9px] text-on-surface-variant font-mono uppercase">Target</div>
+      </div>
+    </div>
+    <div id="wt-status" class="bg-surface-container-low rounded-xl px-4 py-2.5 text-center">
+      <span class="text-[12px] text-on-surface-variant">First weigh-in: <span class="text-primary font-semibold" id="wt-next-date">Next Monday</span> at 7:55 AM</span>
+    </div>
+  </div>
+
+  <!-- ⑧ MOTIVATION WHEN NEEDED -->
+  <div id="motivation-card" class="hidden bg-primary/5 border border-primary/15 rounded-[24px] p-5 fu" style="animation-delay:.18s">
+    <div class="flex items-start gap-3">
+      <span class="material-symbols-outlined ms text-primary text-[22px] flex-shrink-0 mt-0.5">emoji_events</span>
+      <div>
+        <div class="font-semibold text-[14px] text-primary mb-1" id="motiv-title">Keep going — you're on track</div>
+        <div class="text-[12px] text-on-surface-variant leading-relaxed" id="motiv-body">Every day you complete builds the biological machinery for fat loss. The compound effect kicks in at Day 21.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑨ QUICK ACTIONS -->
+  <div class="fu" style="animation-delay:.2s">
+    <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant mb-3">Quick access</div>
+    <div class="grid grid-cols-2 gap-3">
+      <a href="checklist.html" class="lc bg-white rounded-[20px] border border-border-subtle p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-wellness-teal/10 flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined ms text-primary text-[20px]">checklist</span>
+        </div>
+        <div><div class="font-semibold text-[13px]">Checklist</div><div class="text-[11px] text-on-surface-variant mt-0.5">27 items · daily</div></div>
+      </a>
+      <a href="schedule.html" class="lc bg-white rounded-[20px] border border-border-subtle p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-progress-blue/10 flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined ms text-secondary text-[20px]">schedule</span>
+        </div>
+        <div><div class="font-semibold text-[13px]">Schedule</div><div class="text-[11px] text-on-surface-variant mt-0.5">8 AM → 10:30 PM</div></div>
+      </a>
+      <a href="treadmill.html" class="lc bg-white rounded-[20px] border border-border-subtle p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-strict-red/10 flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined ms text-strict-red text-[20px]">directions_run</span>
+        </div>
+        <div><div class="font-semibold text-[13px]">Treadmill</div><div class="text-[11px] text-on-surface-variant mt-0.5">6 PM · 7 km/h · 35 min</div></div>
+      </a>
+      <a href="weight.html" class="lc bg-white rounded-[20px] border border-border-subtle p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-achievement-gold/10 flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined ms text-achievement-gold text-[20px]">monitor_weight</span>
+        </div>
+        <div><div class="font-semibold text-[13px]">Weight log</div><div class="text-[11px] text-on-surface-variant mt-0.5">Mon 7:55 AM</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ⑩ 5 NON-NEGOTIABLES -->
+  <div class="bg-primary/5 border border-primary/15 rounded-[24px] p-5 fu" style="animation-delay:.25s">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="material-symbols-outlined ms text-primary text-[18px]">lock</span>
+      <span class="font-semibold text-[13px] text-primary">5 non-negotiables — every single day</span>
+    </div>
+    <div class="space-y-2">
+      <div class="flex items-start gap-2.5"><div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-white text-[10px] font-bold">1</span></div><div class="text-[12px] text-on-surface-variant"><span class="text-on-surface font-medium">Morning drink before breakfast</span> — always</div></div>
+      <div class="flex items-start gap-2.5"><div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-white text-[10px] font-bold">2</span></div><div class="text-[12px] text-on-surface-variant"><span class="text-on-surface font-medium">Protein first at every meal</span> — egg before idli</div></div>
+      <div class="flex items-start gap-2.5"><div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-white text-[10px] font-bold">3</span></div><div class="text-[12px] text-on-surface-variant"><span class="text-on-surface font-medium">Water 20 min before</span> each meal</div></div>
+      <div class="flex items-start gap-2.5"><div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-white text-[10px] font-bold">4</span></div><div class="text-[12px] text-on-surface-variant"><span class="text-on-surface font-medium">10-min walk after</span> every meal</div></div>
+      <div class="flex items-start gap-2.5"><div class="w-5 h-5 rounded-full bg-strict-red flex items-center justify-center flex-shrink-0 mt-0.5"><span class="text-white text-[10px] font-bold">5</span></div><div class="text-[12px] text-on-surface-variant"><span class="text-on-surface font-medium">Stop eating by 8:30 PM</span> — hard stop</div></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 w-full z-50 gn border-t border-border-subtle rounded-t-2xl h-20 pb-3 px-2 flex justify-around items-center max-w-lg mx-auto left-0 right-0">
+  <a href="index.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl bg-primary-container text-on-primary-container"><span class="material-symbols-outlined ms-f text-[22px]">dashboard</span><span class="text-[9px] font-mono uppercase tracking-tighter">Home</span></a>
+  <a href="schedule.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">today</span><span class="text-[9px] font-mono uppercase tracking-tighter">Schedule</span></a>
+  <a href="meals.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">restaurant</span><span class="text-[9px] font-mono uppercase tracking-tighter">Meals</span></a>
+  <a href="tracker.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">analytics</span><span class="text-[9px] font-mono uppercase tracking-tighter">Tracker</span></a>
+  <a href="more.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">apps</span><span class="text-[9px] font-mono uppercase tracking-tighter">More</span></a>
+</nav>
+
+<!-- FAB -->
+<a href="checklist.html" class="fixed right-5 bottom-24 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40 group">
+  <span class="material-symbols-outlined ms text-[22px]">edit_note</span>
+  <span class="absolute right-full mr-3 bg-inverse-surface text-inverse-on-surface px-3 py-1.5 rounded-lg text-[11px] font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl">Today's checklist</span>
+</a>
+
+<script>
+// ─────────────────────────────────────────────
+//  SETUP LOAD
+// ─────────────────────────────────────────────
+let SETUP = {};
+try { SETUP = JSON.parse(localStorage.getItem('t100_setup') || '{}'); } catch(e) {}
+// If no setup found, use defaults (Praveen's plan) so dashboard renders
+// When deployed on GitHub Pages, first visit will go to setup.html
+if (!SETUP.setupDone) {
+  SETUP = { name: 'Praveen', startDate: '2026-07-06', startWeight: 82.3, targetWeight: 75.0, setupDone: true };
+}
+
+const START_DATE = SETUP.startDate ? new Date(SETUP.startDate + 'T00:00:00') : new Date('2026-07-06T00:00:00');
+const START_WEIGHT = SETUP.startWeight || 82.3;
+const TARGET_WEIGHT = SETUP.targetWeight || 75.0;
+const USER_NAME = SETUP.name || 'Praveen';
+const TOTAL_LOSS = START_WEIGHT - TARGET_WEIGHT;
+
+// ─────────────────────────────────────────────
+//  DATE HELPERS
+// ─────────────────────────────────────────────
+const today = new Date(); today.setHours(0,0,0,0);
+const dayNum = Math.max(1, Math.floor((today - START_DATE) / 86400000) + 1);
+const weekNum = Math.ceil(dayNum / 7);
+const totalDays = 100;
+const daysLeft = Math.max(0, totalDays - dayNum + 1);
+const pct = Math.min(100, Math.round((dayNum - 1) / totalDays * 100));
+const endDate = new Date(START_DATE); endDate.setDate(endDate.getDate() + 99);
+const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fmt = d => d.getDate() + ' ' + monthNames[d.getMonth()];
+const fmtFull = d => dayNames[d.getDay()] + ', ' + d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
+
+// ─────────────────────────────────────────────
+//  HERO UPDATE
+// ─────────────────────────────────────────────
+const initials = USER_NAME.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+document.getElementById('hdr-avatar').textContent = initials;
+const hr = new Date().getHours();
+const greeting = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+document.getElementById('hdr-greeting').textContent = greeting + ', ' + USER_NAME + ' 👋';
+
+document.getElementById('hero-day').innerHTML = 'Day ' + dayNum + ' <span class="text-white/40 font-normal text-[17px]">of ' + totalDays + '</span>';
+document.getElementById('hero-week').textContent = 'Week ' + weekNum + ' of 15';
+document.getElementById('hero-date').textContent = fmtFull(today);
+document.getElementById('prog-pct').textContent = pct + '%';
+document.getElementById('prog-bar').style.width = Math.max(1, pct) + '%';
+document.getElementById('bar-start').textContent = fmt(START_DATE);
+document.getElementById('bar-left').textContent = daysLeft + ' days left';
+document.getElementById('bar-end').textContent = fmt(endDate);
+
+// Progress ring
+const circumference = 175.9;
+const offset = circumference * (1 - pct / 100);
+document.getElementById('prog-ring').setAttribute('stroke-dashoffset', offset.toFixed(1));
+
+// Weight display
+document.getElementById('wt-start-disp').textContent = START_WEIGHT.toFixed(1);
+document.getElementById('wt-target-disp').textContent = TARGET_WEIGHT.toFixed(1);
+
+// ─────────────────────────────────────────────
+//  LOAD CHECKLIST SCORES FROM localStorage
+// ─────────────────────────────────────────────
+function getDateKey(d) {
+  return 't100_' + d.toISOString().slice(0, 10);
+}
+function getScore(d) {
+  try {
+    const s = localStorage.getItem(getDateKey(d));
+    if (s) { const p = JSON.parse(s); return p.pct || 0; }
+  } catch(e) {}
+  return null;
+}
+function getMisses(d) {
+  try {
+    const s = localStorage.getItem(getDateKey(d));
+    if (s) { const p = JSON.parse(s); return p.state || {}; }
+  } catch(e) {}
+  return null;
+}
+
+const yesterdayDate = new Date(today); yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+const yesterdayScore = getScore(yesterdayDate);
+const yesterdayState = getMisses(yesterdayDate);
+
+// Week scores
+const weekScores = [];
+for (let i = 0; i < 7; i++) {
+  const d = new Date(today); d.setDate(d.getDate() - i);
+  const s = getScore(d);
+  if (s !== null) weekScores.push(s);
+}
+const weekAvg = weekScores.length ? Math.round(weekScores.reduce((a,b) => a+b,0) / weekScores.length) : null;
+
+// All-time scores
+const allScores = [];
+for (let i = 0; i < dayNum; i++) {
+  const d = new Date(START_DATE); d.setDate(d.getDate() + i);
+  const s = getScore(d);
+  if (s !== null) allScores.push(s);
+}
+const allAvg = allScores.length ? Math.round(allScores.reduce((a,b) => a+b,0) / allScores.length) : null;
+
+// ─────────────────────────────────────────────
+//  SCORE DISPLAY
+// ─────────────────────────────────────────────
+function scoreColor(s) {
+  if (s === null) return 'text-white';
+  if (s >= 85) return 'text-wellness-teal';
+  if (s >= 70) return 'text-achievement-gold';
+  return 'text-strict-red';
+}
+const yEl = document.getElementById('score-yest');
+yEl.textContent = yesterdayScore !== null ? yesterdayScore + '%' : '—';
+yEl.className = 'font-mono font-bold text-[18px] ' + scoreColor(yesterdayScore);
+
+const wEl = document.getElementById('score-week');
+wEl.textContent = weekAvg !== null ? weekAvg + '%' : '—';
+wEl.className = 'font-mono font-bold text-[18px] ' + scoreColor(weekAvg);
+
+const aEl = document.getElementById('score-all');
+aEl.textContent = allAvg !== null ? allAvg + '%' : '—';
+aEl.className = 'font-mono font-bold text-[18px] ' + scoreColor(allAvg);
+
+// ─────────────────────────────────────────────
+//  YESTERDAY ALERT CARD
+// ─────────────────────────────────────────────
+if (yesterdayScore !== null) {
+  const card = document.getElementById('yest-alert');
+  card.classList.remove('hidden');
+  let bg, icon, title, body;
+  if (yesterdayScore >= 85) {
+    bg = 'bg-wellness-teal/8 border border-wellness-teal/25';
+    icon = '✅'; title = 'Great day yesterday — ' + yesterdayScore + '%';
+    body = 'Strong discipline. Keep the same energy today. Every consistent day compounds.';
+  } else if (yesterdayScore >= 70) {
+    bg = 'bg-achievement-gold/8 border border-achievement-gold/25';
+    icon = '📊'; title = 'Yesterday: ' + yesterdayScore + '% — room to improve';
+    body = 'Decent day. A few misses held you back. Check the miss list below and lock those in today.';
+  } else {
+    bg = 'bg-strict-red/5 border border-strict-red/20';
+    icon = '⚠️'; title = 'Yesterday: ' + yesterdayScore + '% — recovery day today';
+    body = 'One slip is one meal, not a lost week. Reset at the very next action. Today is the restart.';
+  }
+  card.innerHTML = `<div class="${bg} rounded-[20px] p-4 flex items-start gap-3">
+    <span class="text-[18px] flex-shrink-0">${icon}</span>
+    <div><div class="font-semibold text-[13px] mb-1">${title}</div><div class="text-[12px] text-on-surface-variant leading-relaxed">${body}</div></div>
+  </div>`;
+}
+
+// ─────────────────────────────────────────────
+//  MISS DETECTION — Yesterday
+// ─────────────────────────────────────────────
+const ITEM_NAMES = {
+  1:'Morning water', 2:'Morning drink', 3:'Morning stretch', 4:'Pre-breakfast water',
+  5:'Breakfast protein-first', 6:'Post-breakfast walk', 7:'Mid-morning water',
+  8:'Morning snack', 9:'Green tea', 10:'Pre-lunch water', 11:'Lunch plate order',
+  12:'Post-lunch walk', 13:'Afternoon drink', 14:'Afternoon water', 15:'Pre-snack water',
+  16:'Evening snack', 17:'Treadmill', 18:'Post-treadmill water', 19:'Golden milk',
+  20:'Pre-dinner salad+water', 21:'Dinner by 8:30 PM', 22:'Post-dinner walk',
+  23:'Core/breathing', 24:'Checklist', 25:'Herbal tea', 26:'Screens off 10 PM', 27:'Sleep 10:30 PM'
+};
+const MISS_IMPACT = {
+  12: '3× missed post-lunch walk = blood sugar peaks unchecked on 3 afternoons. Adds ~0.15 kg retained per week and HbA1c stays 0.2% higher. 10 minutes is the highest-leverage action on your entire list.',
+  17: 'Treadmill missed = −302 kcal/day deficit lost. 3× missed = 906 kcal gap = ~130g fat not burned. The treadmill is the accelerator. Missing it weekly erodes your end date by 1–2 weeks.',
+  26: 'Late screens → late sleep → morning drink skipped → breakfast late → whole schedule shifted. Screens at 10 PM = actual sleep at 11:30 PM = 6.5 hrs = next day\'s hunger hormones spiked.',
+  6:  'Post-breakfast walk reduces post-meal glucose by 12–22%. Missed daily = HbA1c stays 0.3% higher across 100 days. Your most impactful morning habit after the morning drink.',
+  22: 'Post-dinner walk reduces next morning\'s fasting glucose by 4–6 mg/dL. Your HbA1c test result is being written every night by whether this walk happens or not.',
+  21: 'Eating past 8:30 PM = visceral fat storage. Late eating raises fasting glucose 4–8 mg/dL next morning. Each night of late eating adds compounding difficulty to the next morning\'s habits.',
+  2:  'Morning drink is your HbA1c anchor. Methi reduces post-meal glucose spikes by 13–20%. Skipping it = the blood sugar curve rises unchecked all morning. Never skip this one.',
+};
+
+if (yesterdayState) {
+  const missedIds = Object.entries(yesterdayState).filter(([k, v]) => v === 2).map(([k]) => parseInt(k));
+  if (missedIds.length > 0) {
+    document.getElementById('miss-yest-banner').classList.remove('hidden');
+    document.getElementById('miss-yest-title').textContent = 'You missed ' + missedIds.length + ' item' + (missedIds.length > 1 ? 's' : '') + ' yesterday';
+    const missNames = missedIds.map(id => ITEM_NAMES[id] || ('Item ' + id)).slice(0, 3).join(' · ');
+    document.getElementById('miss-yest-body').textContent = missNames + (missedIds.length > 3 ? ' and ' + (missedIds.length - 3) + ' more' : '') + ' — make sure these happen today.';
+  }
+}
+
+// ─────────────────────────────────────────────
+//  MOST FREQUENTLY MISSED — all-time analysis
+// ─────────────────────────────────────────────
+const missCounts = {};
+for (let i = 0; i < dayNum; i++) {
+  const d = new Date(START_DATE); d.setDate(d.getDate() + i);
+  const state = getMisses(d);
+  if (state) {
+    Object.entries(state).forEach(([k, v]) => {
+      if (v === 2) missCounts[k] = (missCounts[k] || 0) + 1;
+    });
+  }
+}
+const sortedMisses = Object.entries(missCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+
+if (sortedMisses.length > 0) {
+  document.getElementById('miss-freq-section').classList.remove('hidden');
+  const missedDays = allScores.length;
+  document.getElementById('miss-freq-range').textContent = 'Last ' + missedDays + ' days';
+
+  const list = document.getElementById('miss-freq-list');
+  list.innerHTML = sortedMisses.map(([id, count]) => {
+    const name = ITEM_NAMES[id] || ('Item ' + id);
+    const pctMiss = missedDays > 0 ? Math.round(count / missedDays * 100) : 0;
+    const barW = Math.min(100, pctMiss);
+    const col = pctMiss >= 50 ? 'bg-strict-red' : pctMiss >= 30 ? 'bg-achievement-gold' : 'bg-primary';
+    return `<div>
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[12px] font-medium text-on-surface">${name}</span>
+        <span class="font-mono text-[11px] ${pctMiss >= 50 ? 'text-strict-red' : 'text-achievement-gold'} font-bold">${count}× missed</span>
+      </div>
+      <div class="h-1.5 bg-surface-container rounded-full overflow-hidden">
+        <div class="${col} h-full rounded-full" style="width:${barW}%"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Impact card for top miss
+  const topId = sortedMisses[0][0];
+  const impact = MISS_IMPACT[topId] || `Frequently missing "${ITEM_NAMES[topId]}" disrupts the chain of habits this plan depends on. Each miss makes the next one easier.`;
+  document.getElementById('miss-impact-title').textContent = 'Why missing "' + ITEM_NAMES[topId] + '" matters';
+  document.getElementById('miss-impact-body').textContent = impact;
+}
+
+// Motivation card: show after 3+ days with data
+if (allScores.length >= 3 && allAvg !== null) {
+  const mc = document.getElementById('motivation-card');
+  mc.classList.remove('hidden');
+  let title, body;
+  if (allAvg >= 85) {
+    title = 'Elite consistency — ' + allAvg + '% all-time';
+    body = 'Top 10% of people who start 100-day plans sustain >85% discipline through Day 30. You\'re in that group. The biological adaptation is already happening — 100 days builds habits that last years.';
+  } else if (allAvg >= 75) {
+    title = 'Good momentum — keep pushing';
+    body = 'A ' + allAvg + '% average is solid. Closing the gap to 85%+ would accelerate your timeline. Find your top miss and fix just that one thing.';
+  } else if (dayNum <= 14) {
+    title = 'Week 1-2: this is the hardest stretch';
+    body = 'Research shows discipline score improves automatically from Day 14 as habits become automatic. Every completed action today makes tomorrow 8% easier. Keep going.';
+  } else {
+    title = 'Week ' + weekNum + ': the plateau phase is also the test';
+    body = 'Weeks 5-7 are where 73% of people quit. The scale often stalls here from water retention. Check waist measurement instead. Your fat loss is still happening.';
+  }
+  document.getElementById('motiv-title').textContent = title;
+  document.getElementById('motiv-body').textContent = body;
+}
+
+// ─────────────────────────────────────────────
+//  THIS WEEK DAY STRIP
+// ─────────────────────────────────────────────
+const dayLetters = ['S','M','T','W','T','F','S'];
+const strip = document.getElementById('week-strip');
+const weekStart = new Date(today); weekStart.setDate(today.getDate() - today.getDay() + 1); // Monday
+
+strip.innerHTML = '';
+for (let i = 0; i < 7; i++) {
+  const d = new Date(weekStart); d.setDate(weekStart.getDate() + i);
+  const isToday = d.getTime() === today.getTime();
+  const isPast = d < today;
+  const score = getScore(d);
+  let bg, textCol, badge = '';
+  if (isToday) {
+    bg = 'bg-primary'; textCol = 'text-white';
+    badge = '<div class="text-[9px] font-mono text-achievement-gold font-bold mt-0.5">Today</div>';
+  } else if (isPast && score !== null) {
+    const col = score >= 85 ? 'bg-wellness-teal/20 border border-wellness-teal/40' : score >= 70 ? 'bg-achievement-gold/15 border border-achievement-gold/30' : 'bg-strict-red/10 border border-strict-red/20';
+    bg = col; textCol = 'text-on-surface';
+    badge = `<div class="text-[9px] font-mono ${score >= 85 ? 'text-wellness-teal' : score >= 70 ? 'text-achievement-gold' : 'text-strict-red'} font-bold mt-0.5">${score}%</div>`;
+  } else if (isPast) {
+    bg = 'bg-strict-red/8 border border-strict-red/15'; textCol = 'text-on-surface-variant';
+    badge = '<div class="text-[9px] font-mono text-strict-red mt-0.5">—</div>';
+  } else {
+    bg = 'bg-surface-container-low border border-border-subtle'; textCol = 'text-on-surface-variant';
+    badge = '<div class="text-[9px] font-mono text-on-surface-variant mt-0.5">' + fmt(d).split(' ')[0] + ' ' + (d.getMonth()+1) + '/' + d.getDate() + '</div>';
+  }
+  strip.innerHTML += `<div class="flex flex-col items-center gap-0.5 flex-shrink-0 w-12">
+    <div class="w-10 h-10 rounded-xl ${bg} flex items-center justify-center shadow-sm">
+      <span class="${textCol} font-mono font-bold text-[12px]">${dayLetters[d.getDay()]}</span>
+    </div>
+    ${badge}
+  </div>`;
+}
+
+// ─────────────────────────────────────────────
+//  TODAY'S MEALS (day of week aware)
+// ─────────────────────────────────────────────
+const DOW = today.getDay(); // 0=Sun
+const MEALS = {
+  1: { label: 'Reset Day', bf: 'Sambar Idli (2) + Egg Curry', snack: 'Roasted Chana 25g', drink: 'Majjiga 200ml', eve: 'Makhana Masala + 1 tbsp Chia Seeds', din: '2 Chapathi + Egg Curry + Salad (cucumber+tomato+carrot)', bfCal: 420, dinCal: 465 },
+  2: { label: 'Omega-3 Day', bf: 'Egg Dosa (2) + Sambar', snack: 'Sprouts + Lemon 80g', drink: 'Sattu drink', eve: 'Peanut Chaat 18g', din: '2 Chapathi + Fish Curry + Salad (cucumber+tomato+carrot)', bfCal: 450, dinCal: 450 },
+  3: { label: 'Vegetarian Day', bf: 'Pesarattu (2) + Hung Curd + 6 Walnuts', snack: 'Roasted Chana 25g', drink: 'Majjiga 200ml', eve: 'Makhana Masala + 1 tbsp Chia Seeds', din: '2 Chapathi + Mealmaker Curry + Salad (cucumber+tomato+carrot)', bfCal: 431, dinCal: 435 },
+  4: { label: 'Protein Peak', bf: 'Sambar Idli (2) + Egg Curry', snack: 'Sprouts + Lemon 80g', drink: 'Sattu drink', eve: 'Chana + Cucumber', din: '2 Chapathi + Chicken Curry + Salad (cucumber+tomato+carrot)', bfCal: 420, dinCal: 455 },
+  5: { label: 'Light Day', bf: 'Egg Dosa (2) + Sambar', snack: 'Putnalu 25g', drink: 'Majjiga 200ml', eve: 'Peanut Chaat 18g', din: 'Rajma Yogurt Bowl + 1 Boiled Egg', bfCal: 450, dinCal: 430 },
+  6: { label: 'Variety Day', bf: 'Masala Oats Upma + 2 Eggs', snack: 'Mixed Nuts 20g', drink: 'Sattu drink', eve: 'Chana + Cucumber', din: '2 Chapathi + Paneer Curry + Salad (cucumber+tomato+carrot)', bfCal: 365, dinCal: 545 },
+  0: { label: 'Rest Day', bf: 'Sprouts Chaat + Paneer', snack: 'Mixed Nuts 20g', drink: 'Majjiga 200ml', eve: 'Groundnut 18g + 1 tbsp Chia Seeds', din: '2 Chapathi + Egg Curry + Salad (cucumber+tomato+carrot)', bfCal: 365, dinCal: 465 },
+};
+const m = MEALS[DOW] || MEALS[1];
+const mealDiv = document.getElementById('today-meals');
+mealDiv.innerHTML = [
+  { icon:'🍳', name: m.bf, sub: 'Breakfast · 9:10 AM · Egg curry FIRST', cal: m.bfCal + ' kcal' },
+  { icon:'🥜', name: m.snack, sub: 'Morning snack · 11:00 AM', cal: '' },
+  { icon:'🍛', name: 'Lunch — Rasam first · ¾ cup rice', sub: 'Lunch · 1:00 PM · Follow plate order', cal: '~600 kcal' },
+  { icon:'🥛', name: m.drink, sub: 'Afternoon drink · 2:00 PM · Room temp', cal: '' },
+  { icon:'🍿', name: m.eve, sub: 'Evening snack · 5:30 PM · Pre-treadmill', cal: '' },
+  { icon:'🌙', name: m.din, sub: 'Dinner · 7:50 PM · Done by 8:30 PM', cal: m.dinCal + ' kcal' },
+].map(item => `
+  <div class="flex items-center gap-3 bg-surface-container-low rounded-xl px-3 py-2.5">
+    <span class="text-base">${item.icon}</span>
+    <div class="flex-1 min-w-0">
+      <div class="text-[12px] font-semibold text-on-surface truncate">${item.name}</div>
+      <div class="text-[10px] text-on-surface-variant">${item.sub}</div>
+    </div>
+    ${item.cal ? `<span class="font-mono text-[10px] text-primary font-bold flex-shrink-0">${item.cal}</span>` : ''}
+  </div>`).join('');
+
+// ─────────────────────────────────────────────
+//  WEIGHT FROM STORAGE
+// ─────────────────────────────────────────────
+try {
+  const weights = JSON.parse(localStorage.getItem('t100_weights') || '[]');
+  if (weights.length > 0) {
+    const latest = weights[weights.length - 1];
+    const lostKg = (START_WEIGHT - latest.wt).toFixed(1);
+    const wtPct = Math.min(100, Math.round((START_WEIGHT - latest.wt) / TOTAL_LOSS * 100));
+    document.getElementById('wt-bar').style.width = Math.max(0, wtPct) + '%';
+    document.getElementById('wt-pct-label').textContent = wtPct + '% done';
+    document.getElementById('wt-last-label').textContent = 'Last: ' + latest.wt + ' kg (' + (lostKg > 0 ? '-' + lostKg : '+' + Math.abs(lostKg)) + ')';
+    // Next weigh-in = next Monday
+    const nextMon = new Date(today);
+    const daysToMon = (1 - today.getDay() + 7) % 7 || 7;
+    nextMon.setDate(today.getDate() + daysToMon);
+    document.getElementById('wt-next-date').textContent = fmt(nextMon);
+    document.getElementById('wt-status').innerHTML = `<span class="text-[12px] text-on-surface-variant">Current: <span class="text-primary font-semibold">${latest.wt} kg</span> · Lost: <span class="text-wellness-teal font-semibold">${lostKg > 0 ? '-' + lostKg : lostKg} kg</span> · Next log: <span class="text-primary font-semibold">${fmt(nextMon)}</span></span>`;
+  }
+} catch(e) {}
+
+// ─────────────────────────────────────────────
+//  NEXT EVENT (time-aware)
+// ─────────────────────────────────────────────
+const EVENTS = [
+  {tm:8*60,   em:'💧', name:'Morning Water', desc:'2 glasses warm water — 400ml. Before phone. 7.5 hrs dehydrated.', tag:'8:00 AM'},
+  {tm:8*60+10,em:'🌿', name:'Morning Drink', desc:'Methi+ginger+turmeric+amla. Warm. Empty stomach. HbA1c anchor.', tag:'8:10 AM'},
+  {tm:8*60+20,em:'🧘', name:'Morning Stretch', desc:'10 min — neck rolls → overhead stretch → side bends → twists → cat-cow.', tag:'8:20 AM'},
+  {tm:8*60+50,em:'💧', name:'Pre-Breakfast Water', desc:'250ml — 20 min before breakfast. Reduces intake 10–15%.', tag:'8:50 AM'},
+  {tm:9*60+10,em:'🍳', name:'Breakfast', desc:m.bf + ' — protein FIRST.', tag:'9:10 AM'},
+  {tm:9*60+40,em:'🚶', name:'Post-Breakfast Walk', desc:'10 min within 30 min of finishing. Indoors OK. Glucose −22%.', tag:'9:40 AM'},
+  {tm:10*60+30,em:'💧', name:'Mid-Morning Water', desc:'250ml. Running total: ~900ml.', tag:'10:30 AM'},
+  {tm:11*60,  em:'🥜', name:'Morning Snack', desc:m.snack + ' — pre-portioned bowl. Never from the packet.', tag:'11:00 AM'},
+  {tm:11*60+30,em:'🍵', name:'Green Tea', desc:'Plain, no sugar. Max 1 cup. Never after 2 PM.', tag:'11:30 AM'},
+  {tm:12*60+40,em:'💧', name:'Pre-Lunch Water', desc:'250ml — 20 min before lunch. Total ~1.15L.', tag:'12:40 PM'},
+  {tm:13*60,  em:'🍛', name:'Lunch', desc:'Rasam FIRST → ¾ cup rice → dal → veg → protein → curd. No second rice.', tag:'1:00 PM'},
+  {tm:13*60+45,em:'🚶', name:'Post-Lunch Walk', desc:'10 min. Eliminates 3 PM crash. Glucose −22%.', tag:'1:45 PM'},
+  {tm:14*60,  em:'🥛', name:'Afternoon Drink', desc:m.drink + ' — Room temperature always.', tag:'2:00 PM'},
+  {tm:15*60+30,em:'💧', name:'Afternoon Water', desc:'250ml. Most dehydrated at 3–4 PM. Total ~1.65L.', tag:'3:30 PM'},
+  {tm:17*60,  em:'💧', name:'Pre-Snack Water', desc:'250ml. Pre-hydrates for treadmill. Total ~1.9L.', tag:'5:00 PM'},
+  {tm:17*60+30,em:'🍿', name:'Evening Snack', desc:m.eve + ' — ready BEFORE craving peaks. 30 min gap before treadmill.', tag:'5:30 PM'},
+  {tm:18*60,  em:'🏃', name:'Treadmill', desc:'7 km/h · 35 min. Warm up 4 min first. ~302 kcal burn.', tag:'6:00 PM'},
+  {tm:18*60+45,em:'💧', name:'Post-Treadmill Water', desc:'300–500ml room temp. Sip slowly. NEVER cold water.', tag:'6:45 PM'},
+  {tm:18*60+55,em:'🌙', name:'Golden Milk', desc:'200ml warm milk + turmeric + black pepper. No sugar.', tag:'6:55 PM'},
+  {tm:19*60+30,em:'🥗', name:'Pre-Dinner Salad + Water', desc:'250ml + cucumber-tomato-onion salad. Eat slowly before dinner.', tag:'7:30 PM'},
+  {tm:19*60+50,em:'🍽️', name:'Dinner', desc:m.din + ' — DONE BY 8:30 PM. Hard stop.', tag:'7:50 PM'},
+  {tm:20*60+35,em:'🚶', name:'Post-Dinner Walk', desc:'10 min. Most impactful walk. Writes HbA1c down every night.', tag:'8:35 PM'},
+  {tm:20*60+50,em:'💪', name:'Core / Breathing', desc:'Mon/Wed/Fri: plank+crunches+leg raises. Other nights: breathing 5 min.', tag:'8:50 PM'},
+  {tm:21*60+10,em:'✅', name:'Fill Checklist', desc:'90 seconds. Tap done or missed. Score updates live.', tag:'9:10 PM'},
+  {tm:21*60+15,em:'🫖', name:'Herbal Tea', desc:'Chamomile/ashwagandha. No sugar. Lowers cortisol (belly fat driver).', tag:'9:15 PM'},
+  {tm:22*60,  em:'📵', name:'Screens Off', desc:'All screens — phone, laptop, TV. Blue light kills melatonin for 2+ hrs.', tag:'10:00 PM'},
+  {tm:22*60+30,em:'😴', name:'Sleep', desc:'7–7.5 hrs. GH peaks first 90 min — this is when treadmill converts to fat loss.', tag:'10:30 PM'},
+];
+
+const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
+const next = EVENTS.find(e => e.tm > nowMins) || EVENTS[0];
+const diffM = next.tm - nowMins;
+const timeLeft = diffM <= 0 ? 'coming up' : diffM < 60 ? 'in ' + diffM + ' min' : 'in ' + Math.floor(diffM/60) + 'h ' + (diffM%60) + 'm';
+
+document.getElementById('next-name').textContent = next.name + ' ' + next.em;
+document.getElementById('next-desc').textContent = next.desc;
+document.getElementById('next-tag').textContent = next.tag;
+document.getElementById('next-time-left').textContent = timeLeft;
+document.getElementById('next-emoji').textContent = next.em;
+</script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0,viewport-fit=cover" name="viewport"/>
+<title>Meals — Transform 100</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-gray":"#F8FAFC","surface":"#f9f9ff","surface-container-lowest":"#ffffff","surface-container-low":"#f3f3fa","surface-container":"#ededf5","surface-container-high":"#e8e7ef","on-surface":"#1a1b21","on-surface-variant":"#3c4a43","primary":"#006c51","on-primary":"#ffffff","primary-container":"#2dd4a4","on-primary-container":"#005740","secondary":"#005fad","secondary-container":"#4b9dfd","on-secondary-container":"#003462","wellness-teal":"#2DD4A4","progress-blue":"#4D9FFF","achievement-gold":"#E8A020","strict-red":"#FF5E5B","border-subtle":"#E2E8F0","inverse-surface":"#2e3036","inverse-on-surface":"#f0f0f8"}}}}</script>
+<style>
+.ms{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}
+.ms-f{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.gh{background:rgba(255,255,255,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.gn{background:rgba(249,249,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.tab-btn{transition:all .2s;cursor:pointer}
+.tab-btn.active{background:#006c51;color:#fff;box-shadow:0 2px 8px rgba(0,108,81,.25)}
+.day-card{cursor:pointer;transition:all .2s}
+.day-card.active{border-color:#006c51;background:rgba(0,108,81,.04)}
+.meal-section{display:none}
+.meal-section.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fu .3s ease-out forwards}
+body{min-height:max(844px,100dvh)}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:#E2E8F0;border-radius:10px}
+</style>
+</head>
+<body class="bg-surface-gray text-on-surface" style="font-family:Inter,system-ui,sans-serif">
+
+<header class="fixed top-0 w-full z-50 gh border-b border-border-subtle h-16 flex items-center justify-between px-5 max-w-lg mx-auto left-0 right-0">
+  <div class="flex items-center gap-3">
+    <a href="index.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center transition-colors">
+      <span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span>
+    </a>
+    <div>
+      <div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest leading-none">Avg 1,933 kcal · 84g protein</div>
+      <div class="text-[14px] font-semibold text-on-surface">Meals & Plan</div>
+    </div>
+  </div>
+  <div class="font-mono text-[11px] text-on-surface-variant bg-surface-container px-3 py-1.5 rounded-full">Week 1</div>
+</header>
+
+<main class="pt-20 pb-28 max-w-lg mx-auto px-4">
+
+  <!-- Day selector -->
+  <div class="flex gap-1.5 overflow-x-auto pb-2 mb-4 custom-scroll">
+    <button onclick="setDay('mon')" id="day-mon" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white active">
+      <span class="font-mono font-bold text-[11px] text-primary">MON</span>
+      <span class="font-mono text-[10px] text-on-surface-variant">6 Jul</span>
+      <span class="text-[9px] text-achievement-gold font-bold">Today</span>
+    </button>
+    <button onclick="setDay('tue')" id="day-tue" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
+      <span class="font-mono font-bold text-[11px] text-on-surface-variant">TUE</span>
+      <span class="font-mono text-[10px] text-on-surface-variant">7 Jul</span>
+      <span class="text-[9px] text-on-surface-variant">Omega-3</span>
+    </button>
+    <button onclick="setDay('wed')" id="day-wed" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
+      <span class="font-mono font-bold text-[11px] text-on-surface-variant">WED</span>
+      <span class="font-mono text-[10px] text-on-surface-variant">8 Jul</span>
+      <span class="text-[9px] text-on-surface-variant">Veg day</span>
+    </button>
+    <button onclick="setDay('thu')" id="day-thu" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
+      <span class="font-mono font-bold text-[11px] text-on-surface-variant">THU</span>
+      <span class="font-mono text-[10px] text-on-surface-variant">9 Jul</span>
+      <span class="text-[9px] text-on-surface-variant">Protein pk</span>
+    </button>
+    <button onclick="setDay('fri')" id="day-fri" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
+      <span class="font-mono font-bold text-[11px] text-on-surface-variant">FRI</span>
+      <span class="font-mono text-[10px] text-on-surface-variant">10 Jul</span>
+      <span class="text-[9px] text-on-surface-variant">Light day</span>
+    </button>
+    <button onclick="setDay('sat')" id="day-sat" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
+      <span class="font-mono font-bold text-[11px] text-on-surface-variant">SAT</span>
+      <span class="font-mono text-[10px] text-on-surface-variant">11 Jul</span>
+      <span class="text-[9px] text-on-surface-variant">Variety</span>
+    </button>
+    <button onclick="setDay('sun')" id="day-sun" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
+      <span class="font-mono font-bold text-[11px] text-on-surface-variant">SUN</span>
+      <span class="font-mono text-[10px] text-on-surface-variant">12 Jul</span>
+      <span class="text-[9px] text-wellness-teal">Rest day</span>
+    </button>
+  </div>
+
+  <!-- Tab buttons -->
+  <div class="flex gap-2 mb-4">
+    <button onclick="setTab('today')" id="tab-today" class="tab-btn active flex-1 py-2 rounded-xl text-[12px] font-semibold border border-border-subtle">Today's Plan</button>
+    <button onclick="setTab('bank')" id="tab-bank" class="tab-btn flex-1 py-2 rounded-xl text-[12px] font-semibold bg-white border border-border-subtle text-on-surface-variant">Meal Bank</button>
+    <button onclick="setTab('rules')" id="tab-rules" class="tab-btn flex-1 py-2 rounded-xl text-[12px] font-semibold bg-white border border-border-subtle text-on-surface-variant">Plate Rules</button>
+  </div>
+
+  <!-- TODAY'S PLAN TAB -->
+  <div id="section-today" class="meal-section active space-y-3 fu">
+
+    <!-- Day header -->
+    <div id="day-header" class="bg-primary rounded-[20px] px-5 py-4 text-white">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-0.5">Monday · Reset Day</div>
+          <div class="font-bold text-[16px]">Sambar Idli + Egg + Majjiga</div>
+        </div>
+        <div class="text-right">
+          <div class="font-mono font-bold text-[18px] text-wellness-teal">1,861</div>
+          <div class="text-[10px] text-white/60">kcal · 75g prot</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Non-negotiable morning -->
+    <div class="bg-white rounded-[20px] border border-border-subtle p-4">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-[16px]">🌿</div>
+        <div>
+          <div class="font-semibold text-[13px]">8:10 AM — Morning drink</div>
+          <div class="text-[11px] text-achievement-gold font-mono font-bold uppercase">Non-negotiable · Every day</div>
+        </div>
+        <span class="ml-auto font-mono text-[11px] text-on-surface-variant">8 kcal</span>
+      </div>
+      <p class="text-[12px] text-on-surface-variant leading-relaxed">1 tsp soaked methi + boiled ginger + ¼ tsp turmeric + pinch black pepper + 20ml amla juice. Warm. Empty stomach.</p>
+    </div>
+
+    <!-- Breakfast -->
+    <div class="bg-white rounded-[20px] border border-border-subtle p-4">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-8 h-8 rounded-full bg-achievement-gold/15 flex items-center justify-center text-[16px]">🍳</div>
+        <div>
+          <div class="font-semibold text-[13px]">9:10 AM — Breakfast</div>
+          <div class="text-[11px] text-on-surface-variant font-mono">Egg curry FIRST · then idli</div>
+        </div>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary">420 kcal</span>
+      </div>
+      <div class="bg-surface-container-low rounded-xl p-3 mb-2">
+        <div class="font-semibold text-[13px] mb-1">Sambar Idli (2) + Egg Curry</div>
+        <div class="text-[12px] text-on-surface-variant leading-relaxed">2 steamed idli + 1 cup sambar unlimited + coconut chutney 1.5 tbsp max. 2-egg curry (light Andhra masala, 1 tsp oil). <strong class="text-primary">Eat egg curry FIRST then idli. Idli hard cap: 2 pieces.</strong></div>
+      </div>
+      <div class="flex gap-2">
+        <span class="text-[10px] font-mono bg-wellness-teal/10 text-wellness-teal px-2 py-0.5 rounded-full font-bold">23g protein</span>
+        <span class="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">GI ~40</span>
+        <span class="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">2 roti limit</span>
+      </div>
+    </div>
+
+    <!-- Morning snack -->
+    <div class="bg-white rounded-[20px] border border-border-subtle p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-[16px]">🥜</div>
+        <div>
+          <div class="font-semibold text-[13px]">11:00 AM — Morning snack</div>
+          <div class="text-[11px] text-on-surface-variant font-mono">Pre-portioned · never from packet</div>
+        </div>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary">95 kcal</span>
+      </div>
+      <div class="text-[12px] text-on-surface-variant">Roasted Chana 25g · lemon + green chilli + pinch salt · GI 28</div>
+    </div>
+
+    <!-- Lunch -->
+    <div class="bg-white rounded-[20px] border border-border-subtle p-4">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-8 h-8 rounded-full bg-progress-blue/15 flex items-center justify-center text-[16px]">🍛</div>
+        <div>
+          <div class="font-semibold text-[13px]">1:00 PM — Lunch (flexible)</div>
+          <div class="text-[11px] text-on-surface-variant font-mono">Rasam FIRST · always</div>
+        </div>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary">~600 kcal</span>
+      </div>
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2 text-[12px]"><span class="w-5 h-5 rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">1</span><span class="text-on-surface-variant">Rasam — 1 bowl <span class="text-primary font-semibold">FIRST</span></span></div>
+        <div class="flex items-center gap-2 text-[12px]"><span class="w-5 h-5 rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">2</span><span class="text-on-surface-variant">Rice — ¾ cup max (120g level)</span></div>
+        <div class="flex items-center gap-2 text-[12px]"><span class="w-5 h-5 rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">3</span><span class="text-on-surface-variant">Dal/pappu — 1 cup · don't skip</span></div>
+        <div class="flex items-center gap-2 text-[12px]"><span class="w-5 h-5 rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">4</span><span class="text-on-surface-variant">Fish / chicken / egg — 100–150g</span></div>
+        <div class="flex items-center gap-2 text-[12px]"><span class="w-5 h-5 rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">5</span><span class="text-on-surface-variant">Curd 100g + <strong class="text-primary">salad: cucumber 100g + tomato 100g + carrot 50g</strong> (mandatory, not optional)</span></div>
+      </div>
+      <div class="mt-2 flex gap-2 flex-wrap">
+        <span class="text-[10px] font-mono bg-progress-blue/10 text-progress-blue px-2 py-0.5 rounded-full font-bold">+3.2g fiber every day</span>
+        <span class="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">~25 kcal only</span>
+        <span class="text-[10px] font-mono bg-achievement-gold/10 text-achievement-gold px-2 py-0.5 rounded-full">HbA1c impact</span>
+      </div>
+    </div>
+
+    <!-- Afternoon drink -->
+    <div class="bg-white rounded-[20px] border border-border-subtle p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-[16px]">🥛</div>
+        <div>
+          <div class="font-semibold text-[13px]">2:00 PM — Afternoon drink</div>
+          <div class="text-[11px] text-on-surface-variant font-mono">Mon/Wed/Fri/Sun → Majjiga</div>
+        </div>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary">50 kcal</span>
+      </div>
+      <div class="text-[12px] text-on-surface-variant">Majjiga — homemade buttermilk 200ml · mustard + curry leaves + ginger + green chilli + sendha namak. <strong class="text-strict-red">Room temperature always.</strong></div>
+      <div class="mt-1.5 text-[11px] text-on-surface-variant bg-surface-container-low rounded-lg px-3 py-1.5">Tue/Thu/Sat → Sattu drink · 2 tbsp + water + salt + jeera + lemon · 85 kcal · 8g protein</div>
+    </div>
+
+    <!-- Evening snack -->
+    <div class="bg-white rounded-[20px] border border-border-subtle p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-full bg-achievement-gold/15 flex items-center justify-center text-[16px]">🍿</div>
+        <div>
+          <div class="font-semibold text-[13px]">5:30 PM — Evening snack</div>
+          <div class="text-[11px] text-on-surface-variant font-mono">Pre-treadmill fuel · 30 min gap</div>
+        </div>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary">78 kcal</span>
+      </div>
+      <div class="text-[12px] text-on-surface-variant">Roasted Makhana Masala 25g + <strong class="text-primary">1 tbsp chia seeds</strong> — sprinkle chia on makhana (soak 5 min first or sprinkle direct). Pre-roasted Sunday. Chilli powder + chaat masala + black salt. Have it <strong class="text-on-surface">in hand before craving peaks.</strong></div>
+      <div class="mt-2 flex gap-2 flex-wrap">
+        <span class="text-[10px] font-mono bg-progress-blue/10 text-progress-blue px-2 py-0.5 rounded-full">+3.4g fiber</span>
+        <span class="text-[10px] font-mono bg-wellness-teal/10 text-wellness-teal px-2 py-0.5 rounded-full">+1.8g omega-3</span>
+        <span class="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">+37 kcal</span>
+      </div>
+    </div>
+
+    <!-- Dinner -->
+    <div class="bg-white rounded-[20px] border-2 border-primary/20 p-4">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-[16px]">🌙</div>
+        <div>
+          <div class="font-semibold text-[13px]">7:50 PM — Dinner</div>
+          <div class="text-[11px] text-strict-red font-mono font-bold">Done by 8:30 PM · No rice</div>
+        </div>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary">465 kcal</span>
+      </div>
+      <div class="bg-primary/5 rounded-xl p-3 mb-2">
+        <div class="font-semibold text-[13px] mb-1">2 Multigrain Chapathi + Egg Curry + Salad</div>
+        <div class="text-[12px] text-on-surface-variant leading-relaxed">2 chapathi (80% wheat + 10% jowar + 10% ragi dough) + 2-egg curry (tomato-onion base, 1 tsp oil total) + cucumber-tomato-onion salad.</div>
+      </div>
+      <div class="flex gap-2">
+        <span class="text-[10px] font-mono bg-wellness-teal/10 text-wellness-teal px-2 py-0.5 rounded-full font-bold">21g protein</span>
+        <span class="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">GI ~40</span>
+        <span class="text-[10px] font-mono bg-strict-red/10 text-strict-red px-2 py-0.5 rounded-full font-bold">8:30 PM hard stop</span>
+      </div>
+    </div>
+
+    <!-- Day totals -->
+    <div class="bg-surface-container rounded-[20px] p-4">
+      <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant mb-3">Monday totals</div>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="bg-white rounded-xl p-3 text-center"><div class="font-mono font-bold text-[16px] text-primary">1,898</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kcal food</div></div>
+        <div class="bg-white rounded-xl p-3 text-center"><div class="font-mono font-bold text-[16px] text-wellness-teal">76g</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">protein</div></div>
+        <div class="bg-white rounded-xl p-3 text-center"><div class="font-mono font-bold text-[16px] text-progress-blue">~899</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kcal deficit</div></div>
+      </div>
+    </div>
+
+    <!-- 4-Macro Grid Card -->
+    <div class="bg-white rounded-[20px] border border-border-subtle p-4">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-[16px]">📊</span>
+        <span class="font-semibold text-[13px]">4-Macro daily check</span>
+        <span class="ml-auto text-[10px] font-mono bg-wellness-teal/10 text-wellness-teal px-2 py-0.5 rounded-full font-bold">Updated</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <div class="bg-wellness-teal/8 rounded-xl p-3">
+          <div class="text-[10px] font-mono text-wellness-teal font-bold uppercase mb-1">🥩 Protein</div>
+          <div class="font-mono font-bold text-[15px] text-on-surface">~83g avg</div>
+          <div class="text-[10px] text-on-surface-variant mt-0.5">Target 90g · Sources: eggs, dal, curd, fish/chicken/paneer</div>
+        </div>
+        <div class="bg-progress-blue/8 rounded-xl p-3">
+          <div class="text-[10px] font-mono text-progress-blue font-bold uppercase mb-1">🌾 Fiber</div>
+          <div class="font-mono font-bold text-[15px] text-on-surface">~26g avg</div>
+          <div class="text-[10px] text-on-surface-variant mt-0.5">Target 35g · +chia seeds +lunch salad mandate</div>
+        </div>
+        <div class="bg-achievement-gold/8 rounded-xl p-3">
+          <div class="text-[10px] font-mono text-achievement-gold font-bold uppercase mb-1">🥑 Good Fat</div>
+          <div class="font-mono font-bold text-[15px] text-on-surface">~30g avg</div>
+          <div class="text-[10px] text-on-surface-variant mt-0.5">Target 40g · MUFA: peanut · Omega-3: fish, flax · Dairy: curd</div>
+        </div>
+        <div class="bg-surface-container rounded-xl p-3">
+          <div class="text-[10px] font-mono text-on-surface-variant font-bold uppercase mb-1">🌾 Carbs</div>
+          <div class="font-mono font-bold text-[15px] text-on-surface">~170g avg</div>
+          <div class="text-[10px] text-on-surface-variant mt-0.5">Target 185g ✅ · Low-GI: oats, pesarattu, chapathi</div>
+        </div>
+      </div>
+      <!-- Per-day fix notes -->
+      <div class="space-y-2">
+        <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant mb-1">Day-specific fixes applied</div>
+        <div class="flex items-start gap-2 text-[11px]"><span class="text-wellness-teal font-bold flex-shrink-0">MON/WED/SUN</span><span class="text-on-surface-variant">Makhana + 1 tbsp chia seeds → +3.4g fiber, +1.8g omega-3 per day</span></div>
+        <div class="flex items-start gap-2 text-[11px]"><span class="text-progress-blue font-bold flex-shrink-0">ALL DAYS</span><span class="text-on-surface-variant">Lunch salad mandatory: cucumber 100g + tomato 100g + carrot 50g → +3.2g fiber daily</span></div>
+        <div class="flex items-start gap-2 text-[11px]"><span class="text-achievement-gold font-bold flex-shrink-0">WED</span><span class="text-on-surface-variant">Add 6 walnuts to pesarattu breakfast → +3g fat, +1.5g omega-3 (fixes Veg Day fat gap)</span></div>
+        <div class="flex items-start gap-2 text-[11px]"><span class="text-strict-red font-bold flex-shrink-0">FRI</span><span class="text-on-surface-variant">Yogurt bowl + ½ cup rajma → +7g fiber, +6g protein (fixes worst fiber day)</span></div>
+        <div class="flex items-start gap-2 text-[11px]"><span class="text-primary font-bold flex-shrink-0">SAT/SUN</span><span class="text-on-surface-variant">Morning snack: mixed nuts 20g instead of plain makhana → +10g fat, +1.5g fiber</span></div>
+      </div>
+      <!-- Isabgol tip -->
+      <div class="mt-3 bg-primary/5 border border-primary/15 rounded-xl px-3 py-2.5">
+        <div class="text-[11px] text-on-surface-variant leading-relaxed"><span class="text-primary font-semibold">Isabgol tip (Fri/Sun):</span> 1 tsp psyllium husk (isabgol) in 1 glass water before dinner → +3.5g soluble fiber, directly reduces overnight glucose and next-morning fasting levels. ₹2/day. Maximum HbA1c ROI of any single action.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MEAL BANK TAB -->
+  <div id="section-bank" class="meal-section space-y-4 fu">
+    <div class="bg-primary/5 border border-primary/15 rounded-[20px] p-4">
+      <div class="font-semibold text-[13px] text-primary mb-1">🍳 Breakfast Bank — 22 options</div>
+      <div class="text-[12px] text-on-surface-variant">Idli 2×/wk · Dosa 2×/wk · Pesarattu 1×/wk · Oats upma 1×/wk · Smoothie/bowl 1×/wk. Protein cap: 1.5 tbsp chutney, 1 tsp oil per dosa.</div>
+    </div>
+    <!-- Breakfast options -->
+    <div class="space-y-2">
+      <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant px-1">Traditional (weekly anchors)</div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">Sambar Idli (2) + Egg Curry</div><div class="text-[11px] text-on-surface-variant mt-0.5">2 idli + unlimited sambar + egg curry. Egg FIRST. Chutney ≤1.5 tbsp.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">420 kcal</div><div class="text-[10px] text-wellness-teal font-mono">23g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Mon/Thu</span><span class="text-[9px] bg-achievement-gold/10 text-achievement-gold px-2 py-0.5 rounded-full font-mono font-bold">GI ~40</span></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">Egg Dosa (2) + Sambar</div><div class="text-[11px] text-on-surface-variant mt-0.5">2 dosa on non-stick (1 tsp oil each) with eggs cracked directly on tawa. Sambar + 1 tbsp chutney.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">450 kcal</div><div class="text-[10px] text-wellness-teal font-mono">25g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Tue/Fri</span><span class="text-[9px] bg-achievement-gold/10 text-achievement-gold px-2 py-0.5 rounded-full font-mono font-bold">GI ~42</span></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">Pesarattu (2) + Hung Curd + 6 Walnuts</div><div class="text-[11px] text-on-surface-variant mt-0.5">Moong dal batter, 1 tsp oil per piece. Ginger chutney 2 tbsp + 100g hung curd. <strong class="text-primary">6 walnuts on the side</strong> — fixes Veg Day fat gap (+3g fat, +1.5g omega-3). Lowest GI traditional breakfast.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">431 kcal</div><div class="text-[10px] text-wellness-teal font-mono">25.5g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Wed</span><span class="text-[9px] bg-wellness-teal/15 text-wellness-teal px-2 py-0.5 rounded-full font-mono font-bold">GI ~32</span><span class="text-[9px] bg-progress-blue/10 text-progress-blue px-2 py-0.5 rounded-full font-mono">+omega-3</span></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">Masala Oats Upma + 2 Eggs</div><div class="text-[11px] text-on-surface-variant mt-0.5">¾ cup rolled oats upma (mustard+curry leaves+onion+carrot+chilli+1 tsp oil) + 2 eggs stirred in last 3 min. Home-made only — no packet sachets.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">365 kcal</div><div class="text-[10px] text-wellness-teal font-mono">20g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Sat</span><span class="text-[9px] bg-achievement-gold/10 text-achievement-gold px-2 py-0.5 rounded-full font-mono font-bold">GI ~38</span></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">Sprouts Chaat + Paneer</div><div class="text-[11px] text-on-surface-variant mt-0.5">1 cup mixed sprouted moong + chana + 100g paneer cubes + onion + tomato + cucumber + lemon. No cooking needed. Highest-protein breakfast at 33g.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">365 kcal</div><div class="text-[10px] text-wellness-teal font-mono">33g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Sun</span><span class="text-[9px] bg-wellness-teal/15 text-wellness-teal px-2 py-0.5 rounded-full font-mono font-bold">GI ~28</span></div></div>
+    </div>
+    <!-- Dinner bank -->
+    <div class="bg-primary/5 border border-primary/15 rounded-[20px] p-4 mt-2">
+      <div class="font-semibold text-[13px] text-primary mb-1">🌙 Dinner Bank — 22 options</div>
+      <div class="text-[12px] text-on-surface-variant">Rice-free 5+ nights/week. Protein mandatory. Done by 8:30 PM. Walk 10 min after.</div>
+    </div>
+    <div class="space-y-2">
+      <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant px-1">Weekly rotation dinners</div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">2 Chapathi + Egg Curry + Salad</div><div class="text-[11px] text-on-surface-variant mt-0.5">Multigrain chapathi (wheat+jowar+ragi). 2-egg curry tomato-onion base, 1 tsp oil. Salad unlimited.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">465 kcal</div><div class="text-[10px] text-wellness-teal font-mono">21g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Mon/Sun</span></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">2 Chapathi + Fish Curry + Salad</div><div class="text-[11px] text-on-surface-variant mt-0.5">150g fish curry (rohu/katla/surmai, Andhra masala, 1 tsp oil). Best omega-3 + Vitamin D dinner. Never deep-fried.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">450 kcal</div><div class="text-[10px] text-wellness-teal font-mono">29g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Tue</span><span class="text-[9px] bg-progress-blue/10 text-progress-blue px-2 py-0.5 rounded-full font-mono">Omega-3</span></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">2 Chapathi + Mealmaker Curry + Salad</div><div class="text-[11px] text-on-surface-variant mt-0.5">50g dry soya chunks soaked → Andhra masala, 1 tsp oil. Best protein-to-fat ratio dinner: 33g protein, only 4g fat.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">435 kcal</div><div class="text-[10px] text-wellness-teal font-mono">33g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Wed</span><span class="text-[9px] bg-wellness-teal/15 text-wellness-teal px-2 py-0.5 rounded-full font-mono">Only 4g fat</span></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">2 Chapathi + Chicken Curry + Salad</div><div class="text-[11px] text-on-surface-variant mt-0.5">150g breast preferred, tomato-onion base, 1 tsp oil, no cream. Best post-treadmill repair meal. Finish by 8:30 PM.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">455 kcal</div><div class="text-[10px] text-wellness-teal font-mono">33g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Thu</span><span class="text-[9px] bg-achievement-gold/10 text-achievement-gold px-2 py-0.5 rounded-full font-mono">Post-treadmill</span></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">Rajma Yogurt Bowl + 1 Boiled Egg</div><div class="text-[11px] text-on-surface-variant mt-0.5">150g hung curd + <strong class="text-primary">½ cup cooked rajma (red kidney beans)</strong> + 6 almonds + 2 walnuts + 1 tbsp chia seeds + pomegranate/guava. 1 boiled egg alongside. Rajma adds 7g fiber + 6g protein — fixes Friday's worst fiber gap day.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">430 kcal</div><div class="text-[10px] text-wellness-teal font-mono">30g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Fri</span><span class="text-[9px] bg-progress-blue/10 text-progress-blue px-2 py-0.5 rounded-full font-mono font-bold">+7g fiber</span><span class="text-[9px] bg-wellness-teal/15 text-wellness-teal px-2 py-0.5 rounded-full font-mono">+6g protein</span></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-3.5"><div class="flex items-start justify-between gap-2"><div><div class="font-semibold text-[13px]">2 Chapathi + Paneer Curry + Salad</div><div class="text-[11px] text-on-surface-variant mt-0.5">100g paneer — home-made ONLY. No cream, no butter. Tomato-onion base, 1 tsp oil max. Restaurant paneer = 700–850 kcal for same dish.</div></div><div class="text-right flex-shrink-0"><div class="font-mono text-[12px] font-bold text-primary">545 kcal</div><div class="text-[10px] text-wellness-teal font-mono">25g prot</div></div></div><div class="flex gap-1.5 mt-2"><span class="text-[9px] bg-surface-container px-2 py-0.5 rounded-full font-mono">Sat</span><span class="text-[9px] bg-strict-red/10 text-strict-red px-2 py-0.5 rounded-full font-mono">Home-made only</span></div></div>
+    </div>
+  </div>
+
+  <!-- PLATE RULES TAB -->
+  <div id="section-rules" class="meal-section space-y-3 fu">
+    <div class="bg-primary rounded-[20px] p-5 text-white">
+      <div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-1">These are not suggestions</div>
+      <div class="font-bold text-[16px] mb-2">Plate rules — follow all, not the convenient ones</div>
+      <div class="text-[12px] text-white/80">Habit-based weight loss outperforms calorie-counting by 2–3× over 12 weeks.</div>
+    </div>
+    <div class="space-y-2.5">
+      <div class="bg-white rounded-[16px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-achievement-gold/15 flex items-center justify-center text-achievement-gold font-bold text-[12px] flex-shrink-0 mt-0.5">1</div><div><div class="font-semibold text-[13px] mb-1">Protein first at every meal — always</div><div class="text-[12px] text-on-surface-variant leading-relaxed">Eat the protein component before the carb dish. Egg curry before idli. Curd before pesarattu. Protein-first ordering reduces post-breakfast glucose spike by <strong class="text-primary">28–38%.</strong></div></div></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-progress-blue/15 flex items-center justify-center text-progress-blue font-bold text-[12px] flex-shrink-0 mt-0.5">2</div><div><div class="font-semibold text-[13px] mb-1">Rasam or thin dal FIRST before rice</div><div class="text-[12px] text-on-surface-variant leading-relaxed">1 small bowl before rice — every single time. Liquid pre-load reduces total calorie intake by <strong class="text-primary">75–100 kcal per meal</strong> without conscious restriction.</div></div></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-wellness-teal/15 flex items-center justify-center text-wellness-teal font-bold text-[12px] flex-shrink-0 mt-0.5">3</div><div><div class="font-semibold text-[13px] mb-1">Rice: ¾ cup cooked (120g) — same bowl daily</div><div class="text-[12px] text-on-surface-variant leading-relaxed">Use the same measuring bowl every day so you stop measuring by eye. Restaurant rice portions are typically 2–3× this. No second serving.</div></div></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-[12px] flex-shrink-0 mt-0.5">4</div><div><div class="font-semibold text-[13px] mb-1">Rice-free 5 nights per week minimum</div><div class="text-[12px] text-on-surface-variant leading-relaxed">Evening insulin sensitivity is lowest — rice at 9 PM stores as fat more readily than rice at 1 PM. Same total carbs, earlier in the day.</div></div></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-strict-red/15 flex items-center justify-center text-strict-red font-bold text-[12px] flex-shrink-0 mt-0.5">5</div><div><div class="font-semibold text-[13px] mb-1">Stop eating by 8:30 PM — hard stop</div><div class="text-[12px] text-on-surface-variant leading-relaxed">Late eating raises fasting blood glucose by 4–8 mg/dL next morning. Each night of 8:30 PM cutoff directly writes your HbA1c number downward.</div></div></div></div>
+      <div class="bg-white rounded-[16px] border border-border-subtle p-4"><div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold text-[12px] flex-shrink-0 mt-0.5">6</div><div><div class="font-semibold text-[13px] mb-1">Hidden calorie traps to avoid</div><div class="text-[12px] text-on-surface-variant leading-relaxed">Coconut chutney: cap 1.5 tbsp (30 kcal difference). Oil on tawa: 1 tsp per dosa. Ghee roast/butter dosa: Sunday only. If hungry after portion: add sambar or egg — never a 4th idli or 3rd dosa.</div></div></div></div>
+    </div>
+  </div>
+
+</main>
+
+<nav class="fixed bottom-0 w-full z-50 gn border-t border-border-subtle rounded-t-2xl h-20 pb-3 px-2 flex justify-around items-center max-w-lg mx-auto left-0 right-0">
+  <a href="index.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">dashboard</span><span class="text-[9px] font-mono uppercase tracking-tighter">Home</span></a>
+  <a href="schedule.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">today</span><span class="text-[9px] font-mono uppercase tracking-tighter">Schedule</span></a>
+  <a href="meals.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl bg-primary-container text-on-primary-container"><span class="material-symbols-outlined ms-f text-[22px]">restaurant</span><span class="text-[9px] font-mono uppercase tracking-tighter">Meals</span></a>
+  <a href="tracker.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">analytics</span><span class="text-[9px] font-mono uppercase tracking-tighter">Tracker</span></a>
+  <a href="more.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">apps</span><span class="text-[9px] font-mono uppercase tracking-tighter">More</span></a>
+</nav>
+
+<script>
+const days={
+  mon:{label:'Monday · Reset Day',subtitle:'Sambar Idli + Egg + Majjiga + Chia',kcal:'1,893',prot:'76'},
+  tue:{label:'Tuesday · Omega-3 Day',subtitle:'Egg Dosa + Fish Curry + Sattu',kcal:'1,903',prot:'89'},
+  wed:{label:'Wednesday · Veg Day',subtitle:'Pesarattu + Walnuts + Mealmaker + Majjiga',kcal:'1,842',prot:'89'},
+  thu:{label:'Thursday · Protein Peak',subtitle:'Sambar Idli + Chicken + Sattu',kcal:'1,890',prot:'92'},
+  fri:{label:'Friday · Light Day',subtitle:'Egg Dosa + Rajma Yogurt Bowl + Majjiga',kcal:'1,891',prot:'90'},
+  sat:{label:'Saturday · Variety Day',subtitle:'Oats Upma + Mixed Nuts + Paneer + Sattu',kcal:'1,991',prot:'80'},
+  sun:{label:'Sunday · Rest Day',subtitle:'Sprouts Chaat + Mixed Nuts + Egg Curry + Majjiga + Chia',kcal:'1,913',prot:'88'}
+};
+function setDay(d){
+  document.querySelectorAll('.day-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('day-'+d).classList.add('active');
+  const data=days[d];
+  const h=document.getElementById('day-header');
+  h.querySelector('.font-bold.text-\\[16px\\]').textContent=data.subtitle;
+  h.querySelector('.font-mono.font-bold.text-\\[18px\\]').textContent=data.kcal;
+  h.querySelector('.font-mono.text-\\[10px\\]').textContent=data.label;
+  document.querySelector('#section-today .text-\\[10px\\].font-mono.uppercase.tracking-widest').textContent=data.label.split('·')[0].trim()+' totals';
+  document.querySelector('#section-today .font-mono.font-bold.text-\\[16px\\].text-primary').textContent=data.kcal;
+  document.querySelector('#section-today .font-mono.font-bold.text-\\[16px\\].text-wellness-teal').textContent=data.prot+'g';
+}
+function setTab(t){
+  document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active','bg-primary','text-white');b.classList.add('bg-white','text-on-surface-variant');});
+  document.querySelectorAll('.meal-section').forEach(s=>s.classList.remove('active'));
+  const btn=document.getElementById('tab-'+t);
+  btn.classList.add('active');btn.classList.remove('bg-white','text-on-surface-variant');
+  document.getElementById('section-'+t).classList.add('active');
+}
+</script>
+</body>
+</html>

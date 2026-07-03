@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0,viewport-fit=cover" name="viewport"/>
+<title>Weight Log — Transform 100</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-gray":"#F8FAFC","surface-container-low":"#f3f3fa","surface-container":"#ededf5","on-surface":"#1a1b21","on-surface-variant":"#3c4a43","primary":"#006c51","on-primary":"#ffffff","primary-container":"#2dd4a4","on-primary-container":"#005740","wellness-teal":"#2DD4A4","progress-blue":"#4D9FFF","achievement-gold":"#E8A020","strict-red":"#FF5E5B","border-subtle":"#E2E8F0","inverse-surface":"#2e3036","inverse-on-surface":"#f0f0f8"}}}}</script>
+<style>
+.ms{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}
+.ms-f{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.gh{background:rgba(255,255,255,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.gn{background:rgba(249,249,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+body{min-height:max(844px,100dvh)}
+</style>
+</head>
+<body class="bg-surface-gray text-on-surface" style="font-family:Inter,system-ui,sans-serif">
+<header class="fixed top-0 w-full z-50 gh border-b border-border-subtle h-16 flex items-center justify-between px-5 max-w-lg mx-auto left-0 right-0">
+  <div class="flex items-center gap-3">
+    <a href="more.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span></a>
+    <div><div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">Weekly · Mon 7:55 AM</div><div class="text-[14px] font-semibold">Weight Log</div></div>
+  </div>
+  <div class="font-mono text-[11px] bg-primary/10 text-primary px-3 py-1.5 rounded-full">82.3 → 75 kg</div>
+</header>
+<main class="pt-20 pb-28 max-w-lg mx-auto px-4 space-y-4">
+
+  <!-- Hero: current vs target -->
+  <div class="bg-primary rounded-[24px] p-5 text-white">
+    <div class="flex items-center justify-between mb-4">
+      <div><div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-1">Starting weight</div><div class="font-bold text-[32px] leading-none">82.3 <span class="text-[18px] font-normal text-white/60">kg</span></div></div>
+      <span class="material-symbols-outlined ms text-white/40 text-[28px]">arrow_forward</span>
+      <div class="text-right"><div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-1">Target weight</div><div class="font-bold text-[32px] leading-none text-wellness-teal">75.0 <span class="text-[18px] font-normal text-wellness-teal/70">kg</span></div></div>
+    </div>
+    <div class="bg-white/10 rounded-xl p-3">
+      <div class="flex justify-between text-[11px] text-white/60 font-mono mb-1.5"><span>82.3 kg</span><span>7.3 kg to lose</span><span>75.0 kg</span></div>
+      <div class="h-2 bg-white/15 rounded-full overflow-hidden"><div class="h-full bg-wellness-teal rounded-full" style="width:0%"></div></div>
+      <div class="text-center text-[11px] text-white/60 mt-1.5 font-mono">0% complete · 100 days ahead</div>
+    </div>
+  </div>
+
+  <!-- Log entry form -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5">
+    <div class="font-semibold text-[14px] mb-1">Log today's weight</div>
+    <div class="text-[12px] text-on-surface-variant mb-4">Before water, before food, after toilet. Same conditions every Monday.</div>
+    <div class="flex gap-3 mb-4">
+      <div class="flex-1">
+        <label class="text-[11px] text-on-surface-variant font-mono uppercase tracking-wide block mb-1.5">Weight (kg)</label>
+        <input id="wt-input" type="number" step="0.1" min="60" max="120" placeholder="82.3" class="w-full bg-surface-container-low border border-border-subtle rounded-xl px-4 py-3 font-mono font-bold text-[20px] text-on-surface text-center focus:outline-none focus:border-primary transition-colors"/>
+      </div>
+      <div class="flex-1">
+        <label class="text-[11px] text-on-surface-variant font-mono uppercase tracking-wide block mb-1.5">Belly (cm) — optional</label>
+        <input id="belly-input" type="number" step="0.5" placeholder="cm" class="w-full bg-surface-container-low border border-border-subtle rounded-xl px-4 py-3 font-mono font-bold text-[20px] text-on-surface text-center focus:outline-none focus:border-primary transition-colors"/>
+      </div>
+    </div>
+    <button onclick="logWeight()" class="w-full bg-primary text-white font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors">
+      <span class="material-symbols-outlined ms text-[20px]">save</span> Save weight entry
+    </button>
+  </div>
+
+  <!-- Analysis result (shown after entry) -->
+  <div id="analysis" class="hidden bg-white rounded-[24px] border border-border-subtle p-5">
+    <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant mb-3">Instant analysis</div>
+    <div id="analysis-content"></div>
+  </div>
+
+  <!-- Weigh-in schedule -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5">
+    <div class="font-semibold text-[14px] mb-3">13-week weigh-in schedule</div>
+    <div class="space-y-2">
+      <div class="flex items-center justify-between py-2 border-b border-border-subtle">
+        <div><div class="text-[12px] font-medium">Baseline log</div><div class="text-[11px] text-on-surface-variant">Before first treadmill session</div></div>
+        <span class="font-mono text-[11px] text-achievement-gold font-bold">Mon 6 Jul</span>
+      </div>
+      <div class="flex items-center justify-between py-2 border-b border-border-subtle">
+        <div><div class="text-[12px] font-medium">Week 1 check</div><div class="text-[11px] text-on-surface-variant">Expected: 81.5–81.8 kg</div></div>
+        <span class="font-mono text-[11px] text-on-surface-variant">Mon 13 Jul · 7:55 AM</span>
+      </div>
+      <div class="flex items-center justify-between py-2 border-b border-border-subtle">
+        <div><div class="text-[12px] font-medium">Week 4 — Phase 1 gate 🎯</div><div class="text-[11px] text-on-surface-variant">Target: 79.5–80.3 kg</div></div>
+        <span class="font-mono text-[11px] text-primary font-bold">Mon 27 Jul</span>
+      </div>
+      <div class="flex items-center justify-between py-2 border-b border-border-subtle">
+        <div><div class="text-[12px] font-medium">Week 9 — Phase 2 gate 🎯</div><div class="text-[11px] text-on-surface-variant">Target: 77–78.5 kg</div></div>
+        <span class="font-mono text-[11px] text-primary font-bold">Mon 24 Aug</span>
+      </div>
+      <div class="flex items-center justify-between py-2">
+        <div><div class="text-[12px] font-medium">Week 13 — Final result 🏆</div><div class="text-[11px] text-on-surface-variant">Target: 75 kg</div></div>
+        <span class="font-mono text-[11px] text-wellness-teal font-bold">Mon 5 Oct</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Weight history chart -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5">
+    <div class="flex items-center justify-between mb-4">
+      <div class="font-semibold text-[14px]">Weight history</div>
+      <button onclick="clearWeightLog()" class="text-[11px] text-strict-red font-mono hover:opacity-70">Clear log</button>
+    </div>
+    <div id="chart-area" class="relative h-40 mb-3">
+      <canvas id="weight-chart" style="width:100%;height:160px"></canvas>
+      <div id="chart-empty" class="absolute inset-0 flex items-center justify-center text-[12px] text-on-surface-variant">Log your first weight entry to see the chart</div>
+    </div>
+    <div id="weight-log-list" class="space-y-1.5 max-h-48 overflow-y-auto"></div>
+  </div>
+  <!-- Science note -->
+  <div class="bg-surface-container rounded-[20px] p-4">
+    <div class="font-semibold text-[12px] mb-2">Why weekly, not daily?</div>
+    <p class="text-[12px] text-on-surface-variant leading-relaxed">Body weight fluctuates 1–2.5 kg daily from water, food, hormones, and sodium. Daily weighing shows noise not fat loss. Stanford study (n=1,042): weekly weighers lost 2× more than daily weighers over 12 months on the same plan. Weekly = signal. Daily = noise + anxiety.</p>
+  </div>
+
+</main>
+<nav class="fixed bottom-0 w-full z-50 gn border-t border-border-subtle rounded-t-2xl h-20 pb-3 px-2 flex justify-around items-center max-w-lg mx-auto left-0 right-0">
+  <a href="index.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">dashboard</span><span class="text-[9px] font-mono uppercase tracking-tighter">Home</span></a>
+  <a href="schedule.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">today</span><span class="text-[9px] font-mono uppercase tracking-tighter">Schedule</span></a>
+  <a href="meals.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">restaurant</span><span class="text-[9px] font-mono uppercase tracking-tighter">Meals</span></a>
+  <a href="tracker.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">analytics</span><span class="text-[9px] font-mono uppercase tracking-tighter">Tracker</span></a>
+  <a href="more.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">apps</span><span class="text-[9px] font-mono uppercase tracking-tighter">More</span></a>
+</nav>
+<script>
+function logWeight(){
+  const wt=parseFloat(document.getElementById('wt-input').value);
+  if(!wt||wt<50||wt>150){alert('Please enter a valid weight between 50 and 150 kg.');return;}
+  const start=START_W,target=TARGET_W,loss=start-wt,pct=Math.round(loss/7.3*100);
+  const expected=82.3; // Day 1 baseline
+  const status=wt<=expected?'On track':'Review this week';
+  const div=document.getElementById('analysis-content');
+  div.innerHTML=`
+    <div class="grid grid-cols-3 gap-3 mb-3">
+      <div class="bg-surface-container-low rounded-xl p-3 text-center"><div class="font-mono font-bold text-[18px] text-${loss>0?'wellness-teal':'strict-red'}">${loss>0?'-'+loss.toFixed(1):'+'+Math.abs(loss).toFixed(1)}</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kg lost</div></div>
+      <div class="bg-surface-container-low rounded-xl p-3 text-center"><div class="font-mono font-bold text-[18px] text-progress-blue">${pct}%</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">of goal</div></div>
+      <div class="bg-surface-container-low rounded-xl p-3 text-center"><div class="font-mono font-bold text-[18px] text-primary">${(target-wt).toFixed(1)}</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kg remaining</div></div>
+    </div>
+    <div class="bg-primary/5 border border-primary/15 rounded-xl px-4 py-3"><div class="font-semibold text-[13px] text-primary mb-1">${status}</div><div class="text-[12px] text-on-surface-variant">BMI: ${(wt/3.1684).toFixed(1)} (target: 23.9 at 75 kg). Next weigh-in: Next Monday 7:55 AM.</div></div>`;
+  document.getElementById('analysis').classList.remove('hidden');
+  document.getElementById('wt-input').value='';
+  document.getElementById('belly-input').value='';
+}
+</script>
+
+<script>
+// Load setup
+let SETUP={};
+try{SETUP=JSON.parse(localStorage.getItem('t100_setup')||'{}');}catch(e){}
+if(!SETUP.setupDone){window.location.href='setup.html';}
+const START_W = SETUP.startWeight || 82.3;
+const TARGET_W = SETUP.targetWeight || 75.0;
+const USER_NAME = SETUP.name || 'Praveen';
+const START_DATE = SETUP.startDate || '2026-07-06';
+
+// Update hardcoded display values
+window.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.font-bold.text-\[32px\]').forEach(el=>{
+    const t=el.innerHTML;
+    if(t.includes('82.3')) el.innerHTML=t.replace('82.3', START_W.toFixed(1));
+    if(t.includes('75.0')) el.innerHTML=t.replace('75.0', TARGET_W.toFixed(1));
+  });
+  document.querySelectorAll('.font-mono').forEach(el=>{
+    if(el.textContent.trim()==='82.3 → 75 kg') el.textContent=START_W.toFixed(1)+' → '+TARGET_W.toFixed(1)+' kg';
+  });
+  // End date
+  const end=new Date(START_DATE);end.setDate(end.getDate()+99);
+  const endStr=end.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  document.querySelectorAll('span').forEach(el=>{if(el.textContent.includes('5 Oct'))el.textContent=endStr;});
+});
+
+const W_KEY = 't100_weights';
+function getWeights(){ try{return JSON.parse(localStorage.getItem(W_KEY)||'[]');}catch(e){return[];} }
+function saveWeights(arr){ try{localStorage.setItem(W_KEY,JSON.stringify(arr));}catch(e){} }
+
+function logWeight(){
+  const wt=parseFloat(document.getElementById('wt-input').value);
+  if(!wt||wt<50||wt>150){alert('Please enter a valid weight between 50 and 150 kg.');return;}
+  const belly=document.getElementById('belly-input').value;
+  const start=START_W,target=TARGET_W,loss=parseFloat((start-wt).toFixed(1)),pct=Math.round(loss/7.3*100);
+  // Save entry
+  const entries=getWeights();
+  const today=new Date().toISOString().slice(0,10);
+  const exists=entries.findIndex(e=>e.date===today);
+  const entry={date:today,wt:wt,belly:belly||null};
+  if(exists>=0) entries[exists]=entry; else entries.push(entry);
+  entries.sort((a,b)=>a.date.localeCompare(b.date));
+  saveWeights(entries);
+  // Show analysis
+  const div=document.getElementById('analysis-content');
+  const status=pct>=0?'On track':'Behind — review this week';
+  div.innerHTML='<div class="grid grid-cols-3 gap-3 mb-3"><div class="bg-surface-container-low rounded-xl p-3 text-center"><div class="font-mono font-bold text-[18px] text-'+(loss>0?'wellness-teal':'strict-red')+'">'+( loss>0?'-'+loss:'+'+Math.abs(loss))+'</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kg lost</div></div><div class="bg-surface-container-low rounded-xl p-3 text-center"><div class="font-mono font-bold text-[18px] text-progress-blue">'+pct+'%</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">of goal</div></div><div class="bg-surface-container-low rounded-xl p-3 text-center"><div class="font-mono font-bold text-[18px] text-primary">'+parseFloat((target-wt).toFixed(1))+'</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kg remaining</div></div></div><div class="bg-primary/5 border border-primary/15 rounded-xl px-4 py-3"><div class="font-semibold text-[13px] text-primary mb-1">'+status+'</div><div class="text-[12px] text-on-surface-variant">Current BMI: '+(wt/3.1684).toFixed(1)+' (target: 23.9 at 75 kg). Next weigh-in: Next Monday 7:55 AM.</div></div>';
+  document.getElementById('analysis').classList.remove('hidden');
+  document.getElementById('wt-input').value='';
+  document.getElementById('belly-input').value='';
+  renderChart();
+  renderList();
+}
+
+function renderChart(){
+  const entries=getWeights();
+  const canvas=document.getElementById('weight-chart');
+  const empty=document.getElementById('chart-empty');
+  if(!entries.length){empty.style.display='flex';return;}
+  empty.style.display='none';
+  const ctx=const target=TARGET_W,start=START_W;
+  canvas.getContext('2d');
+  const W=canvas.offsetWidth||300,H=160;
+  canvas.width=W;canvas.height=H;
+  // Target line at 75, start at 82.3
+  const allWts=[82.3,...entries.map(e=>e.wt),75];
+  const minW=Math.min(...allWts)-0.5,maxW=Math.max(...allWts)+0.5;
+  const xStep=entries.length>1?(W-40)/(entries.length-1):W-40;
+  const yScale=(H-30)/(maxW-minW);
+  // Grid
+  ctx.strokeStyle='#E2E8F0';ctx.lineWidth=1;
+  [82.3,80,78,76,75].forEach(w=>{
+    const y=H-10-(w-minW)*yScale;
+    ctx.beginPath();ctx.moveTo(30,y);ctx.lineTo(W,y);ctx.stroke();
+    ctx.fillStyle='#9ca3af';ctx.font='9px monospace';
+    ctx.fillText(w,2,y+3);
+  });
+  // Target line
+  const ty=H-10-(75-minW)*yScale;
+  ctx.strokeStyle='rgba(45,212,164,0.5)';ctx.setLineDash([4,3]);ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(30,ty);ctx.lineTo(W,ty);ctx.stroke();
+  ctx.setLineDash([]);
+  // Actual weight line
+  if(entries.length>=2){
+    ctx.strokeStyle='#006c51';ctx.lineWidth=2.5;ctx.lineJoin='round';
+    ctx.beginPath();
+    entries.forEach((e,i)=>{
+      const x=30+i*xStep,y=H-10-(e.wt-minW)*yScale;
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  }
+  // Dots
+  ctx.fillStyle='#006c51';
+  entries.forEach((e,i)=>{
+    const x=30+i*xStep,y=H-10-(e.wt-minW)*yScale;
+    ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#006c51';
+    if(entries.length<=8){ctx.font='9px monospace';ctx.fillText(e.wt,x-8,y-7);}
+  });
+}
+
+function renderList(){
+  const entries=getWeights().slice().reverse();
+  const div=document.getElementById('weight-log-list');
+  if(!entries.length){div.innerHTML='';return;}
+  div.innerHTML=entries.map((e,i)=>{
+    const prev=entries[i+1];
+    const diff=prev?parseFloat((e.wt-prev.wt).toFixed(1)):null;
+    const diffStr=diff!==null?(diff>0?'<span class="text-strict-red font-mono text-[10px]">+'+diff+'</span>':'<span class="text-wellness-teal font-mono text-[10px]">'+diff+'</span>'):'';
+    return '<div class="flex items-center justify-between py-1.5 border-b border-border-subtle last:border-0"><div class="font-mono text-[11px] text-on-surface-variant">'+e.date+'</div><div class="flex items-center gap-3"><span class="font-mono font-bold text-[13px]">'+e.wt+' kg</span>'+diffStr+'</div></div>';
+  }).join('');
+}
+
+function clearWeightLog(){
+  if(confirm('Clear all weight entries? This cannot be undone.')){
+    localStorage.removeItem(W_KEY);
+    document.getElementById('weight-log-list').innerHTML='';
+    document.getElementById('chart-empty').style.display='flex';
+    document.getElementById('analysis').classList.add('hidden');
+  }
+}
+
+// Load on page start
+renderChart();
+renderList();
+</script>
+</body>
+</html>

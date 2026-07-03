@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0,viewport-fit=cover" name="viewport"/>
+<title>Setup — Transform 100</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-gray":"#F8FAFC","surface-container-low":"#f3f3fa","surface-container":"#ededf5","on-surface":"#1a1b21","on-surface-variant":"#3c4a43","primary":"#006c51","on-primary":"#ffffff","primary-container":"#2dd4a4","on-primary-container":"#005740","wellness-teal":"#2DD4A4","progress-blue":"#4D9FFF","achievement-gold":"#E8A020","strict-red":"#FF5E5B","border-subtle":"#E2E8F0"}}}}</script>
+<style>
+.ms{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fu .4s ease-out forwards}
+.step{display:none}.step.active{display:block}
+input[type=range]{-webkit-appearance:none;height:6px;background:#E2E8F0;border-radius:3px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#006c51;cursor:pointer;box-shadow:0 2px 8px rgba(0,108,81,.3)}
+body{min-height:100dvh;background:#F8FAFC}
+</style>
+</head>
+<body style="font-family:Inter,system-ui,sans-serif">
+
+<!-- STEP INDICATOR -->
+<div class="fixed top-0 w-full z-50 bg-white border-b border-border-subtle px-5 py-3 max-w-lg mx-auto left-0 right-0">
+  <div class="flex items-center gap-2 mb-2">
+    <span class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">Setup</span>
+    <span class="ml-auto text-[10px] font-mono text-on-surface-variant" id="step-label">Step 1 of 4</span>
+  </div>
+  <div class="h-1.5 bg-surface-container rounded-full overflow-hidden">
+    <div id="progress-bar" class="h-full bg-primary rounded-full transition-all duration-500" style="width:25%"></div>
+  </div>
+</div>
+
+<main class="pt-16 pb-10 max-w-lg mx-auto px-5">
+
+  <!-- STEP 1: Welcome -->
+  <div id="step1" class="step active min-h-screen flex flex-col justify-center">
+    <div class="text-center mb-8 fu">
+      <div class="w-20 h-20 rounded-[28px] bg-primary flex items-center justify-center mx-auto mb-5 shadow-xl">
+        <span class="text-[40px]">🎯</span>
+      </div>
+      <div class="text-[28px] font-bold text-on-surface mb-2">Transform 100</div>
+      <div class="text-[15px] text-on-surface-variant">Your personal 100-day health mission app.<br/>Let's set it up for you in 60 seconds.</div>
+    </div>
+    <div class="space-y-3 mb-8 fu" style="animation-delay:.1s">
+      <div class="flex items-center gap-3 bg-white rounded-2xl border border-border-subtle p-4">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-[18px] flex-shrink-0">📅</div>
+        <div><div class="font-semibold text-[13px]">Your start date</div><div class="text-[11px] text-on-surface-variant">When you want your 100 days to begin</div></div>
+      </div>
+      <div class="flex items-center gap-3 bg-white rounded-2xl border border-border-subtle p-4">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-[18px] flex-shrink-0">⚖️</div>
+        <div><div class="font-semibold text-[13px]">Starting weight</div><div class="text-[11px] text-on-surface-variant">Your weight when you begin</div></div>
+      </div>
+      <div class="flex items-center gap-3 bg-white rounded-2xl border border-border-subtle p-4">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-[18px] flex-shrink-0">🏆</div>
+        <div><div class="font-semibold text-[13px]">Target weight</div><div class="text-[11px] text-on-surface-variant">Where you want to reach in 100 days</div></div>
+      </div>
+      <div class="flex items-center gap-3 bg-white rounded-2xl border border-border-subtle p-4">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-[18px] flex-shrink-0">👤</div>
+        <div><div class="font-semibold text-[13px]">Your name</div><div class="text-[11px] text-on-surface-variant">So the app feels personal</div></div>
+      </div>
+    </div>
+    <button onclick="nextStep()" class="w-full bg-primary text-white font-bold py-4 rounded-2xl text-[15px] shadow-lg hover:opacity-90 transition-opacity fu" style="animation-delay:.2s">
+      Let's set it up →
+    </button>
+    <!-- Quick fill for Praveen -->
+    <button onclick="fillPraveen()" class="w-full mt-3 bg-surface-container text-on-surface-variant font-semibold py-3 rounded-2xl text-[13px] hover:opacity-80 transition-opacity">
+      Use Praveen's plan (82.3 → 75 kg · 6 Jul 2026)
+    </button>
+  </div>
+
+  <!-- STEP 2: Name + Start date -->
+  <div id="step2" class="step min-h-screen flex flex-col justify-center">
+    <div class="mb-8">
+      <div class="text-[11px] font-mono text-primary uppercase tracking-widest mb-2">Step 1 of 3</div>
+      <div class="text-[24px] font-bold text-on-surface mb-1">Who are you?</div>
+      <div class="text-[14px] text-on-surface-variant">And when does your 100 days start?</div>
+    </div>
+    <div class="space-y-5">
+      <div>
+        <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest block mb-2">Your first name</label>
+        <input id="inp-name" type="text" placeholder="e.g. Praveen" maxlength="20"
+          class="w-full bg-white border-2 border-border-subtle rounded-2xl px-5 py-4 text-[18px] font-semibold text-on-surface focus:outline-none focus:border-primary transition-colors"/>
+      </div>
+      <div>
+        <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest block mb-2">Start date</label>
+        <input id="inp-start" type="date" min="2024-01-01" max="2030-12-31"
+          class="w-full bg-white border-2 border-border-subtle rounded-2xl px-5 py-4 text-[16px] font-mono text-on-surface focus:outline-none focus:border-primary transition-colors"/>
+        <div class="mt-2 text-[11px] text-on-surface-variant">Set to today or a future date when you plan to start.</div>
+      </div>
+      <div id="end-date-preview" class="hidden bg-primary/5 border border-primary/15 rounded-2xl px-5 py-4">
+        <div class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest mb-1">Your 100-day window</div>
+        <div class="flex items-center gap-3">
+          <div class="text-center"><div class="font-mono font-bold text-[14px] text-primary" id="prev-start">—</div><div class="text-[10px] text-on-surface-variant">Start</div></div>
+          <span class="text-on-surface-variant flex-1 text-center text-[20px]">→</span>
+          <div class="text-center"><div class="font-mono font-bold text-[14px] text-wellness-teal" id="prev-end">—</div><div class="text-[10px] text-on-surface-variant">End (Day 90)</div></div>
+        </div>
+        <div class="mt-2 text-[11px] text-achievement-gold font-mono text-center" id="prev-days">—</div>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-8">
+      <button onclick="prevStep()" class="w-16 bg-surface-container text-on-surface-variant font-semibold py-4 rounded-2xl text-[14px] hover:opacity-80">←</button>
+      <button onclick="validateStep2()" class="flex-1 bg-primary text-white font-bold py-4 rounded-2xl text-[15px] hover:opacity-90">Continue →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Weights -->
+  <div id="step3" class="step min-h-screen flex flex-col justify-center">
+    <div class="mb-8">
+      <div class="text-[11px] font-mono text-primary uppercase tracking-widest mb-2">Step 2 of 3</div>
+      <div class="text-[24px] font-bold text-on-surface mb-1">Your weight goal</div>
+      <div class="text-[14px] text-on-surface-variant">Starting weight and where you want to reach.</div>
+    </div>
+    <div class="space-y-6">
+      <!-- Start weight -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest">Starting weight</label>
+          <span class="font-mono font-bold text-[20px] text-primary" id="sw-display">82.3 kg</span>
+        </div>
+        <input id="inp-sw" type="range" min="50" max="150" step="0.1" value="82.3"
+          oninput="updateSliders()" class="w-full"/>
+        <div class="flex justify-between text-[10px] text-on-surface-variant font-mono mt-1"><span>50 kg</span><span>150 kg</span></div>
+      </div>
+      <!-- Target weight -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest">Target weight</label>
+          <span class="font-mono font-bold text-[20px] text-wellness-teal" id="tw-display">75.0 kg</span>
+        </div>
+        <input id="inp-tw" type="range" min="40" max="130" step="0.5" value="75"
+          oninput="updateSliders()" class="w-full"/>
+        <div class="flex justify-between text-[10px] text-on-surface-variant font-mono mt-1"><span>40 kg</span><span>130 kg</span></div>
+      </div>
+      <!-- Live calc -->
+      <div id="weight-calc" class="bg-white border border-border-subtle rounded-2xl p-4">
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div><div class="font-mono font-bold text-[18px] text-primary" id="calc-diff">7.3</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kg to lose</div></div>
+          <div><div class="font-mono font-bold text-[18px] text-achievement-gold" id="calc-pw">0.57</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kg/week</div></div>
+          <div><div class="font-mono font-bold text-[18px] text-progress-blue" id="calc-kcal">~500</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kcal deficit/day</div></div>
+        </div>
+        <div id="calc-status" class="mt-3 text-center text-[11px] text-on-surface-variant bg-surface-container rounded-xl px-3 py-2"></div>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-8">
+      <button onclick="prevStep()" class="w-16 bg-surface-container text-on-surface-variant font-semibold py-4 rounded-2xl text-[14px] hover:opacity-80">←</button>
+      <button onclick="validateStep3()" class="flex-1 bg-primary text-white font-bold py-4 rounded-2xl text-[15px] hover:opacity-90">Continue →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Summary + confirm -->
+  <div id="step4" class="step min-h-screen flex flex-col justify-center">
+    <div class="mb-6">
+      <div class="text-[11px] font-mono text-primary uppercase tracking-widest mb-2">Step 3 of 3</div>
+      <div class="text-[24px] font-bold text-on-surface mb-1">Your mission 🎯</div>
+      <div class="text-[14px] text-on-surface-variant">Confirm these details. You can change them in Settings anytime.</div>
+    </div>
+    <div class="bg-primary rounded-[24px] p-5 text-white mb-4">
+      <div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-3">Mission summary</div>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div><div class="font-mono text-[10px] text-white/50 uppercase">Name</div><div class="font-bold text-[16px] mt-0.5" id="sum-name">—</div></div>
+        <div><div class="font-mono text-[10px] text-white/50 uppercase">Duration</div><div class="font-bold text-[16px] mt-0.5">100 days</div></div>
+        <div><div class="font-mono text-[10px] text-white/50 uppercase">Start date</div><div class="font-bold text-[16px] mt-0.5" id="sum-start">—</div></div>
+        <div><div class="font-mono text-[10px] text-white/50 uppercase">End date</div><div class="font-bold text-[16px] mt-0.5 text-wellness-teal" id="sum-end">—</div></div>
+      </div>
+      <div class="bg-white/10 rounded-xl p-3">
+        <div class="flex items-center justify-between">
+          <div class="text-center"><div class="font-mono font-bold text-[22px]" id="sum-sw">—</div><div class="text-[10px] text-white/60 mt-0.5">Start kg</div></div>
+          <div class="text-center flex-1"><div class="font-bold text-[14px] text-wellness-teal" id="sum-lose">—</div><div class="text-[10px] text-white/60 mt-0.5">to lose</div><div class="mt-1 h-1 bg-white/20 rounded-full"><div class="h-1 bg-wellness-teal rounded-full w-0"></div></div></div>
+          <div class="text-center"><div class="font-mono font-bold text-[22px] text-wellness-teal" id="sum-tw">—</div><div class="text-[10px] text-white/60 mt-0.5">Target kg</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- Phase gates auto-calculated -->
+    <div class="bg-white border border-border-subtle rounded-[20px] p-4 mb-4">
+      <div class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest mb-3">Your phase gates (auto-calculated)</div>
+      <div class="space-y-2">
+        <div class="flex items-center justify-between py-2 border-b border-border-subtle">
+          <div><div class="text-[12px] font-semibold">Phase 1 end — Week 4</div><div class="text-[11px] text-on-surface-variant" id="gate-p1-date">—</div></div>
+          <span class="font-mono text-[12px] text-primary font-bold" id="gate-p1-wt">— kg</span>
+        </div>
+        <div class="flex items-center justify-between py-2 border-b border-border-subtle">
+          <div><div class="text-[12px] font-semibold">Phase 2 end — Week 9</div><div class="text-[11px] text-on-surface-variant" id="gate-p2-date">—</div></div>
+          <span class="font-mono text-[12px] text-progress-blue font-bold" id="gate-p2-wt">— kg</span>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <div><div class="text-[12px] font-semibold text-wellness-teal">Mission complete — Day 90</div><div class="text-[11px] text-on-surface-variant" id="gate-p3-date">—</div></div>
+          <span class="font-mono text-[12px] text-wellness-teal font-bold" id="gate-p3-wt">— kg</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-3">
+      <button onclick="prevStep()" class="w-16 bg-surface-container text-on-surface-variant font-semibold py-4 rounded-2xl text-[14px] hover:opacity-80">←</button>
+      <button onclick="saveAndLaunch()" class="flex-1 bg-primary text-white font-bold py-4 rounded-2xl text-[15px] shadow-lg hover:opacity-90">
+        🚀 Launch Transform 100
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+
+function nextStep(){ goTo(currentStep + 1); }
+function prevStep(){ goTo(currentStep - 1); }
+
+function goTo(n){
+  document.getElementById('step' + currentStep).classList.remove('active');
+  currentStep = Math.max(1, Math.min(totalSteps, n));
+  document.getElementById('step' + currentStep).classList.add('active');
+  document.getElementById('step-label').textContent = 'Step ' + (currentStep-1) + ' of 3';
+  if(currentStep===1) document.getElementById('step-label').textContent = 'Welcome';
+  document.getElementById('progress-bar').style.width = (currentStep/totalSteps*100) + '%';
+  if(currentStep===4) populateSummary();
+  window.scrollTo(0,0);
+}
+
+// Date input — show end date preview
+document.getElementById('inp-start').addEventListener('input', function(){
+  const d = new Date(this.value);
+  if(!isNaN(d)){
+    const end = new Date(d); end.setDate(end.getDate()+99);
+    const fmt = dt => dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    document.getElementById('prev-start').textContent = fmt(d);
+    document.getElementById('prev-end').textContent = fmt(end);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const daysDiff = Math.round((d - today)/86400000);
+    let label = daysDiff === 0 ? '✓ Starting today' : daysDiff > 0 ? 'Starts in ' + daysDiff + ' days' : Math.abs(daysDiff) + ' days ago';
+    document.getElementById('prev-days').textContent = label;
+    document.getElementById('end-date-preview').classList.remove('hidden');
+  }
+});
+
+function updateSliders(){
+  const sw = parseFloat(document.getElementById('inp-sw').value);
+  const tw = parseFloat(document.getElementById('inp-tw').value);
+  document.getElementById('sw-display').textContent = sw.toFixed(1) + ' kg';
+  document.getElementById('tw-display').textContent = tw.toFixed(1) + ' kg';
+  const diff = sw - tw;
+  const pwk = diff > 0 ? (diff/15).toFixed(2) : '0';
+  const kcal = diff > 0 ? '~' + Math.round(diff/15*7*1000/7) : '0';
+  document.getElementById('calc-diff').textContent = diff > 0 ? diff.toFixed(1) : '0';
+  document.getElementById('calc-pw').textContent = pwk;
+  document.getElementById('calc-kcal').textContent = kcal;
+  // Status message
+  let status = '';
+  if(diff <= 0) status = '⚠️ Target must be less than starting weight';
+  else if(diff/15 > 1) status = '⚠️ Goal is aggressive (>1 kg/week). Safe max is 0.8 kg/week.';
+  else if(diff/15 < 0.3) status = '✓ Conservative goal — very achievable.';
+  else status = '✓ Realistic and achievable at this pace.';
+  document.getElementById('calc-status').textContent = status;
+}
+updateSliders();
+
+function validateStep2(){
+  const name = document.getElementById('inp-name').value.trim();
+  const start = document.getElementById('inp-start').value;
+  if(!name){ alert('Please enter your name.'); return; }
+  if(!start){ alert('Please select a start date.'); return; }
+  nextStep();
+}
+function validateStep3(){
+  const sw = parseFloat(document.getElementById('inp-sw').value);
+  const tw = parseFloat(document.getElementById('inp-tw').value);
+  if(tw >= sw){ alert('Target weight must be less than starting weight.'); return; }
+  nextStep();
+}
+
+function populateSummary(){
+  const name = document.getElementById('inp-name').value.trim();
+  const startStr = document.getElementById('inp-start').value;
+  const sw = parseFloat(document.getElementById('inp-sw').value);
+  const tw = parseFloat(document.getElementById('inp-tw').value);
+  const diff = (sw - tw).toFixed(1);
+  const start = new Date(startStr);
+  const end = new Date(start); end.setDate(end.getDate()+99);
+  const wk4 = new Date(start); wk4.setDate(wk4.getDate()+35);
+  const wk9 = new Date(start); wk9.setDate(wk9.getDate()+70);
+  const fmt = dt => dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const fmtShort = dt => dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+
+  document.getElementById('sum-name').textContent = name;
+  document.getElementById('sum-start').textContent = fmt(start);
+  document.getElementById('sum-end').textContent = fmt(end);
+  document.getElementById('sum-sw').textContent = sw.toFixed(1);
+  document.getElementById('sum-tw').textContent = tw.toFixed(1);
+  document.getElementById('sum-lose').textContent = diff + ' kg';
+
+  // Phase gates
+  const p1wt = (sw - (sw-tw)*0.38).toFixed(1);
+  const p2wt = (sw - (sw-tw)*0.69).toFixed(1);
+  document.getElementById('gate-p1-date').textContent = 'By ' + fmt(wk4);
+  document.getElementById('gate-p2-date').textContent = 'By ' + fmt(wk9);
+  document.getElementById('gate-p3-date').textContent = 'By ' + fmt(end);
+  document.getElementById('gate-p1-wt').textContent = p1wt + ' kg';
+  document.getElementById('gate-p2-wt').textContent = p2wt + ' kg';
+  document.getElementById('gate-p3-wt').textContent = tw.toFixed(1) + ' kg';
+}
+
+function saveAndLaunch(){
+  const name = document.getElementById('inp-name').value.trim();
+  const startStr = document.getElementById('inp-start').value;
+  const sw = parseFloat(document.getElementById('inp-sw').value);
+  const tw = parseFloat(document.getElementById('inp-tw').value);
+  const setup = { name, startDate: startStr, startWeight: sw, targetWeight: tw, setupDone: true, setupTs: Date.now() };
+  try{ localStorage.setItem('t100_setup', JSON.stringify(setup)); }catch(e){}
+  window.location.href = 'index.html';
+}
+
+function fillPraveen(){
+  document.getElementById('inp-name').value = 'Praveen';
+  // Set today's date as default, but show option
+  const d = new Date('2026-07-06');
+  document.getElementById('inp-start').value = '2026-07-06';
+  document.getElementById('inp-start').dispatchEvent(new Event('input'));
+  document.getElementById('inp-sw').value = '82.3';
+  document.getElementById('inp-tw').value = '75';
+  updateSliders();
+  nextStep();
+}
+
+// If already set up, offer to go to app
+try{
+  const s = JSON.parse(localStorage.getItem('t100_setup')||'{}');
+  if(s.setupDone){
+    const resume = document.createElement('div');
+    resume.className='fixed top-16 left-0 right-0 max-w-lg mx-auto px-5 z-40';
+    resume.innerHTML='<div class="bg-achievement-gold/15 border border-achievement-gold/30 rounded-2xl px-4 py-3 flex items-center justify-between"><span class="text-[12px] font-semibold text-achievement-gold">App already set up for '+s.name+'</span><a href="index.html" class="text-[12px] bg-achievement-gold text-white px-3 py-1.5 rounded-xl font-bold">Open app →</a></div>';
+    document.body.appendChild(resume);
+  }
+}catch(e){}
+</script>
+</body>
+</html>

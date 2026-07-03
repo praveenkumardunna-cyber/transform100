@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0,viewport-fit=cover" name="viewport"/>
+<title>Food Impact Scanner — Transform 100</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-gray":"#F8FAFC","surface":"#f9f9ff","surface-container-lowest":"#ffffff","surface-container-low":"#f3f3fa","surface-container":"#ededf5","surface-container-high":"#e8e7ef","on-surface":"#1a1b21","on-surface-variant":"#44574d","primary":"#006c51","on-primary":"#ffffff","primary-container":"#2dd4a4","on-primary-container":"#005740","secondary":"#005fad","wellness-teal":"#2DD4A4","progress-blue":"#4D9FFF","achievement-gold":"#E8A020","strict-red":"#FF5E5B","border-subtle":"#E2E8F0","inverse-surface":"#2e3036","inverse-on-surface":"#f0f0f8"}}}}</script>
+<style>
+.ms{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}
+.ms-f{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.gh{background:rgba(255,255,255,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.gn{background:rgba(249,249,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fu .35s ease-out forwards}
+@keyframes sl{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.sl{animation:sl .25s ease-out forwards}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.pulse-once{animation:pulse .4s ease-out}
+/* Impact bar animations */
+@keyframes bar-grow{from{width:0%}to{width:var(--target-w)}}
+.bar-animate{animation:bar-grow .6s cubic-bezier(0.4,0,0.2,1) forwards}
+/* Ripple on search result tap */
+.result-card{transition:all .15s;cursor:pointer}
+.result-card:active{transform:scale(.98);background:#f0fdf8}
+/* Green glow on safe items */
+.safe-glow{box-shadow:0 0 0 2px rgba(45,212,164,.25)}
+/* Red glow on danger items */
+.danger-glow{box-shadow:0 0 0 2px rgba(255,94,91,.2)}
+/* Search input focus ring */
+#search-input:focus{outline:none;box-shadow:0 0 0 3px rgba(0,108,81,.2)}
+/* Quantity stepper */
+.qty-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;transition:all .15s}
+.qty-btn:active{transform:scale(.92)}
+/* Category chips */
+.cat-chip{transition:all .2s;white-space:nowrap}
+.cat-chip.active{background:#006c51;color:#fff}
+/* Burn activity selector */
+.activity-pill{transition:all .15s;cursor:pointer;border:1.5px solid #E2E8F0}
+.activity-pill.selected{border-color:#006c51;background:#f0fdf8}
+body{min-height:100dvh}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:#E2E8F0;border-radius:10px}
+.hscroll::-webkit-scrollbar{height:3px}
+</style>
+</head>
+<body class="bg-surface-gray text-on-surface" style="font-family:Inter,system-ui,sans-serif">
+
+<!-- HEADER -->
+<header class="fixed top-0 w-full z-50 gh border-b border-border-subtle h-16 flex items-center gap-3 px-4 max-w-lg mx-auto left-0 right-0">
+  <a href="index.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center flex-shrink-0 transition-colors">
+    <span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span>
+  </a>
+  <div class="flex-1">
+    <div class="font-bold text-[15px] text-on-surface leading-tight">Food Impact Scanner</div>
+    <div class="text-[10px] font-mono text-on-surface-variant">Search any food · see calories + how to burn it</div>
+  </div>
+  <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0">
+    <span class="material-symbols-outlined ms text-on-primary-container text-[18px]">search</span>
+  </div>
+</header>
+
+<main class="pt-20 pb-28 max-w-lg mx-auto px-4">
+
+  <!-- SEARCH BAR -->
+  <div class="relative mb-4 fu">
+    <span class="material-symbols-outlined ms text-on-surface-variant absolute left-4 top-1/2 -translate-y-1/2 text-[20px] pointer-events-none">search</span>
+    <input id="search-input" type="text" placeholder="Search food… samosa, biryani, chai, banana"
+      class="w-full bg-white border-2 border-border-subtle rounded-2xl pl-11 pr-12 py-3.5 text-[14px] font-medium placeholder:text-on-surface-variant/50 transition-all"
+      autocomplete="off" autocorrect="off" spellcheck="false"/>
+    <button id="clear-btn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-surface-container rounded-full flex items-center justify-center">
+      <span class="material-symbols-outlined ms text-on-surface-variant text-[16px]">close</span>
+    </button>
+  </div>
+
+  <!-- CATEGORY FILTER CHIPS -->
+  <div id="cat-chips" class="flex gap-2 overflow-x-auto pb-2 mb-4 hscroll fu" style="animation-delay:.05s">
+    <button onclick="filterCat('all')" class="cat-chip active text-[11px] font-mono font-bold px-3 py-1.5 rounded-full border border-border-subtle bg-white flex-shrink-0">All</button>
+    <button onclick="filterCat('Street food')" class="cat-chip text-[11px] font-mono px-3 py-1.5 rounded-full border border-border-subtle bg-white flex-shrink-0 text-on-surface-variant">🥘 Street food</button>
+    <button onclick="filterCat('Beverage')" class="cat-chip text-[11px] font-mono px-3 py-1.5 rounded-full border border-border-subtle bg-white flex-shrink-0 text-on-surface-variant">☕ Beverages</button>
+    <button onclick="filterCat('Dessert')" class="cat-chip text-[11px] font-mono px-3 py-1.5 rounded-full border border-border-subtle bg-white flex-shrink-0 text-on-surface-variant">🍮 Desserts</button>
+    <button onclick="filterCat('Main meal')" class="cat-chip text-[11px] font-mono px-3 py-1.5 rounded-full border border-border-subtle bg-white flex-shrink-0 text-on-surface-variant">🍛 Meals</button>
+    <button onclick="filterCat('Breakfast')" class="cat-chip text-[11px] font-mono px-3 py-1.5 rounded-full border border-border-subtle bg-white flex-shrink-0 text-on-surface-variant">🍳 Breakfast</button>
+    <button onclick="filterCat('Snack')" class="cat-chip text-[11px] font-mono px-3 py-1.5 rounded-full border border-border-subtle bg-white flex-shrink-0 text-on-surface-variant">🥜 Snacks</button>
+    <button onclick="filterCat('Fruit')" class="cat-chip text-[11px] font-mono px-3 py-1.5 rounded-full border border-border-subtle bg-white flex-shrink-0 text-on-surface-variant">🍎 Fruits</button>
+  </div>
+
+  <!-- EMPTY STATE / DEFAULT -->
+  <div id="empty-state" class="fu" style="animation-delay:.1s">
+    <!-- Daily budget card -->
+    <div class="bg-primary rounded-[22px] p-5 mb-4 relative overflow-hidden">
+      <div class="absolute -right-8 -top-8 w-36 h-36 bg-white/5 rounded-full pointer-events-none"></div>
+      <div class="relative z-10">
+        <div class="text-white/60 font-mono text-[10px] uppercase tracking-widest mb-2">Today's calorie budget</div>
+        <div class="flex items-end justify-between mb-3">
+          <div>
+            <div class="text-white font-bold text-[28px] leading-none" id="budget-num">564</div>
+            <div class="text-white/60 text-[11px] mt-1">kcal remaining buffer</div>
+          </div>
+          <div class="text-right">
+            <div class="text-wellness-teal font-mono font-bold text-[15px]">1,933 eaten</div>
+            <div class="text-white/50 text-[10px] mt-0.5">of 2,497 daily target</div>
+          </div>
+        </div>
+        <!-- Buffer bar -->
+        <div class="h-2 bg-white/15 rounded-full overflow-hidden">
+          <div class="h-full bg-wellness-teal rounded-full" style="width:77%"></div>
+        </div>
+        <div class="flex justify-between text-white/40 text-[9px] font-mono mt-1">
+          <span>Food eaten</span><span>Treadmill buffer (302 kcal)</span><span>Deficit zone</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick access grid -->
+    <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant mb-3">Common temptations — tap to scan</div>
+    <div class="grid grid-cols-2 gap-2.5 mb-5">
+      <button onclick="quickSearch('Samosa')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🥟</div>
+        <div class="font-semibold text-[13px]">Samosa</div>
+        <div class="text-[10px] font-mono text-strict-red font-bold">150 kcal each</div>
+      </button>
+      <button onclick="quickSearch('Hyderabadi Biryani')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🍛</div>
+        <div class="font-semibold text-[13px]">Biryani</div>
+        <div class="text-[10px] font-mono text-strict-red font-bold">490 kcal/plate</div>
+      </button>
+      <button onclick="quickSearch('Masala Chai with sugar')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">☕</div>
+        <div class="font-semibold text-[13px]">Masala Chai</div>
+        <div class="text-[10px] font-mono text-achievement-gold font-bold">80 kcal/cup</div>
+      </button>
+      <button onclick="quickSearch('Gulab Jamun')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🍮</div>
+        <div class="font-semibold text-[13px]">Gulab Jamun</div>
+        <div class="text-[10px] font-mono text-strict-red font-bold">150 kcal each</div>
+      </button>
+      <button onclick="quickSearch('Roadside Hakka Noodles')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🍜</div>
+        <div class="font-semibold text-[13px]">Hakka Noodles</div>
+        <div class="text-[10px] font-mono text-strict-red font-bold">380 kcal/plate</div>
+      </button>
+      <button onclick="quickSearch('Pani Puri / Golgappa')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">💧</div>
+        <div class="font-semibold text-[13px]">Pani Puri</div>
+        <div class="text-[10px] font-mono text-achievement-gold font-bold">35 kcal/puri</div>
+      </button>
+      <button onclick="quickSearch('Veg Manchurian (gravy)')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🥡</div>
+        <div class="font-semibold text-[13px]">Veg Manchurian</div>
+        <div class="text-[10px] font-mono text-strict-red font-bold">320 kcal/plate</div>
+      </button>
+      <button onclick="quickSearch('Momos (steamed veg)')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🥟</div>
+        <div class="font-semibold text-[13px]">Steamed Momos</div>
+        <div class="text-[10px] font-mono text-wellness-teal font-bold">180 kcal/6 pcs</div>
+      </button>
+      <button onclick="quickSearch('Bhel Puri')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🫙</div>
+        <div class="font-semibold text-[13px]">Bhel Puri</div>
+        <div class="text-[10px] font-mono text-wellness-teal font-bold">180 kcal/plate</div>
+      </button>
+      <button onclick="quickSearch('Veg Fried Rice')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🍚</div>
+        <div class="font-semibold text-[13px]">Veg Fried Rice</div>
+        <div class="text-[10px] font-mono text-strict-red font-bold">400 kcal/plate</div>
+      </button>
+      <button onclick="quickSearch('Roasted Corn on the Cob')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🌽</div>
+        <div class="font-semibold text-[13px]">Roasted Corn</div>
+        <div class="text-[10px] font-mono text-wellness-teal font-bold">130 kcal each</div>
+      </button>
+      <button onclick="quickSearch('Buttermilk / Chaas 300ml')" class="bg-white rounded-[18px] border border-border-subtle p-3.5 text-left hover:border-wellness-teal/40 transition-all active:scale-95">
+        <div class="text-[18px] mb-1.5">🥛</div>
+        <div class="font-semibold text-[13px]">Chaas / Buttermilk</div>
+        <div class="text-[10px] font-mono text-wellness-teal font-bold">45 kcal/glass</div>
+      </button>
+    </div>
+
+    <!-- How it works -->
+    <div class="bg-white rounded-[20px] border border-border-subtle p-4">
+      <div class="font-semibold text-[13px] mb-3">How this works</div>
+      <div class="space-y-2.5">
+        <div class="flex items-start gap-3">
+          <div class="w-7 h-7 rounded-full bg-progress-blue/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined ms text-progress-blue text-[14px]">search</span></div>
+          <div class="text-[12px] text-on-surface-variant leading-relaxed"><span class="text-on-surface font-medium">Search any food</span> — 100+ Indian foods including Hyderabadi specialties, Indo-Chinese, chaat varieties, street food, drinks, sweets</div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-7 h-7 rounded-full bg-achievement-gold/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined ms text-achievement-gold text-[14px]">add_circle</span></div>
+          <div class="text-[12px] text-on-surface-variant leading-relaxed"><span class="text-on-surface font-medium">Set quantity</span> — 1 piece, 2 cups, half a plate — see exact calories update live</div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-7 h-7 rounded-full bg-wellness-teal/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined ms text-primary text-[14px]">directions_walk</span></div>
+          <div class="text-[12px] text-on-surface-variant leading-relaxed"><span class="text-on-surface font-medium">See the burn</span> — exact minutes of brisk walk, treadmill, or steps to offset it</div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined ms text-primary text-[14px]">swap_horiz</span></div>
+          <div class="text-[12px] text-on-surface-variant leading-relaxed"><span class="text-on-surface font-medium">Get a smarter swap</span> — what to eat instead that satisfies the same craving for less</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH RESULTS LIST -->
+  <div id="search-results" class="hidden space-y-2 mb-4"></div>
+
+  <!-- FOOD DETAIL PANEL (shown when food is selected) -->
+  <div id="detail-panel" class="hidden fu">
+    <!-- Back to results -->
+    <button onclick="backToResults()" class="flex items-center gap-2 text-primary text-[13px] font-semibold mb-4">
+      <span class="material-symbols-outlined ms text-[18px]">chevron_left</span> Back to results
+    </button>
+
+    <!-- Food name + category -->
+    <div id="detail-header" class="bg-white rounded-[22px] border border-border-subtle p-5 mb-3">
+      <div class="flex items-start justify-between gap-3 mb-4">
+        <div>
+          <div id="detail-cat-badge" class="text-[10px] font-mono font-bold uppercase tracking-widest text-on-surface-variant mb-1"></div>
+          <div id="detail-name" class="font-bold text-[20px] leading-tight text-on-surface"></div>
+          <div id="detail-unit-label" class="text-[12px] text-on-surface-variant mt-1"></div>
+        </div>
+        <div id="detail-emoji" class="text-[36px] flex-shrink-0"></div>
+      </div>
+
+      <!-- QUANTITY STEPPER -->
+      <div class="bg-surface-container-low rounded-[16px] px-4 py-3 flex items-center justify-between mb-4">
+        <div>
+          <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant mb-0.5">Quantity</div>
+          <div class="text-[12px] text-on-surface-variant" id="detail-qty-desc">How many are you having?</div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="changeQty(-1)" class="qty-btn bg-surface-container text-on-surface-variant hover:bg-surface-container-high active:bg-border-subtle">−</button>
+          <div class="font-mono font-bold text-[22px] text-primary min-w-[28px] text-center" id="qty-display">1</div>
+          <button onclick="changeQty(1)" class="qty-btn bg-primary text-white hover:bg-primary/90">+</button>
+        </div>
+      </div>
+
+      <!-- CALORIE IMPACT -->
+      <div id="calorie-impact" class="grid grid-cols-3 gap-2 mb-4">
+        <div class="bg-surface-container-low rounded-[14px] p-3 text-center">
+          <div class="font-mono font-bold text-[20px] text-strict-red" id="total-kcal">—</div>
+          <div class="text-[9px] text-on-surface-variant uppercase tracking-wide mt-0.5">Total kcal</div>
+        </div>
+        <div class="bg-surface-container-low rounded-[14px] p-3 text-center">
+          <div class="font-mono font-bold text-[16px] text-wellness-teal" id="total-protein">—</div>
+          <div class="text-[9px] text-on-surface-variant uppercase tracking-wide mt-0.5">Protein</div>
+        </div>
+        <div class="bg-surface-container-low rounded-[14px] p-3 text-center">
+          <div class="font-mono font-bold text-[16px] text-progress-blue" id="total-fiber">—</div>
+          <div class="text-[9px] text-on-surface-variant uppercase tracking-wide mt-0.5">Fiber</div>
+        </div>
+      </div>
+
+      <!-- PLAN IMPACT BAR -->
+      <div class="mb-2">
+        <div class="flex justify-between text-[11px] mb-1.5">
+          <span class="text-on-surface-variant font-mono">Impact on today's budget</span>
+          <span id="impact-pct-label" class="font-mono font-bold text-strict-red"></span>
+        </div>
+        <div class="h-3 bg-surface-container rounded-full overflow-hidden relative">
+          <div class="h-full bg-wellness-teal/30 rounded-full" style="width:77%"></div>
+          <div id="impact-bar" class="h-full bg-strict-red/80 rounded-full absolute top-0 bar-animate" style="left:77%;--target-w:0%;width:0%"></div>
+        </div>
+        <div class="flex justify-between text-[9px] text-on-surface-variant font-mono mt-1">
+          <span>Current food (1,933 kcal)</span><span>This item</span><span>2,800 kcal TDEE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAN VERDICT -->
+    <div id="verdict-card" class="rounded-[22px] p-5 mb-3">
+      <div class="flex items-start gap-3">
+        <span id="verdict-icon" class="text-[22px] flex-shrink-0 mt-0.5"></span>
+        <div>
+          <div id="verdict-title" class="font-bold text-[14px] mb-1"></div>
+          <div id="verdict-body" class="text-[12px] text-on-surface-variant leading-relaxed"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BURN IT OFF SECTION -->
+    <div class="bg-white rounded-[22px] border border-border-subtle p-5 mb-3">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="material-symbols-outlined ms text-primary text-[20px]">local_fire_department</span>
+        <span class="font-semibold text-[14px]">How to burn it off</span>
+        <span class="ml-auto text-[10px] font-mono text-on-surface-variant">82 kg · your weight</span>
+      </div>
+
+      <!-- Activity selector -->
+      <div class="flex gap-2 overflow-x-auto pb-2 mb-4 hscroll">
+        <button onclick="selectActivity('walk')" id="act-walk" class="activity-pill selected text-[11px] font-mono px-3 py-1.5 rounded-full flex-shrink-0 font-bold text-primary">🚶 Brisk walk</button>
+        <button onclick="selectActivity('treadmill')" id="act-treadmill" class="activity-pill text-[11px] font-mono px-3 py-1.5 rounded-full flex-shrink-0 text-on-surface-variant">🏃 Treadmill 7km/h</button>
+        <button onclick="selectActivity('stairs')" id="act-stairs" class="activity-pill text-[11px] font-mono px-3 py-1.5 rounded-full flex-shrink-0 text-on-surface-variant">🪜 Staircase</button>
+        <button onclick="selectActivity('slow')" id="act-slow" class="activity-pill text-[11px] font-mono px-3 py-1.5 rounded-full flex-shrink-0 text-on-surface-variant">🚶 Slow walk</button>
+      </div>
+
+      <!-- Burn display -->
+      <div class="bg-primary/5 border border-primary/15 rounded-[16px] p-4 mb-3">
+        <div class="text-center mb-3">
+          <div class="font-mono font-bold text-[36px] text-primary" id="burn-time">—</div>
+          <div class="text-[12px] text-on-surface-variant" id="burn-desc">minutes of brisk walking</div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div>
+            <div class="font-mono font-bold text-[16px] text-on-surface" id="burn-steps">—</div>
+            <div class="text-[9px] text-on-surface-variant uppercase tracking-wide">Steps</div>
+          </div>
+          <div>
+            <div class="font-mono font-bold text-[16px] text-on-surface" id="burn-km">—</div>
+            <div class="text-[9px] text-on-surface-variant uppercase tracking-wide">Kilometres</div>
+          </div>
+          <div>
+            <div class="font-mono font-bold text-[16px] text-on-surface" id="burn-floors">—</div>
+            <div class="text-[9px] text-on-surface-variant uppercase tracking-wide">Floors up</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Split options -->
+      <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant mb-2">Or split it across the day</div>
+      <div id="split-options" class="space-y-2"></div>
+    </div>
+
+    <!-- MACROS BREAKDOWN -->
+    <div class="bg-white rounded-[22px] border border-border-subtle p-5 mb-3">
+      <div class="font-semibold text-[13px] mb-3">What's inside</div>
+      <div id="macro-bars" class="space-y-3"></div>
+      <!-- GI indicator -->
+      <div class="mt-4 pt-3 border-t border-border-subtle">
+        <div class="flex items-center justify-between">
+          <div class="text-[12px] text-on-surface-variant">Glycemic Index (GI)</div>
+          <div id="gi-badge" class="font-mono text-[11px] font-bold px-3 py-1 rounded-full"></div>
+        </div>
+        <div id="gi-explanation" class="text-[11px] text-on-surface-variant mt-1.5 leading-relaxed"></div>
+      </div>
+    </div>
+
+    <!-- SMARTER SWAP -->
+    <div id="swap-card" class="bg-white rounded-[22px] border border-border-subtle p-5 mb-3">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="material-symbols-outlined ms text-achievement-gold text-[20px]">swap_horiz</span>
+        <span class="font-semibold text-[13px]">Smarter swap</span>
+      </div>
+      <div id="swap-content"></div>
+    </div>
+
+    <!-- HBA1C IMPACT NOTE -->
+    <div id="hba1c-card" class="bg-achievement-gold/8 border border-achievement-gold/25 rounded-[20px] p-4 mb-3">
+      <div class="flex items-start gap-3">
+        <span class="text-[18px] flex-shrink-0">🩸</span>
+        <div>
+          <div class="font-semibold text-[13px] text-achievement-gold mb-1">HbA1c impact</div>
+          <div id="hba1c-text" class="text-[12px] text-on-surface-variant leading-relaxed"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 w-full z-50 gn border-t border-border-subtle rounded-t-2xl h-20 pb-3 px-2 flex justify-around items-center max-w-lg mx-auto left-0 right-0">
+  <a href="index.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">dashboard</span><span class="text-[9px] font-mono uppercase tracking-tighter">Home</span></a>
+  <a href="schedule.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">today</span><span class="text-[9px] font-mono uppercase tracking-tighter">Schedule</span></a>
+  <a href="meals.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">restaurant</span><span class="text-[9px] font-mono uppercase tracking-tighter">Meals</span></a>
+  <a href="foodsearch.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl bg-primary-container text-on-primary-container"><span class="material-symbols-outlined ms-f text-[22px]">search</span><span class="text-[9px] font-mono uppercase tracking-tighter">Scanner</span></a>
+  <a href="more.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">apps</span><span class="text-[9px] font-mono uppercase tracking-tighter">More</span></a>
+</nav>
+
+<script>
+// ─────────────────────────────────────
+// FOOD DATABASE
+// ─────────────────────────────────────
+const FOODS = {
+  "Samosa":{kcal:150,unit:"piece",protein:3,fat:8,carbs:18,fiber:1.2,cat:"Street food",gi:65,emoji:"🥟",swap:"Roasted chana 25g (95 kcal) — same crunch, 37% fewer calories, 3× more fiber",swapKcal:95,hba1c:"High GI (65). Fried crust causes a rapid glucose spike within 30 min. If you must have it, eat it after a protein source — never on empty stomach."},
+  "Mirchi Bajji":{kcal:180,unit:"piece",protein:3,fat:10,carbs:20,fiber:1,cat:"Street food",gi:70,emoji:"🌶️",swap:"Grilled mirchi with masala (40 kcal) — same spice hit, 78% fewer calories",swapKcal:40,hba1c:"High GI batter causes glucose spike. The chilli itself is actually beneficial (capsaicin reduces insulin resistance) — it's the batter that's the problem."},
+  "Vada Pav":{kcal:290,unit:"piece",protein:7,fat:12,carbs:38,fiber:2,cat:"Street food",gi:72,emoji:"🍔",swap:"2 Pesarattu with chutney (220 kcal) — fills you more, 24% fewer calories, way more protein",swapKcal:220,hba1c:"Very high GI. White bread pav + fried vada = double glucose spike layered together. One of the worst combinations for HbA1c management."},
+  "Pani Puri":{kcal:35,unit:"puri",protein:0.8,fat:1.5,carbs:5,fiber:0.3,cat:"Street food",gi:60,emoji:"🫙",swap:"Have max 6 pieces — 210 kcal total — and eat them with the jaljeera water which adds antioxidants",swapKcal:210,hba1c:"Moderate GI but almost zero fiber or protein. 6 pieces = pure carb load. Eat slowly, not all at once — spacing them out reduces the glucose spike."},
+  "Masala Chai with sugar":{kcal:80,unit:"cup",protein:3,fat:3,carbs:12,fiber:0,cat:"Beverage",gi:55,emoji:"☕",swap:"Masala chai without sugar (45 kcal) — saving 35 kcal and 7g sugar per cup. 3 cups/day = 105 kcal saved",swapKcal:45,hba1c:"Each teaspoon of sugar raises post-meal glucose by ~4 mg/dL. If you have 3 teas/day, switching to no-sugar drops your daily glucose load significantly."},
+  "Masala Chai without sugar":{kcal:45,unit:"cup",protein:3,fat:3,carbs:5,fiber:0,cat:"Beverage",gi:30,emoji:"☕",swap:"This is already the smart choice. Add ¼ tsp cinnamon for extra HbA1c benefit.",swapKcal:45,hba1c:"Low GI. Milk protein slows absorption. Ginger in chai actually improves insulin sensitivity. Good choice — just keep it under 2 cups/day (caffeine)."},
+  "Hyderabadi Biryani":{kcal:490,unit:"plate",protein:25,fat:18,carbs:60,fiber:2,cat:"Main meal",gi:68,emoji:"🍛",swap:"Haleem (320 kcal) — same Hyderabadi flavor, 35% fewer calories, 3× more fiber, much lower GI",swapKcal:320,hba1c:"High GI basmati + high fat = sustained glucose elevation for 2-3 hours. If eating biryani, pair with a large raita and eat 200-250g not the full plate. Never eat biryani at dinner."},
+  "Haleem":{kcal:320,unit:"bowl",protein:22,fat:14,carbs:28,fiber:4,cat:"Main meal",gi:45,emoji:"🥘",swap:"This is one of the best Hyderabadi street foods nutritionally — lentils + meat = high protein + fiber. Have it at lunch not dinner.",swapKcal:320,hba1c:"Medium GI (45). Lentils slow glucose absorption significantly. Protein content (22g) is excellent. One of the rare street foods that actually supports your HbA1c goal."},
+  "Irani Chai":{kcal:120,unit:"cup",protein:4,fat:5,carbs:16,fiber:0,cat:"Beverage",gi:55,emoji:"☕",swap:"Ask for less sugar (half the normal amount) → 85 kcal. Or drink the Irani chai and skip the Osmania biscuit that comes with it.",swapKcal:85,hba1c:"Full-fat milk + sugar makes this a meaningful glucose load. Not terrible occasionally, but 2 Irani chais = 240 kcal with zero fiber — same calories as a meal."},
+  "Osmania Biscuit":{kcal:55,unit:"biscuit",protein:1,fat:2.5,carbs:7,fiber:0.2,cat:"Snack",gi:70,emoji:"🍪",swap:"Have 1 biscuit, not the usual 3-4 that come with chai. 55 kcal vs 165-220 kcal. Or replace with 5 cashews.",swapKcal:55,hba1c:"High GI refined flour biscuit. Small individually but 4 with chai = 460 kcal total for what feels like a snack. The portion is the problem, not the biscuit."},
+  "Gulab Jamun":{kcal:150,unit:"piece",protein:2,fat:6,carbs:22,fiber:0.5,cat:"Dessert",gi:76,emoji:"🍮",swap:"Qubani ka Meetha (180 kcal for a bowl) — more volume, more fiber, apricot is lower GI than sugar syrup",swapKcal:180,hba1c:"One of the highest GI desserts (76). Sugar syrup absorption is near-instant. If you must have one — eat it immediately after a full meal, never standalone. The food already in your stomach slows the glucose spike."},
+  "Rasgulla":{kcal:100,unit:"piece",protein:3,fat:2,carbs:18,fiber:0,cat:"Dessert",gi:65,emoji:"🍡",swap:"1 Rasgulla + 1 tsp chia seeds on top — adds fiber to slow the glucose spike for +5 kcal",swapKcal:105,hba1c:"Lower fat than gulab jamun but same sugar problem. Chhena (fresh cheese) has some protein which marginally slows absorption. Strictly 1 piece limit."},
+  "Kheer":{kcal:200,unit:"bowl",protein:5,fat:7,carbs:30,fiber:0.5,cat:"Dessert",gi:68,emoji:"🥣",swap:"Small bowl (100g) with extra cardamom and a pinch of cinnamon. Cinnamon reduces post-meal glucose spike by 8-13%.",swapKcal:100,hba1c:"Rice + sugar + milk = triple glucose source. The fat in kheer (from milk/ghee) slightly delays absorption. Half-bowl with cinnamon is acceptable occasionally."},
+  "Jalebi":{kcal:150,unit:"piece",protein:1.5,fat:6,carbs:22,fiber:0.5,cat:"Dessert",gi:80,emoji:"🍥",swap:"Skip this one entirely. GI of 80 — higher than white bread. There is no smart version of jalebi.",swapKcal:0,hba1c:"Highest GI food in this database (80). Refined flour + sugar syrup = instant glucose spike. One jalebi raises blood sugar by ~15-20 mg/dL within 15 minutes. Complete avoid."},
+  "Qubani ka Meetha":{kcal:180,unit:"bowl",protein:2,fat:3,carbs:38,fiber:3,cat:"Dessert",gi:62,emoji:"🍑",swap:"Best dessert choice in Hyderabadi cuisine — apricot fiber slows absorption. Have it with 2 tbsp thick curd on top.",swapKcal:180,hba1c:"Medium-low GI for a dessert (62). Dried apricot fiber genuinely slows glucose absorption. Acceptable occasionally at lunch (never dinner)."},
+  "Banana":{kcal:90,unit:"piece",protein:1.1,fat:0.3,carbs:23,fiber:2.6,cat:"Fruit",gi:51,emoji:"🍌",swap:"Guava (55 kcal, GI 31, 5.4g fiber) — more fiber, lower GI, same snack habit. Best fruit swap.",swapKcal:55,hba1c:"Medium GI (51) but 2.6g fiber softens the spike. Eat with peanuts (8 pieces) — the fat further slows absorption. Never eat banana on an empty stomach."},
+  "Apple":{kcal:72,unit:"piece",protein:0.4,fat:0.2,carbs:19,fiber:3.3,cat:"Fruit",gi:36,emoji:"🍎",swap:"Already a great choice. Eat with skin — the skin contains 60% of the fiber and quercetin which improves insulin sensitivity.",swapKcal:72,hba1c:"Low GI (36). Malic acid in apples actually improves insulin function. One of the best fruits for HbA1c management. Eat whole, never as juice."},
+  "Soft drink / Cola 300ml":{kcal:126,unit:"can",protein:0,fat:0,carbs:33,fiber:0,cat:"Beverage",gi:65,emoji:"🥤",swap:"Nimbu paani with sendha namak, no sugar (15 kcal) — same cold refreshing feeling, 89% fewer calories, actual electrolytes",swapKcal:15,hba1c:"33g sugar with zero fiber = fastest glucose spike in this database. Blood sugar peaks at 15 min. Zero nutritional value. Diet cola is slightly better (0 kcal) but artificial sweeteners stimulate insulin response anyway."},
+  "Fruit juice 200ml":{kcal:90,unit:"glass",protein:0.5,fat:0.2,carbs:22,fiber:0.3,cat:"Beverage",gi:60,emoji:"🧃",swap:"Eat the whole fruit instead (55-90 kcal) — same calories but 10× more fiber = completely different glucose response",swapKcal:75,hba1c:"Juice removes fiber, leaving only sugar. A glass of orange juice vs eating an orange — same kcal, but juice spikes blood sugar 3× more. Always eat fruit whole."},
+  "Lassi sweet":{kcal:180,unit:"glass",protein:7,fat:6,carbs:26,fiber:0,cat:"Beverage",gi:50,emoji:"🥛",swap:"Salted lassi (80 kcal, no sugar) — same probiotic curd benefit, 56% fewer calories, better for HbA1c",swapKcal:80,hba1c:"Sweet lassi = curd's probiotic benefit (good) plus 5 tsp sugar (bad). Salted lassi is strictly better in every way for your goals. Or plain Majjiga from your plan."},
+  "Coconut water":{kcal:45,unit:"glass",protein:1.7,fat:0.5,carbs:9,fiber:2.6,cat:"Beverage",gi:35,emoji:"🥥",swap:"Already a great choice. Natural electrolytes, low GI. Best post-treadmill drink after your water.",swapKcal:45,hba1c:"Low GI (35). Natural potassium and magnesium actually support insulin function. One of the few truly beneficial beverages. Better than sports drinks for post-exercise recovery."},
+  "Black coffee no sugar":{kcal:5,unit:"cup",protein:0.3,fat:0,carbs:0.7,fiber:0,cat:"Beverage",gi:0,emoji:"☕",swap:"Already optimal. Chlorogenic acid in coffee improves insulin sensitivity. Max 2 cups/day, not after 2 PM.",swapKcal:5,hba1c:"GI essentially zero. Chlorogenic acid (polyphenol in coffee) reduces glucose absorption from gut by 6-7%. One of the few beverages that actively helps HbA1c. Keep it black."},
+  "Filter coffee with milk":{kcal:65,unit:"cup",protein:3,fat:2.5,carbs:8,fiber:0,cat:"Beverage",gi:40,emoji:"☕",swap:"Use less sugar (half tsp vs full tsp) — saves 16 kcal and 4g sugar. Or use cardamom to enhance sweetness perception.",swapKcal:50,hba1c:"Low-medium GI. Milk protein slows caffeine and sugar absorption. Better than chai if you're having 3 cups/day due to lower sugar per cup on average."},
+  "Extra Idli":{kcal:80,unit:"piece",protein:2.5,fat:0.4,carbs:17,fiber:1,cat:"Breakfast",gi:45,emoji:"🫓",swap:"Extra sambar (30 kcal per cup) — more volume, more protein, more fiber, less carbs. You'll feel equally full.",swapKcal:30,hba1c:"Medium-low GI (45). Fermented batter improves glycemic response vs non-fermented. The issue isn't 1 extra idli — it's 2-3 extra. One extra idli is acceptable."},
+  "Extra Dosa":{kcal:133,unit:"piece",protein:3,fat:3,carbs:24,fiber:1,cat:"Breakfast",gi:55,emoji:"🥞",swap:"Extra sambar + curd (60 kcal combined) — more protein, more fullness, half the calories",swapKcal:60,hba1c:"GI 55 — moderate. The problem isn't the dosa, it's what comes with it (extra chutney = 60-90 extra kcal of coconut fat). If having extra dosa, skip the extra chutney."},
+  "Extra Chapathi":{kcal:104,unit:"piece",protein:3,fat:1.5,carbs:20,fiber:2,cat:"Main meal",gi:52,emoji:"🫓",swap:"Extra dal (50 kcal per ladle) — more protein and fiber than a chapathi, half the calories",swapKcal:50,hba1c:"Multigrain chapathi GI ~48-52. Acceptable. Better than rice for dinner. If you want extra food at dinner, extra chapathi is the best choice — more fiber than rice, lower GI."},
+  "Extra Rice (small bowl)":{kcal:130,unit:"bowl",protein:2.7,fat:0.3,carbs:28,fiber:0.4,cat:"Main meal",gi:72,emoji:"🍚",swap:"Extra dal or rasam (40-50 kcal) — same satisfaction, 70% fewer calories, more protein, more flavor",swapKcal:45,hba1c:"High GI (72) especially at dinner when insulin sensitivity is lowest. Extra rice at dinner is the single worst calorie addition in this plan — it stores as visceral fat more readily than at lunch."},
+  "Coconut Chutney":{kcal:60,unit:"tbsp",protein:0.8,fat:5,carbs:3,fiber:1,cat:"Condiment",gi:35,emoji:"🥥",swap:"Tomato-onion chutney (20 kcal/tbsp) — same accompaniment function, 67% fewer calories",swapKcal:20,hba1c:"Low GI (35). Fat content slows digestion which is actually beneficial with idli/dosa. The issue is quantity — 3 tbsp = 180 kcal. Stick to 1.5 tbsp max as per your plan."},
+  "Ghee":{kcal:45,unit:"tsp",protein:0,fat:5,carbs:0,fiber:0,cat:"Fat",gi:0,emoji:"🧈",swap:"½ tsp ghee (22 kcal) — same flavor, half the calories. Or use ghee only on chapathi, not on rice.",swapKcal:22,hba1c:"GI 0 — pure fat, no glucose impact. Ghee actually contains butyrate which feeds gut bacteria and improves insulin sensitivity. Not the enemy — quantity is. 1 tsp on chapathi is fine. 3 tsp daily is not."},
+  "Double ka Meetha":{kcal:310,unit:"piece",protein:7,fat:14,carbs:40,fiber:0.5,cat:"Dessert",gi:75,emoji:"🍞",swap:"Qubani ka Meetha (180 kcal) — authentic Hyderabadi, 42% fewer calories, better for HbA1c",swapKcal:180,hba1c:"Fried bread + sugar syrup + ghee = worst dessert combination for HbA1c. If at a wedding or function, have a very small portion and walk 20 min immediately after dinner."},
+  "Boiled Egg":{kcal:78,unit:"egg",protein:6.3,fat:5.3,carbs:0.6,fiber:0,cat:"Protein",gi:0,emoji:"🥚",swap:"Already optimal. Best snack in your plan. Protein + fat with zero GI = perfect between-meal food.",swapKcal:78,hba1c:"GI essentially 0. Leucine in egg white directly stimulates insulin signaling without raising blood sugar. One of the best foods for HbA1c management. Eat more, not less."},
+  "Peanuts 20g":{kcal:113,unit:"handful",protein:4.7,fat:9.3,carbs:3.3,fiber:1.6,cat:"Snack",gi:14,emoji:"🥜",swap:"Already a smart choice. At GI 14, peanuts are the lowest GI snack in common use. Eat before meals to blunt the subsequent glucose spike.",swapKcal:113,hba1c:"GI 14 — extremely low. Resveratrol in peanut skin improves insulin sensitivity. Pre-meal peanuts reduce post-meal glucose by 15-21%. Don't remove the skin."},
+  "Dark chocolate 20g":{kcal:110,unit:"piece",protein:1.5,fat:7,carbs:11,fiber:1.8,cat:"Snack",gi:23,emoji:"🍫",swap:"70%+ cocoa only. Less than 70% has too much sugar. 20g is the correct portion.",swapKcal:110,hba1c:"Low GI (23). Flavonoids in dark chocolate improve endothelial function and insulin sensitivity. 20g of 70%+ dark chocolate daily is actually beneficial for HbA1c — one of few sweets with evidence behind it."},
+  // ── NOODLES & INDO-CHINESE ──────────────────────────────────────────────
+  "Roadside Hakka Noodles":{kcal:380,unit:"plate",protein:9,fat:14,carbs:52,fiber:2.5,cat:"Street food",gi:65,emoji:"🍜",swap:"Half portion (190 kcal) + 1 boiled egg alongside — more protein, less carb load, same experience",swapKcal:190,hba1c:"High GI maida noodles cause rapid glucose spike. Street stall oil is typically reused (oxidized fat). If eating, take half portion and walk 30 min after."},
+  "Veg Manchurian (gravy)":{kcal:320,unit:"plate",protein:7,fat:15,carbs:38,fiber:3,cat:"Street food",gi:62,emoji:"🥡",swap:"Dry Manchurian, half portion (160 kcal) — no sugar-heavy gravy, 50% fewer calories",swapKcal:160,hba1c:"Cornflour coating + sugar in sauce = double glucose load. Maida balls fried then dipped in sugar-soy sauce. One of the worst HbA1c foods in street cuisine."},
+  "Chicken Manchurian":{kcal:380,unit:"plate",protein:22,fat:18,carbs:28,fiber:2,cat:"Street food",gi:55,emoji:"🍗",swap:"Grilled chicken 150g with lemon (165 kcal) — same protein, 56% fewer calories, zero glucose spike",swapKcal:165,hba1c:"Better than veg manchurian — protein content slows absorption. Dry version (no gravy) is 40 kcal less and meaningfully lower GI. Always ask for dry over gravy."},
+  "Veg Fried Rice":{kcal:400,unit:"plate",protein:8,fat:14,carbs:58,fiber:2,cat:"Street food",gi:70,emoji:"🍚",swap:"Half plate + extra egg (200 kcal) — more protein, same satisfaction, lower total glucose load",swapKcal:200,hba1c:"White rice + high heat oil (often reused) + ajinomoto = GI 70. Fast glucose spike. Never at dinner — evening insulin sensitivity is lowest. Lunch only, half portion."},
+  "Egg Fried Rice":{kcal:450,unit:"plate",protein:15,fat:16,carbs:58,fiber:1.5,cat:"Street food",gi:68,emoji:"🍳",swap:"Half plate egg fried rice + extra egg curry (300 kcal) — more protein, lower carb load",swapKcal:300,hba1c:"Egg protein buffers the glucose spike partially vs veg version. Still high GI from white rice. Lunch only, never dinner. Walk 20 min after."},
+  "Schezwan Noodles":{kcal:420,unit:"plate",protein:9,fat:16,carbs:56,fiber:2.5,cat:"Street food",gi:68,emoji:"🌶️",swap:"Half portion + large cucumber salad (210 kcal) — fiber from salad slows noodle absorption",swapKcal:210,hba1c:"Schezwan sauce adds sugar and sodium. Capsaicin slightly improves insulin sensitivity but noodles overwhelm any benefit. Occasional food only — not weekly."},
+  "Paneer Fried Rice":{kcal:480,unit:"plate",protein:16,fat:18,carbs:58,fiber:2,cat:"Street food",gi:67,emoji:"🧀",swap:"Paneer bhurji (180 kcal) — same paneer satisfaction, completely different macro profile — high protein, very low carb",swapKcal:180,hba1c:"Paneer protein buffers the rice glucose spike more than veg/egg versions. Still a high-calorie meal. If having, skip afternoon snack and ensure treadmill that day."},
+
+  // ── CHAAT VARIETIES ──────────────────────────────────────────────────────
+  "Bhel Puri":{kcal:180,unit:"plate",protein:4,fat:5,carbs:30,fiber:3,cat:"Street food",gi:55,emoji:"🫙",swap:"Already one of the lighter chaat options. Ask for extra onion, tomato, coriander — more fiber, same flavour.",swapKcal:180,hba1c:"Puffed rice GI ~65 but the volume is large so actual glucose load is moderate. One of the better street food choices for HbA1c. Avoid the sweet chutney, use green chutney."},
+  "Sev Puri":{kcal:250,unit:"plate",protein:5,fat:10,carbs:34,fiber:2.5,cat:"Street food",gi:60,emoji:"🫙",swap:"Bhel puri (180 kcal) — similar flavour profile, 28% fewer calories",swapKcal:180,hba1c:"Fried sev adds significant fat. Multiple chutneys combine sugar sources. Eat slowly — spacing each puri reduces glucose spike vs eating all at once."},
+  "Dahi Puri":{kcal:220,unit:"plate",protein:6,fat:6,carbs:32,fiber:2,cat:"Street food",gi:50,emoji:"🫙",swap:"Best chaat choice — curd protein + probiotic significantly lowers GI vs other chaats.",swapKcal:220,hba1c:"Best GI of all puri-based chaats (50) — curd protein slows glucose absorption and the probiotic improves insulin sensitivity. Reasonable choice at lunch."},
+  "Papdi Chaat":{kcal:290,unit:"plate",protein:7,fat:11,carbs:38,fiber:3,cat:"Street food",gi:58,emoji:"🍽️",swap:"Dahi puri (220 kcal) — similar experience, less fried papdi, better GI",swapKcal:220,hba1c:"Multiple fried elements + sweet/tamarind chutneys = layered sugar load. Curd component helps. Moderate impact if eaten at lunch after a protein-first meal."},
+  "Aloo Chaat":{kcal:240,unit:"plate",protein:4,fat:9,carbs:34,fiber:3.5,cat:"Street food",gi:70,emoji:"🥔",swap:"Same with boiled aloo instead of fried + extra curd (180 kcal) — cuts GI from 70 to 55",swapKcal:180,hba1c:"Fried potato = very high GI (70). Worse for HbA1c than it looks. If craving this, insist on boiled not fried potato, with lots of curd and no sweet chutney."},
+  "Ragda Pattice":{kcal:350,unit:"plate",protein:10,fat:12,carbs:48,fiber:5,cat:"Street food",gi:58,emoji:"🍽️",swap:"Half portion (175 kcal) — ragda (white peas) is nutritious with good fiber and protein",swapKcal:175,hba1c:"White peas in ragda have decent fiber which slows glucose absorption. Better than most chaats. The fried pattice is the issue — ask for baked version where possible."},
+  "Pani Puri / Golgappa":{kcal:35,unit:"puri",protein:0.8,fat:1.5,carbs:5,fiber:0.3,cat:"Street food",gi:60,emoji:"💧",swap:"Cap at 6 pieces (210 kcal total). Mint-water version better than sweet version.",swapKcal:210,hba1c:"6 puris = 210 kcal with virtually zero protein or fiber. Fast glucose hit. If eating, stand while eating — it slightly improves glucose metabolism and you naturally eat fewer."},
+  "Dahi Vada":{kcal:230,unit:"plate",protein:9,fat:7,carbs:30,fiber:2.5,cat:"Street food",gi:48,emoji:"🥛",swap:"Already a relatively smart choice — urad dal + curd combination creates one of the lowest GI chaats.",swapKcal:230,hba1c:"One of the best street food options for HbA1c (GI 48). Urad dal protein + curd probiotic. Acceptable 2-3× per week at lunch. Ask for less sweet chutney, more green chutney."},
+  "Chaat (mixed)":{kcal:280,unit:"plate",protein:6,fat:10,carbs:38,fiber:3,cat:"Street food",gi:58,emoji:"🍽️",swap:"Always choose dahi-heavy chaat variant — curd transforms the GI profile of any chaat",swapKcal:220,hba1c:"Mixed chaat GI depends on composition. Always choose dahi-heavy versions. Less sweet chutney, more green chutney. Eat at lunch, never as standalone dinner."},
+
+  // ── MORE STREET FOOD ─────────────────────────────────────────────────────
+  "Chole Bhature":{kcal:550,unit:"plate",protein:15,fat:22,carbs:70,fiber:8,cat:"Street food",gi:68,emoji:"🫓",swap:"Chole with 2 multigrain chapathi (420 kcal) — same chole (nutritious), replace bhature with chapathi",swapKcal:420,hba1c:"Bhature = deep-fried maida, fast GI spike. But chole (chickpeas) has excellent 8g fiber. The chickpeas are the hero — the bhature is the villain. Chole-roti is a completely different metabolic event."},
+  "Pav Bhaji":{kcal:420,unit:"plate",protein:10,fat:18,carbs:52,fiber:6,cat:"Street food",gi:65,emoji:"🍞",swap:"Bhaji with 2 multigrain rotis instead of pav (370 kcal) — bhaji is nutritious, pav is the problem",swapKcal:370,hba1c:"The bhaji (mixed veg mash) has decent fiber from potato, tomato, capsicum, peas. White pav is high GI. Butter adds significant calories — typical stall uses 30-40g. Ask for less butter."},
+  "Kachori":{kcal:220,unit:"piece",protein:4,fat:12,carbs:24,fiber:2,cat:"Street food",gi:68,emoji:"🫓",swap:"Roasted chana 50g (190 kcal) — same satisfying crunch, better nutrition",swapKcal:190,hba1c:"Deep-fried maida shell overwhelms the moderate GI dal filling. One kachori + chai = 300 kcal, very low nutrition density. Occasional only."},
+  "Bread Pakora":{kcal:280,unit:"piece",protein:7,fat:14,carbs:30,fiber:1.5,cat:"Street food",gi:72,emoji:"🍞",swap:"Egg bhurji (120 kcal) — if craving something hot and spiced, this is the intelligent choice",swapKcal:120,hba1c:"White bread (high GI) + besan batter + deep fried = compounded glucose impact. One of the foods to avoid completely on this plan. No acceptable version exists."},
+  "Aloo Tikki":{kcal:190,unit:"piece",protein:3.5,fat:8,carbs:24,fiber:2.5,cat:"Street food",gi:70,emoji:"🥔",swap:"Eat with curd not ketchup — cuts effective GI from 70 to ~55 due to protein buffering",swapKcal:220,hba1c:"Fried potato = high GI. Curd vs ketchup is a significant difference in metabolic impact. Always ask for dahi topping. 1 tikki with curd is acceptable; 2-3 are not."},
+  "Momos (steamed veg)":{kcal:180,unit:"6 pieces",protein:6,fat:4,carbs:28,fiber:2,cat:"Street food",gi:48,emoji:"🥟",swap:"Already a good street food — steamed preparation preserves resistant starch. Best momo: always steamed, never fried.",swapKcal:180,hba1c:"Steamed momos GI 48 — steam cooking creates resistant starch. Good choice. Chilli chutney is fine. Only problem: portions — 6 is fine, 12 is not."},
+  "Fried Momos":{kcal:320,unit:"6 pieces",protein:7,fat:14,carbs:36,fiber:1.5,cat:"Street food",gi:72,emoji:"🥟",swap:"Steamed momos (180 kcal, GI 48) — same filling, 44% fewer calories, GI drops from 72 to 48",swapKcal:180,hba1c:"Frying destroys resistant starch benefit. GI jumps from 48 to 72. The preparation method alone doubles the metabolic impact. Always choose steamed — no compromise."},
+  "Corn Chaat / Masala Corn":{kcal:180,unit:"cup",protein:4,fat:6,carbs:28,fiber:4,cat:"Street food",gi:52,emoji:"🌽",swap:"Ask for less butter (saves 40 kcal). Add extra lemon and chilli — enhances flavour without calories.",swapKcal:150,hba1c:"Medium GI (52). Corn fiber slows absorption. One of the better street food choices. Plain masala corn without butter is genuinely acceptable 3-4× per week."},
+  "Roasted Corn on the Cob":{kcal:130,unit:"piece",protein:3.5,fat:2,carbs:24,fiber:3.5,cat:"Street food",gi:48,emoji:"🌽",swap:"Best outdoor/roadside snack in the entire list. Low GI, high fiber, natural, minimal oil.",swapKcal:130,hba1c:"GI 48 — one of the lowest GI street foods. Roasting creates resistant starch. Lemon + chilli seasoning. No butter version is an excellent choice on travel days."},
+
+  // ── BEVERAGES ────────────────────────────────────────────────────────────
+  "Sugarcane Juice 300ml":{kcal:180,unit:"glass",protein:0.5,fat:0.2,carbs:45,fiber:0,cat:"Beverage",gi:43,emoji:"🥤",swap:"Coconut water (45 kcal) — similar refreshing quality, 75% fewer calories, actual electrolytes",swapKcal:45,hba1c:"GI 43 (lower than expected) — polyphenols in sugarcane slow absorption. But 45g carbs with zero fiber is still a significant load. One small glass occasionally, never daily."},
+  "Buttermilk / Chaas 300ml":{kcal:45,unit:"glass",protein:3,fat:1.5,carbs:5,fiber:0,cat:"Beverage",gi:27,emoji:"🥛",swap:"Already excellent — best roadside beverage for your goals. Spiced with cumin, ginger, coriander is even better.",swapKcal:45,hba1c:"GI 27 — one of the lowest GI beverages. Probiotic improves insulin sensitivity over time. Best roadside drink. Drink freely — it's essentially Majjiga from your plan."},
+  "Shikanji / Nimbu Paani (no sugar)":{kcal:20,unit:"glass",protein:0.3,fat:0,carbs:5,fiber:0,cat:"Beverage",gi:20,emoji:"🍋",swap:"Best roadside beverage — natural electrolytes, near-zero calories, vitamin C improves iron absorption.",swapKcal:20,hba1c:"Essentially no glycemic impact. Citric acid in lemon slightly improves insulin sensitivity. Sendha namak provides minerals. Default travel day beverage."},
+
+  // ── SOUTH INDIAN EXTRAS ──────────────────────────────────────────────────
+  "Medu Vada":{kcal:145,unit:"piece",protein:4.5,fat:7,carbs:16,fiber:1.5,cat:"Breakfast",gi:50,emoji:"🍩",swap:"1 medu vada with sambar — the sambar protein+fiber brings effective GI down. Never eat standalone without sambar.",swapKcal:145,hba1c:"Urad dal base = reasonable protein and GI (50). Deep fried is the issue. One vada with sambar is acceptable. Most people eat 2-3 which doubles the impact."},
+  "Upma":{kcal:250,unit:"bowl",protein:5,fat:8,carbs:38,fiber:2.5,cat:"Breakfast",gi:55,emoji:"🍚",swap:"Oats upma (from your plan) — same preparation, better fiber (5.5g vs 2.5g), lower GI",swapKcal:250,hba1c:"Rava/semolina GI 55. Vegetables added improve fiber. Better than plain rava, worse than oats upma. Acceptable 1-2×/week as a lunch item."},
+  "Pongal (ven)":{kcal:290,unit:"bowl",protein:8,fat:10,carbs:42,fiber:2,cat:"Breakfast",gi:58,emoji:"🍚",swap:"¾ serving + sambar + curd — adds protein and fiber, lowers effective GI to ~48",swapKcal:290,hba1c:"Rice + moong dal = better amino profile than rice alone. Ghee slightly slows absorption. Acceptable at breakfast. Worse choice at dinner."},
+
+  // ── SNACKS ───────────────────────────────────────────────────────────────
+  "Chakli / Murukku":{kcal:160,unit:"handful (30g)",protein:2.5,fat:8,carbs:18,fiber:1,cat:"Snack",gi:65,emoji:"🌀",swap:"Roasted makhana 25g (78 kcal) — same crunchy snack habit, half the calories, no deep frying",swapKcal:78,hba1c:"Deep-fried rice flour. GI 65. Easy to overconsume — crunch triggers continued eating. Pre-portion before eating, never eat from the packet directly."},
+  "Mixture / Bombay Mix":{kcal:180,unit:"handful (35g)",protein:4,fat:10,carbs:18,fiber:2,cat:"Snack",gi:60,emoji:"🥜",swap:"Plain roasted peanuts 30g (170 kcal) — similar satisfaction, much lower GI (14 vs 60), better fat profile",swapKcal:170,hba1c:"Variety of textures makes it very easy to overeat. Fried sev (gram flour) drives the GI. The peanuts in the mix are the only beneficial component. Switch to plain peanuts."},
+  "Khakhra (plain)":{kcal:120,unit:"2 pieces",protein:3.5,fat:3,carbs:18,fiber:2.5,cat:"Snack",gi:48,emoji:"🫓",swap:"One of the better packaged snacks — whole wheat, thin, low fat. 2 pieces with curd is a balanced snack.",swapKcal:120,hba1c:"GI 48. Whole wheat base provides fiber. Plain version far better than masala. A genuinely acceptable packaged snack choice."},
+
+  // ── SWEETS ───────────────────────────────────────────────────────────────
+  "Gajar Ka Halwa":{kcal:280,unit:"bowl",protein:5,fat:12,carbs:36,fiber:2.5,cat:"Dessert",gi:60,emoji:"🥕",swap:"½ small bowl (140 kcal) — carrot fiber partially offsets the sugar. Strict half-portion rule.",swapKcal:140,hba1c:"Carrot itself has excellent fiber and GI 35. The problem is khoya/mawa and sugar. Carrot fiber partially offsets the sugar load. Occasional at lunch is acceptable, never daily."},
+  "Besan Ladoo":{kcal:180,unit:"piece",protein:4,fat:8,carbs:22,fiber:1.5,cat:"Dessert",gi:58,emoji:"🟡",swap:"1 piece maximum. Roasted besan is one of the relatively better traditional sweets for GI management.",swapKcal:180,hba1c:"Roasted gram flour base = better GI than maida sweets (58 vs 70+). Ghee slows absorption. One of the better traditional sweets for HbA1c. Strict 1-piece limit — never 2-3."},
+  "Halwa (suji/rava)":{kcal:260,unit:"bowl",protein:4,fat:11,carbs:35,fiber:1,cat:"Dessert",gi:72,emoji:"🟡",swap:"Besan ladoo (180 kcal, GI 58) — lower GI, better protein, same sweet satisfaction",swapKcal:180,hba1c:"Rava + sugar + ghee = triple glucose source with minimal fiber. GI 72. One of the worst traditional sweets for HbA1c. Temple prasad portions (small) are acceptable. Regular servings are not."},
+
+};
+
+// ─────────────────────────────────────
+// STATE
+// ─────────────────────────────────────
+const WEIGHT_KG = 82;
+const ACTIVITIES = {
+  walk:    {MET:5.0, label:"Brisk walk (6 km/h)", stepsPerMin:100, desc:"minutes of brisk walking"},
+  treadmill:{MET:8.0,label:"Treadmill (7 km/h)",  stepsPerMin:140, desc:"minutes on treadmill"},
+  stairs:  {MET:8.8, label:"Staircase climbing",   stepsPerMin:80,  desc:"minutes of stair climbing"},
+  slow:    {MET:2.8, label:"Slow walk (4 km/h)",   stepsPerMin:75,  desc:"minutes of slow walking"},
+};
+
+let currentFood = null;
+let currentQty = 1;
+let currentActivity = 'walk';
+let currentCat = 'all';
+let lastResults = [];
+
+// ─────────────────────────────────────
+// SEARCH
+// ─────────────────────────────────────
+const searchInput = document.getElementById('search-input');
+const clearBtn = document.getElementById('clear-btn');
+
+searchInput.addEventListener('input', function() {
+  const q = this.value.trim();
+  clearBtn.classList.toggle('hidden', q.length === 0);
+  if (q.length === 0) { showEmpty(); return; }
+  performSearch(q);
+});
+
+function clearSearch() {
+  searchInput.value = '';
+  clearBtn.classList.add('hidden');
+  showEmpty();
+  searchInput.focus();
+}
+
+function quickSearch(name) {
+  searchInput.value = name;
+  clearBtn.classList.remove('hidden');
+  performSearch(name);
+  // Auto-select if exact match
+  if (FOODS[name]) {
+    setTimeout(() => selectFood(name), 200);
+  }
+}
+
+function filterCat(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  const q = searchInput.value.trim();
+  if (q) performSearch(q);
+  else if (cat !== 'all') showCategoryBrowse(cat);
+  else showEmpty();
+}
+
+function performSearch(query) {
+  const q = query.toLowerCase();
+  let results = Object.entries(FOODS).filter(([name, food]) => {
+    const matchQuery = name.toLowerCase().includes(q) ||
+      food.cat.toLowerCase().includes(q) ||
+      name.toLowerCase().split(' ').some(w => w.startsWith(q));
+    const matchCat = currentCat === 'all' || food.cat === currentCat;
+    return matchQuery && matchCat;
+  });
+
+  lastResults = results;
+  showResults(results);
+}
+
+function showCategoryBrowse(cat) {
+  const results = Object.entries(FOODS).filter(([n, f]) => f.cat === cat);
+  lastResults = results;
+  showResults(results);
+}
+
+function showResults(results) {
+  document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('detail-panel').classList.add('hidden');
+  const container = document.getElementById('search-results');
+  container.classList.remove('hidden');
+
+  if (results.length === 0) {
+    container.innerHTML = `<div class="bg-white rounded-[20px] border border-border-subtle p-6 text-center">
+      <div class="text-3xl mb-3">🔍</div>
+      <div class="font-semibold text-[14px] mb-1">No results found</div>
+      <div class="text-[12px] text-on-surface-variant">Try searching in English — samosa, biryani, chai, banana</div>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = results.map(([name, food], i) => {
+    const verdict = getQuickVerdict(food);
+    return `<div class="result-card bg-white rounded-[20px] border border-border-subtle p-4 flex items-center gap-3 sl ${verdict.glow}" onclick="selectFood('${name}')" style="animation-delay:${i*0.04}s">
+      <div class="text-[24px] flex-shrink-0">${food.emoji}</div>
+      <div class="flex-1 min-w-0">
+        <div class="font-semibold text-[13px] text-on-surface">${name}</div>
+        <div class="text-[11px] text-on-surface-variant mt-0.5">${food.cat} · per ${food.unit}</div>
+      </div>
+      <div class="text-right flex-shrink-0">
+        <div class="font-mono font-bold text-[16px] ${verdict.color}">${food.kcal}</div>
+        <div class="text-[9px] text-on-surface-variant font-mono">kcal</div>
+      </div>
+      <span class="material-symbols-outlined ms text-on-surface-variant text-[18px]">chevron_right</span>
+    </div>`;
+  }).join('');
+}
+
+function getQuickVerdict(food) {
+  if (food.kcal < 80)  return {color:'text-wellness-teal', glow:''};
+  if (food.kcal < 150) return {color:'text-achievement-gold', glow:''};
+  return {color:'text-strict-red', glow:''};
+}
+
+function showEmpty() {
+  document.getElementById('empty-state').classList.remove('hidden');
+  document.getElementById('search-results').classList.add('hidden');
+  document.getElementById('detail-panel').classList.add('hidden');
+}
+
+// ─────────────────────────────────────
+// FOOD DETAIL
+// ─────────────────────────────────────
+function selectFood(name) {
+  currentFood = name;
+  currentQty = 1;
+  currentActivity = 'walk';
+  document.querySelectorAll('.activity-pill').forEach(p => p.classList.remove('selected'));
+  document.getElementById('act-walk').classList.add('selected');
+
+  document.getElementById('search-results').classList.add('hidden');
+  document.getElementById('empty-state').classList.add('hidden');
+  const panel = document.getElementById('detail-panel');
+  panel.classList.remove('hidden');
+
+  const food = FOODS[name];
+  renderDetail(name, food);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function backToResults() {
+  document.getElementById('detail-panel').classList.add('hidden');
+  if (lastResults.length > 0) {
+    document.getElementById('search-results').classList.remove('hidden');
+  } else {
+    showEmpty();
+  }
+}
+
+function changeQty(delta) {
+  currentQty = Math.max(1, Math.min(10, currentQty + delta));
+  document.getElementById('qty-display').textContent = currentQty;
+  document.getElementById('qty-display').classList.remove('pulse-once');
+  void document.getElementById('qty-display').offsetWidth;
+  document.getElementById('qty-display').classList.add('pulse-once');
+  updateCalculations(FOODS[currentFood]);
+}
+
+function selectActivity(act) {
+  currentActivity = act;
+  document.querySelectorAll('.activity-pill').forEach(p => p.classList.remove('selected'));
+  document.getElementById('act-'+act).classList.add('selected');
+  updateBurnSection(FOODS[currentFood]);
+}
+
+function renderDetail(name, food) {
+  const emojis = {'Street food':'🥘','Beverage':'☕','Dessert':'🍮','Main meal':'🍛','Breakfast':'🍳','Snack':'🥜','Fruit':'🍎','Protein':'🥩','Dairy':'🥛','Nuts':'🥜','Condiment':'🥄','Fat':'🫙'};
+  document.getElementById('detail-name').textContent = name;
+  document.getElementById('detail-cat-badge').textContent = food.cat;
+  document.getElementById('detail-unit-label').textContent = `Per ${food.unit} · adjust quantity below`;
+  document.getElementById('detail-emoji').textContent = food.emoji;
+
+  // Macro bars
+  const macros = [
+    {label:'Carbs',  val:food.carbs,   max:60,  col:'bg-achievement-gold', unit:'g'},
+    {label:'Protein',val:food.protein, max:35,  col:'bg-wellness-teal', unit:'g'},
+    {label:'Fat',    val:food.fat,     max:20,  col:'bg-progress-blue', unit:'g'},
+    {label:'Fiber',  val:food.fiber,   max:10,  col:'bg-primary', unit:'g'},
+  ];
+  document.getElementById('macro-bars').innerHTML = macros.map(m => {
+    const pct = Math.min(100, (m.val / m.max) * 100);
+    return `<div>
+      <div class="flex justify-between text-[11px] mb-1">
+        <span class="text-on-surface-variant">${m.label}</span>
+        <span class="font-mono font-bold text-on-surface">${m.val}${m.unit}</span>
+      </div>
+      <div class="h-2 bg-surface-container rounded-full overflow-hidden">
+        <div class="${m.col} h-full rounded-full" style="width:${pct}%"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // GI
+  const gi = food.gi;
+  let giCol, giLabel, giExp;
+  if (gi === 0)       { giCol='bg-wellness-teal/15 text-wellness-teal'; giLabel='0 (No GI)'; giExp='Pure protein or fat — has no glycemic impact at all.'; }
+  else if (gi <= 35)  { giCol='bg-wellness-teal/15 text-wellness-teal'; giLabel=gi+' — Low GI'; giExp='Slow glucose release. Safe for blood sugar management.'; }
+  else if (gi <= 55)  { giCol='bg-achievement-gold/15 text-achievement-gold'; giLabel=gi+' — Medium GI'; giExp='Moderate glucose spike. Eat with protein or fat to slow absorption.'; }
+  else if (gi <= 70)  { giCol='bg-strict-red/10 text-strict-red'; giLabel=gi+' — High GI'; giExp='Fast glucose spike within 30 min. Always pair with protein. Never eat alone.'; }
+  else                { giCol='bg-strict-red/15 text-strict-red'; giLabel=gi+' — Very High GI'; giExp='Rapid glucose spike. Serious impact on HbA1c if consumed regularly.'; }
+  document.getElementById('gi-badge').className = 'font-mono text-[11px] font-bold px-3 py-1 rounded-full '+giCol;
+  document.getElementById('gi-badge').textContent = giLabel;
+  document.getElementById('gi-explanation').textContent = giExp;
+
+  // HbA1c
+  document.getElementById('hba1c-text').textContent = food.hba1c;
+
+  // Swap card
+  document.getElementById('swap-content').innerHTML = `
+    <div class="bg-surface-container-low rounded-[14px] p-3.5">
+      <div class="text-[12px] text-on-surface leading-relaxed">${food.swap}</div>
+      ${food.swapKcal > 0 ? `<div class="mt-2 flex items-center gap-2">
+        <span class="text-[10px] font-mono bg-wellness-teal/15 text-wellness-teal px-2 py-0.5 rounded-full font-bold">Save ${food.kcal - food.swapKcal} kcal</span>
+        <span class="text-[10px] font-mono text-on-surface-variant">→ ${food.swapKcal} kcal instead of ${food.kcal}</span>
+      </div>` : ''}
+    </div>`;
+
+  updateCalculations(food);
+}
+
+function updateCalculations(food) {
+  const qty = currentQty;
+  const totalKcal = food.kcal * qty;
+  const totalProtein = (food.protein * qty).toFixed(1);
+  const totalFiber = (food.fiber * qty).toFixed(1);
+
+  document.getElementById('total-kcal').textContent = totalKcal;
+  document.getElementById('total-protein').textContent = totalProtein + 'g';
+  document.getElementById('total-fiber').textContent = totalFiber + 'g';
+
+  // Impact bar (food = 1933, TDEE = 2800, buffer zone = 867)
+  const bufferTotal = 2800 - 1933; // 867
+  const impactPct = Math.min(100, (totalKcal / bufferTotal) * 100);
+  document.getElementById('impact-bar').style.setProperty('--target-w', impactPct.toFixed(1)+'%');
+  document.getElementById('impact-pct-label').textContent = '+' + impactPct.toFixed(0) + '% of buffer';
+
+  // Verdict
+  let vIcon, vTitle, vBody, vBg;
+  if (totalKcal <= 100) {
+    vIcon='✅'; vTitle='Safe — within your daily buffer'; vBg='bg-wellness-teal/8 border border-wellness-teal/25';
+    vBody=`${totalKcal} kcal is well within your 867 kcal daily buffer. No impact on your 100-day weight loss target.`;
+  } else if (totalKcal <= 200) {
+    vIcon='⚠️'; vTitle='Manageable — offset with a walk'; vBg='bg-achievement-gold/8 border border-achievement-gold/25';
+    vBody=`${totalKcal} kcal uses ${Math.round(totalKcal/867*100)}% of your daily buffer. A 20-25 min brisk walk clears it completely.`;
+  } else if (totalKcal <= 400) {
+    vIcon='⚠️'; vTitle='Significant — needs deliberate offset'; vBg='bg-achievement-gold/8 border border-achievement-gold/25';
+    vBody=`${totalKcal} kcal is ${Math.round(totalKcal/867*100)}% of your buffer. Add 10 min to today's treadmill OR reduce dinner by one chapathi.`;
+  } else {
+    vIcon='🚨'; vTitle='High impact — plan your offset now'; vBg='bg-strict-red/5 border border-strict-red/20';
+    vBody=`${totalKcal} kcal exceeds your daily buffer. This alone requires a ${Math.round(totalKcal/(5.0*WEIGHT_KG/60))}-min brisk walk plus reducing today's dinner by 1 chapathi to stay on track.`;
+  }
+  const vc = document.getElementById('verdict-card');
+  vc.className = `rounded-[22px] p-5 mb-3 ${vBg}`;
+  document.getElementById('verdict-icon').textContent = vIcon;
+  document.getElementById('verdict-title').textContent = vTitle;
+  document.getElementById('verdict-body').textContent = vBody;
+
+  updateBurnSection(food);
+}
+
+function updateBurnSection(food) {
+  const qty = currentQty;
+  const totalKcal = food.kcal * qty;
+  const act = ACTIVITIES[currentActivity];
+  const burnPerMin = act.MET * WEIGHT_KG / 60;
+  const minsNeeded = Math.ceil(totalKcal / burnPerMin);
+  const stepsNeeded = Math.round(minsNeeded * act.stepsPerMin);
+  const kmNeeded = (act.MET === 8.8 ? 0 : (minsNeeded / 60) * (currentActivity==='treadmill' ? 7 : currentActivity==='walk' ? 6 : 4)).toFixed(1);
+  const floorsNeeded = Math.ceil(totalKcal / (0.15 * WEIGHT_KG));
+
+  document.getElementById('burn-time').textContent = minsNeeded;
+  document.getElementById('burn-desc').textContent = act.desc;
+  document.getElementById('burn-steps').textContent = stepsNeeded.toLocaleString();
+  document.getElementById('burn-km').textContent = act.MET === 8.8 ? '—' : kmNeeded + ' km';
+  document.getElementById('burn-floors').textContent = floorsNeeded;
+
+  // Split options
+  const splits = [
+    {n:2, label:'2 sessions', icon:'🕐'},
+    {n:3, label:'After each meal', icon:'🍛'},
+    {n:4, label:'4 short walks', icon:'🚶'},
+  ];
+  document.getElementById('split-options').innerHTML = splits.map(s => {
+    const perSession = Math.ceil(minsNeeded / s.n);
+    const stepsPerSession = Math.round(stepsNeeded / s.n);
+    return `<div class="flex items-center justify-between bg-surface-container-low rounded-[12px] px-3.5 py-2.5">
+      <div class="flex items-center gap-2">
+        <span class="text-[14px]">${s.icon}</span>
+        <span class="text-[12px] font-medium text-on-surface">${s.label}</span>
+      </div>
+      <div class="text-right">
+        <span class="font-mono font-bold text-[13px] text-primary">${perSession} min each</span>
+        <span class="text-[10px] text-on-surface-variant font-mono ml-2">~${stepsPerSession.toLocaleString()} steps</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

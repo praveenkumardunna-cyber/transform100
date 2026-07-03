@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0,viewport-fit=cover" name="viewport"/>
+<title>Settings — Transform 100</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-gray":"#F8FAFC","surface-container-low":"#f3f3fa","surface-container":"#ededf5","on-surface":"#1a1b21","on-surface-variant":"#3c4a43","primary":"#006c51","on-primary":"#ffffff","primary-container":"#2dd4a4","on-primary-container":"#005740","wellness-teal":"#2DD4A4","progress-blue":"#4D9FFF","achievement-gold":"#E8A020","strict-red":"#FF5E5B","border-subtle":"#E2E8F0"}}}}</script>
+<style>.ms{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}.gh{background:rgba(255,255,255,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.gn{background:rgba(249,249,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}body{min-height:100dvh}</style>
+</head>
+<body class="bg-surface-gray text-on-surface" style="font-family:Inter,system-ui,sans-serif">
+<header class="fixed top-0 w-full z-50 gh border-b border-border-subtle h-16 flex items-center gap-3 px-5 max-w-lg mx-auto left-0 right-0">
+  <a href="more.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span></a>
+  <div class="text-[14px] font-semibold">Settings</div>
+  <button onclick="saveSettings()" class="ml-auto bg-primary text-white text-[12px] font-bold px-4 py-2 rounded-xl">Save</button>
+</header>
+<main class="pt-20 pb-10 max-w-lg mx-auto px-5 space-y-4">
+
+  <!-- Current mission status -->
+  <div id="mission-banner" class="bg-primary rounded-[24px] p-5 text-white">
+    <div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-2">Current mission</div>
+    <div class="font-bold text-[16px]" id="banner-text">Loading...</div>
+    <div class="text-[12px] text-white/70 mt-1" id="banner-sub">—</div>
+  </div>
+
+  <!-- Name -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5">
+    <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest block mb-2">Your name</label>
+    <input id="s-name" type="text" maxlength="20" class="w-full bg-surface-container-low border border-border-subtle rounded-xl px-4 py-3 text-[16px] font-semibold focus:outline-none focus:border-primary transition-colors"/>
+  </div>
+
+  <!-- Start date -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5">
+    <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest block mb-2">Start date</label>
+    <input id="s-start" type="date" class="w-full bg-surface-container-low border border-border-subtle rounded-xl px-4 py-3 text-[15px] font-mono focus:outline-none focus:border-primary transition-colors"/>
+    <div class="mt-3 bg-surface-container rounded-xl px-4 py-2.5 text-[12px] text-on-surface-variant">
+      End date (Day 90): <span id="s-end-preview" class="font-mono font-bold text-primary">—</span>
+    </div>
+    <div id="s-daynum" class="mt-2 text-[12px] text-achievement-gold font-mono text-center font-bold"></div>
+  </div>
+
+  <!-- Weights -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5 space-y-5">
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest">Starting weight</label>
+        <span class="font-mono font-bold text-[16px] text-primary" id="s-sw-disp">82.3 kg</span>
+      </div>
+      <input id="s-sw" type="range" min="50" max="150" step="0.1" oninput="updatePrev()" style="-webkit-appearance:none;height:6px;background:#E2E8F0;border-radius:3px;outline:none;width:100%"/>
+    </div>
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest">Target weight</label>
+        <span class="font-mono font-bold text-[16px] text-wellness-teal" id="s-tw-disp">75.0 kg</span>
+      </div>
+      <input id="s-tw" type="range" min="40" max="130" step="0.5" oninput="updatePrev()" style="-webkit-appearance:none;height:6px;background:#E2E8F0;border-radius:3px;outline:none;width:100%"/>
+    </div>
+    <div class="bg-surface-container rounded-xl p-3 grid grid-cols-3 gap-2 text-center">
+      <div><div class="font-mono font-bold text-[15px] text-primary" id="s-diff">7.3</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kg to lose</div></div>
+      <div><div class="font-mono font-bold text-[15px] text-achievement-gold" id="s-pw">0.57</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kg/week</div></div>
+      <div><div class="font-mono font-bold text-[15px] text-progress-blue" id="s-kcal">~500</div><div class="text-[9px] text-on-surface-variant uppercase mt-0.5">kcal deficit</div></div>
+    </div>
+  </div>
+
+  <!-- Data management -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5 space-y-3">
+    <div class="font-semibold text-[14px] mb-3">Data</div>
+    <button onclick="exportData()" class="w-full bg-surface-container text-on-surface-variant font-semibold py-3 rounded-xl text-[13px] flex items-center justify-center gap-2 hover:opacity-80">
+      <span class="material-symbols-outlined ms text-[18px]">download</span> Export all data (JSON)
+    </button>
+    <button onclick="clearAllData()" class="w-full bg-strict-red/8 border border-strict-red/20 text-strict-red font-semibold py-3 rounded-xl text-[13px] flex items-center justify-center gap-2 hover:opacity-80">
+      <span class="material-symbols-outlined ms text-[18px]">delete_forever</span> Clear all app data
+    </button>
+    <button onclick="window.location.href='setup.html'" class="w-full bg-surface-container text-on-surface-variant font-semibold py-3 rounded-xl text-[13px] flex items-center justify-center gap-2 hover:opacity-80">
+      <span class="material-symbols-outlined ms text-[18px]">restart_alt</span> Re-run setup wizard
+    </button>
+  </div>
+
+  <!-- App info -->
+  <div class="text-center text-[11px] text-on-surface-variant font-mono pb-4">
+    Transform 100 · v1.0 · 13 screens · 246 KB
+  </div>
+
+</main>
+
+<nav class="fixed bottom-0 w-full z-50 gn border-t border-border-subtle rounded-t-2xl h-20 pb-3 px-2 flex justify-around items-center max-w-lg mx-auto left-0 right-0">
+  <a href="index.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">dashboard</span><span class="text-[9px] font-mono uppercase tracking-tighter">Home</span></a>
+  <a href="schedule.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">today</span><span class="text-[9px] font-mono uppercase tracking-tighter">Schedule</span></a>
+  <a href="meals.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">restaurant</span><span class="text-[9px] font-mono uppercase tracking-tighter">Meals</span></a>
+  <a href="tracker.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">analytics</span><span class="text-[9px] font-mono uppercase tracking-tighter">Tracker</span></a>
+  <a href="more.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">apps</span><span class="text-[9px] font-mono uppercase tracking-tighter">More</span></a>
+</nav>
+
+<script>
+let setup = {};
+try{ setup = JSON.parse(localStorage.getItem('t100_setup')||'{}'); }catch(e){}
+
+// Load current values
+document.getElementById('s-name').value = setup.name || '';
+document.getElementById('s-start').value = setup.startDate || '';
+document.getElementById('s-sw').value = setup.startWeight || 82.3;
+document.getElementById('s-tw').value = setup.targetWeight || 75;
+
+// Banner
+const sw = setup.startWeight||82.3, tw = setup.targetWeight||75;
+document.getElementById('banner-text').textContent = (setup.name||'You') + ' · ' + sw + ' → ' + tw + ' kg in 100 days';
+if(setup.startDate){
+  const s=new Date(setup.startDate),e=new Date(s);e.setDate(e.getDate()+99);
+  const today=new Date();today.setHours(0,0,0,0);
+  const dayNum=Math.max(1,Math.floor((today-s)/86400000)+1);
+  const fmt=d=>d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('banner-sub').textContent=fmt(s)+' → '+fmt(e)+' · Day '+dayNum+' of 90';
+}
+
+function updatePrev(){
+  const sw=parseFloat(document.getElementById('s-sw').value);
+  const tw=parseFloat(document.getElementById('s-tw').value);
+  document.getElementById('s-sw-disp').textContent=sw.toFixed(1)+' kg';
+  document.getElementById('s-tw-disp').textContent=tw.toFixed(1)+' kg';
+  const diff=sw-tw;
+  document.getElementById('s-diff').textContent=diff>0?diff.toFixed(1):'0';
+  document.getElementById('s-pw').textContent=diff>0?(diff/15).toFixed(2):'0';
+  document.getElementById('s-kcal').textContent=diff>0?'~'+Math.round(diff/15*1000/7):'0';
+  const sDate=document.getElementById('s-start').value;
+  if(sDate){
+    const d=new Date(sDate),e=new Date(d);e.setDate(e.getDate()+99);
+    document.getElementById('s-end-preview').textContent=e.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const today=new Date();today.setHours(0,0,0,0);
+    const dn=Math.max(1,Math.floor((today-d)/86400000)+1);
+    document.getElementById('s-daynum').textContent=dn<=90?'Currently on Day '+dn+' of 90':'Mission completed!';
+  }
+}
+document.getElementById('s-start').addEventListener('input', updatePrev);
+updatePrev();
+
+function saveSettings(){
+  const name=document.getElementById('s-name').value.trim();
+  const startDate=document.getElementById('s-start').value;
+  const startWeight=parseFloat(document.getElementById('s-sw').value);
+  const targetWeight=parseFloat(document.getElementById('s-tw').value);
+  if(!name||!startDate){alert('Please fill in name and start date.');return;}
+  if(targetWeight>=startWeight){alert('Target weight must be less than starting weight.');return;}
+  const newSetup={name,startDate,startWeight,targetWeight,setupDone:true,setupTs:setup.setupTs||Date.now(),updatedTs:Date.now()};
+  try{localStorage.setItem('t100_setup',JSON.stringify(newSetup));}catch(e){}
+  alert('Settings saved! ✓');
+  window.location.href='index.html';
+}
+
+function exportData(){
+  const data={setup:JSON.parse(localStorage.getItem('t100_setup')||'{}'),weights:JSON.parse(localStorage.getItem('t100_weights')||'[]'),checklist_keys:JSON.parse(localStorage.getItem('t100_keys')||'[]')};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='transform100_data.json';a.click();
+}
+
+function clearAllData(){
+  if(confirm('This will delete ALL your progress — scores, weight logs, and setup. Are you sure?')){
+    Object.keys(localStorage).filter(k=>k.startsWith('t100_')).forEach(k=>localStorage.removeItem(k));
+    alert('All data cleared.');
+    window.location.href='setup.html';
+  }
+}
+</script>
+</body>
+</html>

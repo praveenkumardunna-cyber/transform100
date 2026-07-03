@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0,viewport-fit=cover" name="viewport"/>
+<title>Treadmill — Transform 100</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-gray":"#F8FAFC","surface-container-low":"#f3f3fa","surface-container":"#ededf5","on-surface":"#1a1b21","on-surface-variant":"#3c4a43","primary":"#006c51","on-primary":"#ffffff","primary-container":"#2dd4a4","on-primary-container":"#005740","wellness-teal":"#2DD4A4","progress-blue":"#4D9FFF","achievement-gold":"#E8A020","strict-red":"#FF5E5B","border-subtle":"#E2E8F0","inverse-surface":"#2e3036","inverse-on-surface":"#f0f0f8"}}}}</script>
+<style>
+.ms{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}
+.ms-f{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.gh{background:rgba(255,255,255,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.gn{background:rgba(249,249,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+@keyframes tick{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.ticking{animation:tick 1s ease-in-out infinite}
+body{min-height:max(844px,100dvh)}
+</style>
+</head>
+<body class="bg-surface-gray text-on-surface" style="font-family:Inter,system-ui,sans-serif">
+<header class="fixed top-0 w-full z-50 gh border-b border-border-subtle h-16 flex items-center justify-between px-5 max-w-lg mx-auto left-0 right-0">
+  <div class="flex items-center gap-3">
+    <a href="more.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span></a>
+    <div><div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">6 PM daily · Mon–Sat</div><div class="text-[14px] font-semibold">Treadmill Protocol</div></div>
+  </div>
+  <div class="font-mono text-[11px] bg-strict-red/10 text-strict-red px-3 py-1.5 rounded-full font-bold">~302 kcal</div>
+</header>
+<main class="pt-20 pb-28 max-w-lg mx-auto px-4 space-y-4">
+
+  <!-- Live session timer -->
+  <div class="bg-primary rounded-[24px] p-6 text-center">
+    <div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-2">Session timer</div>
+    <div id="timer-display" class="font-mono font-bold text-[52px] text-white leading-none mb-1">35:00</div>
+    <div id="phase-label" class="font-mono text-[12px] text-wellness-teal mb-4">Ready to start · Warm up at 4 km/h first</div>
+    <div class="flex gap-3 justify-center">
+      <button id="btn-start" onclick="startTimer()" class="flex-1 bg-wellness-teal text-on-primary-container font-bold py-3 rounded-xl text-[14px] hover:opacity-90 transition-opacity">▶ Start</button>
+      <button onclick="resetTimer()" class="px-5 bg-white/15 text-white font-semibold py-3 rounded-xl text-[13px] hover:bg-white/25 transition-colors">Reset</button>
+    </div>
+    <!-- Phase progress bar -->
+    <div class="mt-4">
+      <div class="flex justify-between text-[10px] text-white/50 font-mono mb-1"><span>Warm up</span><span>7 km/h main</span><span>Cool down</span><span>Done</span></div>
+      <div class="h-2 bg-white/15 rounded-full overflow-hidden">
+        <div id="phase-bar" class="h-full bg-wellness-teal rounded-full transition-all duration-1000" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Session structure -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5">
+    <div class="font-semibold text-[14px] mb-4">Session structure</div>
+    <div class="space-y-3">
+      <div class="flex items-start gap-4 p-3 bg-surface-container-low rounded-xl">
+        <div class="w-10 h-10 rounded-full bg-progress-blue/15 flex items-center justify-center flex-shrink-0"><span class="font-mono font-bold text-progress-blue text-[13px]">01</span></div>
+        <div><div class="font-semibold text-[13px]">Warm-up — 4 min at 4–5 km/h</div><div class="text-[12px] text-on-surface-variant mt-0.5">Don't start at 7 km/h cold. Airways need warm-up time with bronchitis history.</div></div>
+      </div>
+      <div class="flex items-start gap-4 p-3 bg-achievement-gold/8 rounded-xl border border-achievement-gold/20">
+        <div class="w-10 h-10 rounded-full bg-achievement-gold/15 flex items-center justify-center flex-shrink-0"><span class="font-mono font-bold text-achievement-gold text-[13px]">02</span></div>
+        <div><div class="font-semibold text-[13px]">Main session — 7 km/h for 28–30 min</div><div class="text-[12px] text-on-surface-variant mt-0.5">Breathing elevated but conversational — should say a short sentence without gasping. This is moderate-brisk walk, not run.</div></div>
+      </div>
+      <div class="flex items-start gap-4 p-3 bg-surface-container-low rounded-xl">
+        <div class="w-10 h-10 rounded-full bg-wellness-teal/15 flex items-center justify-center flex-shrink-0"><span class="font-mono font-bold text-wellness-teal text-[13px]">03</span></div>
+        <div><div class="font-semibold text-[13px]">Cool-down — 3–5 min at 4 km/h</div><div class="text-[12px] text-on-surface-variant mt-0.5">Slow gradually. Never stop abruptly. Keep moving until heart rate settles.</div></div>
+      </div>
+      <div class="flex items-start gap-4 p-3 bg-surface-container-low rounded-xl">
+        <div class="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0"><span class="font-mono font-bold text-primary text-[13px]">04</span></div>
+        <div><div class="font-semibold text-[13px]">Post-session — room-temp water only</div><div class="text-[12px] text-on-surface-variant mt-0.5">No cold water. Throat tightening risk. Sip slowly. No standing in AC airflow while breathing heavily.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calorie table -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5">
+    <div class="font-semibold text-[14px] mb-3">Calorie burn at your weight</div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-[12px]">
+        <thead><tr class="border-b border-border-subtle"><th class="text-left py-2 text-on-surface-variant font-mono text-[10px] uppercase">Weight</th><th class="text-center py-2 text-on-surface-variant font-mono text-[10px] uppercase">30 min</th><th class="text-center py-2 text-achievement-gold font-mono text-[10px] uppercase">35 min</th><th class="text-center py-2 text-on-surface-variant font-mono text-[10px] uppercase">40 min</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-border-subtle bg-primary/3"><td class="py-2.5 font-semibold text-primary">82.3 kg (now)</td><td class="text-center py-2.5 font-mono">~259</td><td class="text-center py-2.5 font-mono font-bold text-achievement-gold">~302</td><td class="text-center py-2.5 font-mono">~346</td></tr>
+          <tr class="border-b border-border-subtle"><td class="py-2.5 text-on-surface-variant">78 kg (halfway)</td><td class="text-center py-2.5 font-mono text-on-surface-variant">~246</td><td class="text-center py-2.5 font-mono text-on-surface-variant">~287</td><td class="text-center py-2.5 font-mono text-on-surface-variant">~328</td></tr>
+          <tr><td class="py-2.5 text-wellness-teal font-semibold">75 kg (target)</td><td class="text-center py-2.5 font-mono text-on-surface-variant">~238</td><td class="text-center py-2.5 font-mono text-on-surface-variant">~278</td><td class="text-center py-2.5 font-mono text-on-surface-variant">~318</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-[11px] text-on-surface-variant mt-3">As you lose weight, the same session burns slightly fewer calories — expected and fine. Build to 40 min by Month 2. The habit is more important than the precise number.</p>
+  </div>
+
+  <!-- Bronchitis rules -->
+  <div class="bg-strict-red/5 border border-strict-red/20 rounded-[24px] p-5">
+    <div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined ms text-strict-red text-[20px]">warning</span><div class="font-semibold text-[14px] text-strict-red">Bronchitis rules — non-negotiable</div></div>
+    <div class="space-y-2.5">
+      <div class="flex items-start gap-2.5"><div class="w-2 h-2 rounded-full bg-strict-red flex-shrink-0 mt-1.5"></div><div class="text-[12px] text-on-surface-variant"><strong class="text-on-surface">Any wheeze = slow belt immediately.</strong> Don't push through chest tightness or breathing difficulty beyond normal exertion. This is non-negotiable.</div></div>
+      <div class="flex items-start gap-2.5"><div class="w-2 h-2 rounded-full bg-strict-red flex-shrink-0 mt-1.5"></div><div class="text-[12px] text-on-surface-variant"><strong class="text-on-surface">Room-temp water only</strong> after session. Never cold water — throat tightening risk.</div></div>
+      <div class="flex items-start gap-2.5"><div class="w-2 h-2 rounded-full bg-strict-red flex-shrink-0 mt-1.5"></div><div class="text-[12px] text-on-surface-variant"><strong class="text-on-surface">No direct AC airflow</strong> on face during or immediately after. Keep room ventilated.</div></div>
+      <div class="flex items-start gap-2.5"><div class="w-2 h-2 rounded-full bg-achievement-gold flex-shrink-0 mt-1.5"></div><div class="text-[12px] text-on-surface-variant"><strong class="text-on-surface">If genuinely can't do 35 min:</strong> do 15 min at any pace. Never zero. One skip becomes two, two becomes the new pattern.</div></div>
+    </div>
+  </div>
+
+  <!-- Best timing -->
+  <div class="bg-white rounded-[24px] border border-border-subtle p-5">
+    <div class="font-semibold text-[14px] mb-3">Best timing options</div>
+    <div class="space-y-2">
+      <div class="flex items-start gap-3 p-3 bg-primary/5 rounded-xl border border-primary/15"><span class="text-[16px] flex-shrink-0">⭐</span><div><div class="font-semibold text-[13px]">6:00 PM — optimal (default)</div><div class="text-[12px] text-on-surface-variant">Peak body temperature, glycogen loaded after lunch, 30 min after evening snack. Best performance window.</div></div></div>
+      <div class="flex items-start gap-3 p-3 bg-surface-container-low rounded-xl"><span class="text-[16px] flex-shrink-0">✓</span><div><div class="font-semibold text-[13px]">5 PM (pre-snack) — if schedule shifted</div><div class="text-[12px] text-on-surface-variant">Have evening snack after treadmill instead. Works fine.</div></div></div>
+      <div class="flex items-start gap-3 p-3 bg-surface-container-low rounded-xl"><span class="text-[16px] flex-shrink-0">✓</span><div><div class="font-semibold text-[13px]">7 PM — late arrival</div><div class="text-[12px] text-on-surface-variant">Dinner pushed to 8 PM. Strictly done by 8:30 PM still. Acceptable, not ideal.</div></div></div>
+      <div class="flex items-start gap-3 p-3 bg-strict-red/5 rounded-xl border border-strict-red/15"><span class="text-[16px] flex-shrink-0">⚠️</span><div><div class="font-semibold text-[13px]">After 7:30 PM — avoid</div><div class="text-[12px] text-on-surface-variant">Dinner cannot finish by 8:30 PM. Do 20-min walk instead on these days.</div></div></div>
+    </div>
+  </div>
+
+</main>
+<nav class="fixed bottom-0 w-full z-50 gn border-t border-border-subtle rounded-t-2xl h-20 pb-3 px-2 flex justify-around items-center max-w-lg mx-auto left-0 right-0">
+  <a href="index.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">dashboard</span><span class="text-[9px] font-mono uppercase tracking-tighter">Home</span></a>
+  <a href="schedule.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">today</span><span class="text-[9px] font-mono uppercase tracking-tighter">Schedule</span></a>
+  <a href="meals.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">restaurant</span><span class="text-[9px] font-mono uppercase tracking-tighter">Meals</span></a>
+  <a href="tracker.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">analytics</span><span class="text-[9px] font-mono uppercase tracking-tighter">Tracker</span></a>
+  <a href="more.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">apps</span><span class="text-[9px] font-mono uppercase tracking-tighter">More</span></a>
+</nav>
+<script>
+let t=35*60,running=false,interval=null,phase='ready';
+const phases=[{name:'WARM-UP · 4–5 km/h',end:35*60-4*60,pct:0},{name:'MAIN SESSION · 7 km/h',end:5*60,pct:11.4},{name:'COOL-DOWN · 4 km/h',end:0,pct:88.6},{name:'SESSION COMPLETE 🎉',end:-1,pct:100}];
+function fmt(s){return Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60;}
+let wakeLock=null;
+async function requestWakeLock(){try{if('wakeLock' in navigator){wakeLock=await navigator.wakeLock.request('screen');}}catch(e){}}
+function releaseWakeLock(){if(wakeLock){wakeLock.release();wakeLock=null;}}
+function startTimer(){
+  if(running){clearInterval(interval);running=false;document.getElementById('btn-start').textContent='▶ Resume';releaseWakeLock();return;}
+  running=true;document.getElementById('btn-start').textContent='⏸ Pause';
+  requestWakeLock();
+  interval=setInterval(()=>{
+    if(t<=0){clearInterval(interval);releaseWakeLock();running=false;document.getElementById('btn-start').textContent='▶ Start';document.getElementById('timer-display').textContent='Done!';document.getElementById('phase-label').textContent='Session complete 🎉 Cool down and drink room-temp water.';document.getElementById('phase-bar').style.width='100%';return;}
+    t--;
+    document.getElementById('timer-display').textContent=fmt(t);
+    const elapsed=35*60-t;const pct=elapsed/(35*60)*100;
+    document.getElementById('phase-bar').style.width=pct+'%';
+    if(elapsed<4*60)document.getElementById('phase-label').textContent='WARM-UP · 4–5 km/h · '+fmt(4*60-elapsed)+' remaining';
+    else if(t>5*60)document.getElementById('phase-label').textContent='MAIN SESSION · 7 km/h · '+fmt(t-5*60)+' remaining';
+    else document.getElementById('phase-label').textContent='COOL-DOWN · 4 km/h · '+fmt(t)+' remaining';
+  },1000);
+}
+function resetTimer(){clearInterval(interval);releaseWakeLock();running=false;t=35*60;document.getElementById('timer-display').textContent='35:00';document.getElementById('phase-label').textContent='Ready to start · Warm up at 4 km/h first';document.getElementById('phase-bar').style.width='0%';document.getElementById('btn-start').textContent='▶ Start';}
+</script>
+</body>
+</html>
