@@ -1,0 +1,14 @@
+{
+  "name": "Transform 100",
+  "short_name": "T100",
+  "description": "Your personal 100-day health mission",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#006c51",
+  "theme_color": "#006c51",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
