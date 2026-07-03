@@ -34,7 +34,7 @@
     <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest block mb-2">Start date</label>
     <input id="s-start" type="date" class="w-full bg-surface-container-low border border-border-subtle rounded-xl px-4 py-3 text-[15px] font-mono focus:outline-none focus:border-primary transition-colors"/>
     <div class="mt-3 bg-surface-container rounded-xl px-4 py-2.5 text-[12px] text-on-surface-variant">
-      End date (Day 90): <span id="s-end-preview" class="font-mono font-bold text-primary">—</span>
+      End date (Day 100): <span id="s-end-preview" class="font-mono font-bold text-primary">—</span>
     </div>
     <div id="s-daynum" class="mt-2 text-[12px] text-achievement-gold font-mono text-center font-bold"></div>
   </div>
@@ -109,7 +109,7 @@ if(setup.startDate){
   const today=new Date();today.setHours(0,0,0,0);
   const dayNum=Math.max(1,Math.floor((today-s)/86400000)+1);
   const fmt=d=>d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
-  document.getElementById('banner-sub').textContent=fmt(s)+' → '+fmt(e)+' · Day '+dayNum+' of 90';
+  document.getElementById('banner-sub').textContent=fmt(s)+' → '+fmt(e)+' · Day '+dayNum+' of 100';
 }
 
 function updatePrev(){
@@ -127,7 +127,7 @@ function updatePrev(){
     document.getElementById('s-end-preview').textContent=e.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
     const today=new Date();today.setHours(0,0,0,0);
     const dn=Math.max(1,Math.floor((today-d)/86400000)+1);
-    document.getElementById('s-daynum').textContent=dn<=90?'Currently on Day '+dn+' of 90':'Mission completed!';
+    document.getElementById('s-daynum').textContent=dn<=90?'Currently on Day '+dn+' of 100':'Mission completed!';
   }
 }
 document.getElementById('s-start').addEventListener('input', updatePrev);
