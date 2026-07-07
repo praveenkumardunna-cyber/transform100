@@ -53,40 +53,40 @@ body{min-height:max(844px,100dvh)}
 
   <!-- Day selector -->
   <div class="flex gap-1.5 overflow-x-auto pb-2 mb-4 custom-scroll">
-    <button onclick="setDay('mon')" id="day-mon" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white active">
+    <button onclick="setDay('mon')" id="day-mon" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
       <span class="font-mono font-bold text-[11px] text-primary">MON</span>
-      <span class="font-mono text-[10px] text-on-surface-variant">6 Jul</span>
-      <span class="text-[9px] text-achievement-gold font-bold">Today</span>
+      <span class="font-mono text-[10px] text-on-surface-variant" id="date-mon">6 Jul</span>
+      <span class="text-[9px] text-on-surface-variant" id="label-mon">Reset</span>
     </button>
     <button onclick="setDay('tue')" id="day-tue" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
       <span class="font-mono font-bold text-[11px] text-on-surface-variant">TUE</span>
-      <span class="font-mono text-[10px] text-on-surface-variant">7 Jul</span>
-      <span class="text-[9px] text-on-surface-variant">Omega-3</span>
+      <span class="font-mono text-[10px] text-on-surface-variant" id="date-tue">7 Jul</span>
+      <span class="text-[9px] text-on-surface-variant" id="label-tue">Omega-3</span>
     </button>
     <button onclick="setDay('wed')" id="day-wed" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
       <span class="font-mono font-bold text-[11px] text-on-surface-variant">WED</span>
-      <span class="font-mono text-[10px] text-on-surface-variant">8 Jul</span>
-      <span class="text-[9px] text-on-surface-variant">Veg day</span>
+      <span class="font-mono text-[10px] text-on-surface-variant" id="date-wed">8 Jul</span>
+      <span class="text-[9px] text-on-surface-variant" id="label-wed">Veg day</span>
     </button>
     <button onclick="setDay('thu')" id="day-thu" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
       <span class="font-mono font-bold text-[11px] text-on-surface-variant">THU</span>
-      <span class="font-mono text-[10px] text-on-surface-variant">9 Jul</span>
-      <span class="text-[9px] text-on-surface-variant">Protein pk</span>
+      <span class="font-mono text-[10px] text-on-surface-variant" id="date-thu">9 Jul</span>
+      <span class="text-[9px] text-on-surface-variant" id="label-thu">Protein pk</span>
     </button>
     <button onclick="setDay('fri')" id="day-fri" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
       <span class="font-mono font-bold text-[11px] text-on-surface-variant">FRI</span>
-      <span class="font-mono text-[10px] text-on-surface-variant">10 Jul</span>
-      <span class="text-[9px] text-on-surface-variant">Light day</span>
+      <span class="font-mono text-[10px] text-on-surface-variant" id="date-fri">10 Jul</span>
+      <span class="text-[9px] text-on-surface-variant" id="label-fri">Light day</span>
     </button>
     <button onclick="setDay('sat')" id="day-sat" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
       <span class="font-mono font-bold text-[11px] text-on-surface-variant">SAT</span>
-      <span class="font-mono text-[10px] text-on-surface-variant">11 Jul</span>
-      <span class="text-[9px] text-on-surface-variant">Variety</span>
+      <span class="font-mono text-[10px] text-on-surface-variant" id="date-sat">11 Jul</span>
+      <span class="text-[9px] text-on-surface-variant" id="label-sat">Variety</span>
     </button>
     <button onclick="setDay('sun')" id="day-sun" class="day-card flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2 rounded-[14px] border border-border-subtle bg-white">
       <span class="font-mono font-bold text-[11px] text-on-surface-variant">SUN</span>
-      <span class="font-mono text-[10px] text-on-surface-variant">12 Jul</span>
-      <span class="text-[9px] text-wellness-teal">Rest day</span>
+      <span class="font-mono text-[10px] text-on-surface-variant" id="date-sun">12 Jul</span>
+      <span class="text-[9px] text-wellness-teal" id="label-sun">Rest day</span>
     </button>
   </div>
 
@@ -133,18 +133,17 @@ body{min-height:max(844px,100dvh)}
         <div class="w-8 h-8 rounded-full bg-achievement-gold/15 flex items-center justify-center text-[16px]">🍳</div>
         <div>
           <div class="font-semibold text-[13px]">9:10 AM — Breakfast</div>
-          <div class="text-[11px] text-on-surface-variant font-mono">Egg curry FIRST · then idli</div>
+          <div class="text-[11px] text-on-surface-variant font-mono" id="bf-subtitle">Egg curry FIRST · then idli</div>
         </div>
-        <span class="ml-auto font-mono text-[11px] font-bold text-primary">420 kcal</span>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary" id="bf-kcal">420 kcal</span>
       </div>
       <div class="bg-surface-container-low rounded-xl p-3 mb-2">
-        <div class="font-semibold text-[13px] mb-1">Sambar Idli (2) + Egg Curry</div>
-        <div class="text-[12px] text-on-surface-variant leading-relaxed">2 steamed idli + 1 cup sambar unlimited + coconut chutney 1.5 tbsp max. 2-egg curry (light Andhra masala, 1 tsp oil). <strong class="text-primary">Eat egg curry FIRST then idli. Idli hard cap: 2 pieces.</strong></div>
+        <div class="font-semibold text-[13px] mb-1" id="bf-title">Sambar Idli (2) + Egg Curry</div>
+        <div class="text-[12px] text-on-surface-variant leading-relaxed" id="bf-desc">2 steamed idli + 1 cup sambar unlimited + coconut chutney 1.5 tbsp max. 2-egg curry (light Andhra masala, 1 tsp oil). <strong class="text-primary">Eat egg curry FIRST then idli. Idli hard cap: 2 pieces.</strong></div>
       </div>
-      <div class="flex gap-2">
+      <div class="flex gap-2" id="bf-tags">
         <span class="text-[10px] font-mono bg-wellness-teal/10 text-wellness-teal px-2 py-0.5 rounded-full font-bold">23g protein</span>
         <span class="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">GI ~40</span>
-        <span class="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">2 roti limit</span>
       </div>
     </div>
 
@@ -156,9 +155,9 @@ body{min-height:max(844px,100dvh)}
           <div class="font-semibold text-[13px]">11:00 AM — Morning snack</div>
           <div class="text-[11px] text-on-surface-variant font-mono">Pre-portioned · never from packet</div>
         </div>
-        <span class="ml-auto font-mono text-[11px] font-bold text-primary">95 kcal</span>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary" id="snack-kcal">95 kcal</span>
       </div>
-      <div class="text-[12px] text-on-surface-variant">Roasted Chana 25g · lemon + green chilli + pinch salt · GI 28</div>
+      <div class="text-[12px] text-on-surface-variant" id="snack-desc">Roasted Chana 25g · lemon + green chilli + pinch salt · GI 28</div>
     </div>
 
     <!-- Lunch -->
@@ -191,12 +190,11 @@ body{min-height:max(844px,100dvh)}
         <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-[16px]">🥛</div>
         <div>
           <div class="font-semibold text-[13px]">2:00 PM — Afternoon drink</div>
-          <div class="text-[11px] text-on-surface-variant font-mono">Mon/Wed/Fri/Sun → Majjiga</div>
+          <div class="text-[11px] text-on-surface-variant font-mono" id="drink-subtitle">Mon/Wed/Fri/Sun → Majjiga</div>
         </div>
-        <span class="ml-auto font-mono text-[11px] font-bold text-primary">50 kcal</span>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary" id="drink-kcal">50 kcal</span>
       </div>
-      <div class="text-[12px] text-on-surface-variant">Majjiga — homemade buttermilk 200ml · mustard + curry leaves + ginger + green chilli + sendha namak. <strong class="text-strict-red">Room temperature always.</strong></div>
-      <div class="mt-1.5 text-[11px] text-on-surface-variant bg-surface-container-low rounded-lg px-3 py-1.5">Tue/Thu/Sat → Sattu drink · 2 tbsp + water + salt + jeera + lemon · 85 kcal · 8g protein</div>
+      <div class="text-[12px] text-on-surface-variant" id="drink-desc">Majjiga — homemade buttermilk 200ml · mustard + curry leaves + ginger + green chilli + sendha namak. <strong class="text-strict-red">Room temperature always.</strong></div>
     </div>
 
     <!-- Evening snack -->
@@ -207,14 +205,9 @@ body{min-height:max(844px,100dvh)}
           <div class="font-semibold text-[13px]">5:30 PM — Evening snack</div>
           <div class="text-[11px] text-on-surface-variant font-mono">Pre-treadmill fuel · 30 min gap</div>
         </div>
-        <span class="ml-auto font-mono text-[11px] font-bold text-primary">78 kcal</span>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary" id="eve-kcal">78 kcal</span>
       </div>
-      <div class="text-[12px] text-on-surface-variant">Roasted Makhana Masala 25g + <strong class="text-primary">1 tbsp chia seeds</strong> — sprinkle chia on makhana (soak 5 min first or sprinkle direct). Pre-roasted Sunday. Chilli powder + chaat masala + black salt. Have it <strong class="text-on-surface">in hand before craving peaks.</strong></div>
-      <div class="mt-2 flex gap-2 flex-wrap">
-        <span class="text-[10px] font-mono bg-progress-blue/10 text-progress-blue px-2 py-0.5 rounded-full">+3.4g fiber</span>
-        <span class="text-[10px] font-mono bg-wellness-teal/10 text-wellness-teal px-2 py-0.5 rounded-full">+1.8g omega-3</span>
-        <span class="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">+37 kcal</span>
-      </div>
+      <div class="text-[12px] text-on-surface-variant" id="eve-desc">Roasted Makhana Masala 25g + 1 tbsp chia seeds — sprinkle chia on makhana. Have it in hand before craving peaks.</div>
     </div>
 
     <!-- Dinner -->
@@ -225,15 +218,14 @@ body{min-height:max(844px,100dvh)}
           <div class="font-semibold text-[13px]">7:50 PM — Dinner</div>
           <div class="text-[11px] text-strict-red font-mono font-bold">Done by 8:30 PM · No rice</div>
         </div>
-        <span class="ml-auto font-mono text-[11px] font-bold text-primary">465 kcal</span>
+        <span class="ml-auto font-mono text-[11px] font-bold text-primary" id="din-kcal">465 kcal</span>
       </div>
       <div class="bg-primary/5 rounded-xl p-3 mb-2">
-        <div class="font-semibold text-[13px] mb-1">2 Multigrain Chapathi + Egg Curry + Salad</div>
-        <div class="text-[12px] text-on-surface-variant leading-relaxed">2 chapathi (80% wheat + 10% jowar + 10% ragi dough) + 2-egg curry (tomato-onion base, 1 tsp oil total) + cucumber-tomato-onion salad.</div>
+        <div class="font-semibold text-[13px] mb-1" id="din-title">2 Multigrain Chapathi + Egg Curry + Salad</div>
+        <div class="text-[12px] text-on-surface-variant leading-relaxed" id="din-desc">2 chapathi (80% wheat + 10% jowar + 10% ragi) + egg curry + salad: cucumber 100g + tomato 100g + carrot 50g. Eat salad first.</div>
       </div>
-      <div class="flex gap-2">
-        <span class="text-[10px] font-mono bg-wellness-teal/10 text-wellness-teal px-2 py-0.5 rounded-full font-bold">21g protein</span>
-        <span class="text-[10px] font-mono bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">GI ~40</span>
+      <div class="flex gap-2" id="din-tags">
+        <span class="text-[10px] font-mono bg-wellness-teal/10 text-wellness-teal px-2 py-0.5 rounded-full font-bold" id="din-prot">21g protein</span>
         <span class="text-[10px] font-mono bg-strict-red/10 text-strict-red px-2 py-0.5 rounded-full font-bold">8:30 PM hard stop</span>
       </div>
     </div>
@@ -353,34 +345,206 @@ body{min-height:max(844px,100dvh)}
 </nav>
 
 <script>
-const days={
-  mon:{label:'Monday · Reset Day',subtitle:'Sambar Idli + Egg + Majjiga + Chia',kcal:'1,893',prot:'76'},
-  tue:{label:'Tuesday · Omega-3 Day',subtitle:'Egg Dosa + Fish Curry + Sattu',kcal:'1,903',prot:'89'},
-  wed:{label:'Wednesday · Veg Day',subtitle:'Pesarattu + Walnuts + Mealmaker + Majjiga',kcal:'1,842',prot:'89'},
-  thu:{label:'Thursday · Protein Peak',subtitle:'Sambar Idli + Chicken + Sattu',kcal:'1,890',prot:'92'},
-  fri:{label:'Friday · Light Day',subtitle:'Egg Dosa + Rajma Yogurt Bowl + Majjiga',kcal:'1,891',prot:'90'},
-  sat:{label:'Saturday · Variety Day',subtitle:'Oats Upma + Mixed Nuts + Paneer + Sattu',kcal:'1,991',prot:'80'},
-  sun:{label:'Sunday · Rest Day',subtitle:'Sprouts Chaat + Mixed Nuts + Egg Curry + Majjiga + Chia',kcal:'1,913',prot:'88'}
+// ── MEAL DATA — all 7 days ──────────────────────────────────────────────────
+const MEAL_DATA = {
+  mon: {
+    label:'Monday · Reset Day', subtitle:'Sambar Idli + Egg + Majjiga + Chia', kcal:'1,893', prot:'76',
+    bfSubtitle:'Egg curry FIRST · then idli', bfKcal:'420 kcal', bfTitle:'Sambar Idli (2) + Egg Curry',
+    bfDesc:'2 steamed idli + 1 cup sambar unlimited + coconut chutney 1.5 tbsp max. 2-egg curry (light masala, 1 tsp oil). <strong>Eat egg curry FIRST then idli. Idli hard cap: 2 pieces.</strong>',
+    snackKcal:'95 kcal', snackDesc:'Roasted Chana 25g · lemon + green chilli + pinch salt · GI 28',
+    drinkSubtitle:'Today → Majjiga 200ml', drinkKcal:'50 kcal',
+    drinkDesc:'Homemade buttermilk · mustard + curry leaves + ginger + green chilli + sendha namak. <strong>Room temperature always.</strong>',
+    eveKcal:'96 kcal', eveDesc:'Makhana Masala 25g + 1 tbsp chia seeds — sprinkle chia on makhana. Have in hand before craving peaks. 30 min before treadmill.',
+    dinKcal:'465 kcal', dinTitle:'2 Chapathi + Egg Curry + Salad', dinProt:'21g protein',
+    dinDesc:'2 multigrain chapathi (80% wheat+10% jowar+10% ragi) + egg curry + salad: cucumber 100g + tomato 100g + carrot 50g. Eat salad first.',
+  },
+  tue: {
+    label:'Tuesday · Omega-3 Day', subtitle:'Egg Dosa + Fish Curry + Sattu', kcal:'1,903', prot:'89',
+    bfSubtitle:'Egg FIRST · then dosa', bfKcal:'450 kcal', bfTitle:'Egg Dosa (2) + Sambar',
+    bfDesc:'2 egg dosas (1 tsp oil each) + sambar unlimited. <strong>Eat egg FIRST, then dosa.</strong> Dip in sambar, not excess chutney. Omega-3 day starts at breakfast.',
+    snackKcal:'80 kcal', snackDesc:'Sprouted Moong+Chana 80g + lemon — squeeze full lemon. Vitamin C doubles iron absorption. GI 32.',
+    drinkSubtitle:'Today → Sattu drink', drinkKcal:'85 kcal',
+    drinkDesc:'2 tbsp sattu + 250ml water + sendha namak + jeera + lemon juice. Stir well. Room temperature. 8g protein in this drink.',
+    eveKcal:'100 kcal', eveDesc:'Peanut Chaat 18g — peanuts + lemon + chilli + onion. Don\'t remove peanut skin (resveratrol). GI 14 — lowest GI snack.',
+    dinKcal:'450 kcal', dinTitle:'2 Chapathi + Fish Curry + Salad', dinProt:'29g protein',
+    dinDesc:'2 multigrain chapathi + fish curry 150g + salad: cucumber 100g + tomato 100g + carrot 50g. Eat salad first. Best dinner for HbA1c — omega-3 day.',
+  },
+  wed: {
+    label:'Wednesday · Veg Day', subtitle:'Pesarattu + Walnuts + Mealmaker + Majjiga', kcal:'1,842', prot:'89',
+    bfSubtitle:'Curd FIRST · then pesarattu', bfKcal:'431 kcal', bfTitle:'Pesarattu (2) + Hung Curd + 6 Walnuts',
+    bfDesc:'Moong dal pesarattu (1 tsp oil each) + 100g hung curd + 6 walnuts. <strong>Eat curd FIRST, then pesarattu.</strong> Walnuts fix Veg Day fat gap (+3g fat, +1.5g omega-3). GI ~32.',
+    snackKcal:'95 kcal', snackDesc:'Roasted Chana 25g · lemon + green chilli + pinch salt · GI 28',
+    drinkSubtitle:'Today → Majjiga 200ml', drinkKcal:'50 kcal',
+    drinkDesc:'Homemade buttermilk · mustard + curry leaves + ginger + green chilli + sendha namak. <strong>Room temperature always.</strong>',
+    eveKcal:'96 kcal', eveDesc:'Makhana Masala 25g + 1 tbsp chia seeds — sprinkle chia on makhana. Have in hand before craving peaks. 30 min before treadmill.',
+    dinKcal:'435 kcal', dinTitle:'2 Chapathi + Mealmaker (Soya) Curry + Salad', dinProt:'33g protein',
+    dinDesc:'2 multigrain chapathi + soya mealmaker curry 50g dry + salad: cucumber 100g + tomato 100g + carrot 50g. Soya = complete protein. Eat salad first.',
+  },
+  thu: {
+    label:'Thursday · Protein Peak', subtitle:'Sambar Idli + Chicken + Sattu', kcal:'1,890', prot:'92',
+    bfSubtitle:'Egg curry FIRST · then idli', bfKcal:'420 kcal', bfTitle:'Sambar Idli (2) + Egg Curry',
+    bfDesc:'2 steamed idli + sambar unlimited + 1.5 tbsp chutney max. 2-egg curry (1 tsp oil). <strong>Eat egg curry FIRST then idli.</strong> Highest protein day — 92g target.',
+    snackKcal:'80 kcal', snackDesc:'Sprouted Moong+Chana 80g + lemon — squeeze full lemon. Vitamin C doubles iron absorption. GI 32.',
+    drinkSubtitle:'Today → Sattu drink', drinkKcal:'85 kcal',
+    drinkDesc:'2 tbsp sattu + 250ml water + sendha namak + jeera + lemon juice. Stir well. Room temperature. 8g protein in this drink.',
+    eveKcal:'80 kcal', eveDesc:'Chana 25g + Cucumber slices — pre-portioned chana + unlimited cucumber. Cucumber = zero calories, high water. GI 28.',
+    dinKcal:'455 kcal', dinTitle:'2 Chapathi + Chicken Curry + Salad', dinProt:'33g protein',
+    dinDesc:'2 multigrain chapathi + chicken curry 150g + salad: cucumber 100g + tomato 100g + carrot 50g. Lean protein + fiber. Eat salad first.',
+  },
+  fri: {
+    label:'Friday · Light Day', subtitle:'Egg Dosa + Rajma Yogurt Bowl + Majjiga', kcal:'1,891', prot:'90',
+    bfSubtitle:'Egg FIRST · then dosa', bfKcal:'450 kcal', bfTitle:'Egg Dosa (2) + Sambar',
+    bfDesc:'2 egg dosas (1 tsp oil each) + sambar unlimited. <strong>Eat egg FIRST, then dosa.</strong> Light day — stick to portions exactly. Oil: 1 tsp/dosa.',
+    snackKcal:'80 kcal', snackDesc:'Putnalu (roasted chana dal) 25g — pre-portioned. Slow eating, chew each piece fully. GI 40.',
+    drinkSubtitle:'Today → Majjiga 200ml', drinkKcal:'50 kcal',
+    drinkDesc:'Homemade buttermilk · mustard + curry leaves + ginger + green chilli + sendha namak. <strong>Room temperature always.</strong>',
+    eveKcal:'100 kcal', eveDesc:'Peanut Chaat 18g — peanuts + lemon + chilli + onion. Don\'t remove peanut skin. GI 14 — lowest GI snack.',
+    dinKcal:'430 kcal', dinTitle:'Rajma Yogurt Bowl + 1 Boiled Egg', dinProt:'30g protein',
+    dinDesc:'150g hung curd + ½ cup cooked rajma + 1 boiled egg. Rajma adds 7g fiber. Best dinner for HbA1c. Light but complete. Most impactful Friday dinner.',
+  },
+  sat: {
+    label:'Saturday · Variety Day', subtitle:'Oats Upma + Mixed Nuts + Paneer + Sattu', kcal:'1,991', prot:'80',
+    bfSubtitle:'Eggs FIRST · then upma', bfKcal:'365 kcal', bfTitle:'Masala Oats Upma + 2 Scrambled Eggs',
+    bfDesc:'Oats upma with onion + tomato + green chilli + 2 scrambled eggs. <strong>Eat eggs FIRST, then upma.</strong> Best breakfast fiber day — 5.5g oat fiber.',
+    snackKcal:'130 kcal', snackDesc:'Mixed Nuts 20g — almonds + walnuts + cashews. Pre-portioned. Never from full bag. Omega-3 + MUFA + protein.',
+    drinkSubtitle:'Today → Sattu drink', drinkKcal:'85 kcal',
+    drinkDesc:'2 tbsp sattu + 250ml water + sendha namak + jeera + lemon juice. Stir well. Room temperature. 8g protein in this drink.',
+    eveKcal:'80 kcal', eveDesc:'Chana 25g + Cucumber slices — pre-portioned chana + unlimited cucumber. Good pre-treadmill fuel. 30 min gap.',
+    dinKcal:'545 kcal', dinTitle:'2 Chapathi + Paneer Curry + Salad', dinProt:'20g protein',
+    dinDesc:'2 multigrain chapathi + paneer curry 80g + salad: cucumber 100g + tomato 100g + carrot 50g. Eat salad first. Done by 8:30 PM.',
+  },
+  sun: {
+    label:'Sunday · Rest Day', subtitle:'Sprouts Chaat + Mixed Nuts + Egg Curry + Majjiga + Chia', kcal:'1,913', prot:'88',
+    bfSubtitle:'Paneer FIRST · then sprouts', bfKcal:'365 kcal', bfTitle:'Sprouts Chaat + 100g Paneer',
+    bfDesc:'Sprouted moong+chana chaat + 100g paneer cubes. <strong>Eat paneer FIRST.</strong> Best breakfast in plan — 33g protein, 7g fiber. No cooking needed.',
+    snackKcal:'130 kcal', snackDesc:'Mixed Nuts 20g — almonds + walnuts + cashews. Pre-portioned. Never from full bag. Omega-3 + MUFA + protein.',
+    drinkSubtitle:'Today → Majjiga 200ml', drinkKcal:'50 kcal',
+    drinkDesc:'Homemade buttermilk · mustard + curry leaves + ginger + green chilli + sendha namak. <strong>Room temperature always.</strong>',
+    eveKcal:'113 kcal', eveDesc:'Groundnut 18g + 1 tbsp chia seeds — mix chia with groundnuts. Eat with skin. GI 14. Omega-3 + MUFA + 3.4g soluble fiber.',
+    dinKcal:'465 kcal', dinTitle:'2 Chapathi + Egg Curry + Salad', dinProt:'21g protein',
+    dinDesc:'2 multigrain chapathi + egg curry + salad: cucumber 100g + tomato 100g + carrot 50g. Eat salad first. Done by 8:30 PM. Rest day — no treadmill.',
+  },
 };
-function setDay(d){
-  document.querySelectorAll('.day-card').forEach(c=>c.classList.remove('active'));
-  document.getElementById('day-'+d).classList.add('active');
-  const data=days[d];
-  const h=document.getElementById('day-header');
-  h.querySelector('.font-bold.text-\\[16px\\]').textContent=data.subtitle;
-  h.querySelector('.font-mono.font-bold.text-\\[18px\\]').textContent=data.kcal;
-  h.querySelector('.font-mono.text-\\[10px\\]').textContent=data.label;
-  document.querySelector('#section-today .text-\\[10px\\].font-mono.uppercase.tracking-widest').textContent=data.label.split('·')[0].trim()+' totals';
-  document.querySelector('#section-today .font-mono.font-bold.text-\\[16px\\].text-primary').textContent=data.kcal;
-  document.querySelector('#section-today .font-mono.font-bold.text-\\[16px\\].text-wellness-teal').textContent=data.prot+'g';
+
+const DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
+const DAY_LABELS = ['sun','mon','tue','wed','thu','fri','sat'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ── SETUP & DATES ───────────────────────────────────────────────────────────
+let setup = {};
+try { setup = JSON.parse(localStorage.getItem('t100_setup') || '{}'); } catch(e) {}
+const startDate = setup.startDate ? new Date(setup.startDate + 'T00:00:00') : new Date('2026-07-07T00:00:00');
+const today = new Date(); today.setHours(0,0,0,0);
+const todayDow = today.getDay(); // 0=Sun
+const todayKey = DAY_KEYS[todayDow];
+
+// ── UPDATE DATE STRIP ────────────────────────────────────────────────────────
+// Find Monday of the current week
+const mondayOfWeek = new Date(today);
+mondayOfWeek.setDate(today.getDate() - ((todayDow + 6) % 7)); // Monday = 0
+
+const weekDays = ['mon','tue','wed','thu','fri','sat','sun'];
+weekDays.forEach((key, i) => {
+  const d = new Date(mondayOfWeek);
+  d.setDate(mondayOfWeek.getDate() + i);
+  const dateEl = document.getElementById('date-' + key);
+  if (dateEl) dateEl.textContent = d.getDate() + ' ' + MONTHS[d.getMonth()];
+  const labelEl = document.getElementById('label-' + key);
+  if (labelEl) {
+    const isToday = d.getTime() === today.getTime();
+    if (isToday) {
+      labelEl.textContent = 'Today';
+      labelEl.className = 'text-[9px] text-achievement-gold font-bold';
+    }
+  }
+});
+
+// Week number for header
+const dayNum = Math.max(1, Math.floor((today - startDate) / 86400000) + 1);
+const weekNum = Math.ceil(dayNum / 7);
+const wkEl = document.querySelector('header .font-mono.text-\\[11px\\]');
+if (wkEl) wkEl.textContent = 'Week ' + weekNum;
+
+// ── RENDER MEAL CONTENT ──────────────────────────────────────────────────────
+function renderMeal(key) {
+  const d = MEAL_DATA[key];
+  if (!d) return;
+
+  // Header card
+  const hdr = document.getElementById('day-header');
+  if (hdr) {
+    hdr.querySelector('.font-mono.text-\\[10px\\].text-white\\/60').textContent = d.label;
+    hdr.querySelector('.font-bold.text-\\[16px\\]').textContent = d.subtitle;
+    hdr.querySelector('.font-mono.font-bold.text-\\[18px\\]').textContent = d.kcal;
+    hdr.querySelector('.text-\\[10px\\].text-white\\/60').textContent = 'kcal · ' + d.prot + 'g prot';
+  }
+
+  // Totals section
+  const totalsLabel = document.querySelector('#section-today .text-\\[10px\\].font-mono.uppercase.tracking-widest');
+  if (totalsLabel) totalsLabel.textContent = key.charAt(0).toUpperCase() + key.slice(1) + 'day totals';
+
+  // Breakfast
+  const bfSub = document.getElementById('bf-subtitle');
+  if (bfSub) bfSub.textContent = d.bfSubtitle;
+  const bfKcal = document.getElementById('bf-kcal');
+  if (bfKcal) bfKcal.textContent = d.bfKcal;
+  const bfTitle = document.getElementById('bf-title');
+  if (bfTitle) bfTitle.textContent = d.bfTitle;
+  const bfDesc = document.getElementById('bf-desc');
+  if (bfDesc) bfDesc.innerHTML = d.bfDesc;
+
+  // Snack
+  const snackKcal = document.getElementById('snack-kcal');
+  if (snackKcal) snackKcal.textContent = d.snackKcal;
+  const snackDesc = document.getElementById('snack-desc');
+  if (snackDesc) snackDesc.textContent = d.snackDesc;
+
+  // Drink
+  const drinkSub = document.getElementById('drink-subtitle');
+  if (drinkSub) drinkSub.textContent = d.drinkSubtitle;
+  const drinkKcal = document.getElementById('drink-kcal');
+  if (drinkKcal) drinkKcal.textContent = d.drinkKcal;
+  const drinkDesc = document.getElementById('drink-desc');
+  if (drinkDesc) drinkDesc.innerHTML = d.drinkDesc;
+
+  // Evening snack
+  const eveKcal = document.getElementById('eve-kcal');
+  if (eveKcal) eveKcal.textContent = d.eveKcal;
+  const eveDesc = document.getElementById('eve-desc');
+  if (eveDesc) eveDesc.textContent = d.eveDesc;
+
+  // Dinner
+  const dinKcal = document.getElementById('din-kcal');
+  if (dinKcal) dinKcal.textContent = d.dinKcal;
+  const dinTitle = document.getElementById('din-title');
+  if (dinTitle) dinTitle.textContent = d.dinTitle;
+  const dinDesc = document.getElementById('din-desc');
+  if (dinDesc) dinDesc.textContent = d.dinDesc;
+  const dinProt = document.getElementById('din-prot');
+  if (dinProt) dinProt.textContent = d.dinProt;
 }
-function setTab(t){
-  document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active','bg-primary','text-white');b.classList.add('bg-white','text-on-surface-variant');});
-  document.querySelectorAll('.meal-section').forEach(s=>s.classList.remove('active'));
-  const btn=document.getElementById('tab-'+t);
-  btn.classList.add('active');btn.classList.remove('bg-white','text-on-surface-variant');
-  document.getElementById('section-'+t).classList.add('active');
+
+// ── SET DAY ──────────────────────────────────────────────────────────────────
+function setDay(d) {
+  document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('day-' + d).classList.add('active');
+  renderMeal(d);
 }
+
+function setTab(t) {
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active', 'bg-primary', 'text-white');
+    b.classList.add('bg-white', 'text-on-surface-variant');
+  });
+  document.querySelectorAll('.meal-section').forEach(s => s.classList.remove('active'));
+  const btn = document.getElementById('tab-' + t);
+  btn.classList.add('active'); btn.classList.remove('bg-white', 'text-on-surface-variant');
+  document.getElementById('section-' + t).classList.add('active');
+}
+
+// ── INIT — set today as active ───────────────────────────────────────────────
+document.getElementById('day-' + todayKey).classList.add('active');
+renderMeal(todayKey);
 </script>
 </body>
 </html>
