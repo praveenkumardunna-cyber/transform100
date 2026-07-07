@@ -44,7 +44,7 @@ body{min-height:max(844px,100dvh)}
       <span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span>
     </a>
     <div>
-      <div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest leading-none">Monday 6 Jul · Day 1</div>
+      <div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest leading-none" id="chk-date">Today · Day 1</div>
       <div class="text-[14px] font-semibold text-on-surface">Daily Checklist</div>
     </div>
   </div>
@@ -391,6 +391,20 @@ function saveScore(){
       updateScore();
     }
   }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  let setup = {};
+  try { setup = JSON.parse(localStorage.getItem('t100_setup') || '{}'); } catch(e) {}
+  const startDate = setup.startDate ? new Date(setup.startDate + 'T00:00:00') : new Date('2026-07-07T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dayNum = Math.max(1, Math.floor((today - startDate) / 86400000) + 1);
+  const dayLabel = DAYS[today.getDay()] + ' ' + today.getDate() + ' ' + MONTHS[today.getMonth()];
+  const el = document.getElementById('chk-date');
+  if (el) el.textContent = dayLabel + ' · Day ' + dayNum;
 })();
 </script>
 </body>
