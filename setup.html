@@ -72,7 +72,7 @@ body{min-height:100dvh;background:#F8FAFC}
     </button>
     <!-- Quick fill for Praveen -->
     <button onclick="fillPraveen()" class="w-full mt-3 bg-surface-container text-on-surface-variant font-semibold py-3 rounded-2xl text-[13px] hover:opacity-80 transition-opacity">
-      Use Praveen's plan (82.3 → 75 kg · 6 Jul 2026)
+      Use Praveen's plan (82.5 → 75 kg · 7 Jul 2026)
     </button>
   </div>
 
@@ -123,9 +123,9 @@ body{min-height:100dvh;background:#F8FAFC}
       <div>
         <div class="flex items-center justify-between mb-2">
           <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest">Starting weight</label>
-          <span class="font-mono font-bold text-[20px] text-primary" id="sw-display">82.3 kg</span>
+          <span class="font-mono font-bold text-[20px] text-primary" id="sw-display">82.5 kg</span>
         </div>
-        <input id="inp-sw" type="range" min="50" max="150" step="0.1" value="82.3"
+        <input id="inp-sw" type="range" min="50" max="150" step="0.1" value="82.5"
           oninput="updateSliders()" class="w-full"/>
         <div class="flex justify-between text-[10px] text-on-surface-variant font-mono mt-1"><span>50 kg</span><span>150 kg</span></div>
       </div>
@@ -319,10 +319,10 @@ function saveAndLaunch(){
 function fillPraveen(){
   document.getElementById('inp-name').value = 'Praveen';
   // Set today's date as default, but show option
-  const d = new Date('2026-07-06');
-  document.getElementById('inp-start').value = '2026-07-06';
+  const d = new Date('2026-07-07');
+  document.getElementById('inp-start').value = '2026-07-07';
   document.getElementById('inp-start').dispatchEvent(new Event('input'));
-  document.getElementById('inp-sw').value = '82.3';
+  document.getElementById('inp-sw').value = '82.5';
   document.getElementById('inp-tw').value = '75';
   updateSliders();
   nextStep();

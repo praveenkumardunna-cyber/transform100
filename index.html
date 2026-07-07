@@ -68,7 +68,7 @@ body{min-height:max(844px,100dvh)}
           <div class="text-white/60 font-mono text-[10px] uppercase tracking-widest mb-1">Mission active</div>
           <div class="text-white font-bold text-[26px] leading-none" id="hero-day">Day 1 <span class="text-white/40 font-normal text-[17px]">of 100</span></div>
           <div class="text-white/70 text-[12px] mt-1 font-mono" id="hero-week">Week 1 of 15</div>
-          <div class="text-white/50 text-[11px] mt-0.5" id="hero-date">Monday, 6 Jul 2026</div>
+          <div class="text-white/50 text-[11px] mt-0.5" id="hero-date">Monday, 7 Jul 2026</div>
         </div>
         <!-- Progress ring -->
         <div class="relative w-[68px] h-[68px]">
@@ -196,7 +196,7 @@ body{min-height:max(844px,100dvh)}
     </div>
     <div class="flex items-center gap-3 mb-3">
       <div class="text-center">
-        <div class="font-mono font-bold text-[17px] text-on-surface" id="wt-start-disp">82.3</div>
+        <div class="font-mono font-bold text-[17px] text-on-surface" id="wt-start-disp">82.5</div>
         <div class="text-[9px] text-on-surface-variant font-mono uppercase">Start</div>
       </div>
       <div class="flex-1 relative">
@@ -301,11 +301,11 @@ try { SETUP = JSON.parse(localStorage.getItem('t100_setup') || '{}'); } catch(e)
 // If no setup found, use defaults (Praveen's plan) so dashboard renders
 // When deployed on GitHub Pages, first visit will go to setup.html
 if (!SETUP.setupDone) {
-  SETUP = { name: 'Praveen', startDate: '2026-07-06', startWeight: 82.3, targetWeight: 75.0, setupDone: true };
+  SETUP = { name: 'Praveen', startDate: '2026-07-07', startWeight: 82.5, targetWeight: 75.0, setupDone: true };
 }
 
-const START_DATE = SETUP.startDate ? new Date(SETUP.startDate + 'T00:00:00') : new Date('2026-07-06T00:00:00');
-const START_WEIGHT = SETUP.startWeight || 82.3;
+const START_DATE = SETUP.startDate ? new Date(SETUP.startDate + 'T00:00:00') : new Date('2026-07-07T00:00:00');
+const START_WEIGHT = SETUP.startWeight || 82.5;
 const TARGET_WEIGHT = SETUP.targetWeight || 75.0;
 const USER_NAME = SETUP.name || 'Praveen';
 const TOTAL_LOSS = START_WEIGHT - TARGET_WEIGHT;

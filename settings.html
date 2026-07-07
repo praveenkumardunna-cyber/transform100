@@ -53,7 +53,7 @@
     <div>
       <div class="flex items-center justify-between mb-2">
         <label class="text-[11px] font-mono text-on-surface-variant uppercase tracking-widest">Starting weight</label>
-        <span class="font-mono font-bold text-[16px] text-primary" id="s-sw-disp">82.3 kg</span>
+        <span class="font-mono font-bold text-[16px] text-primary" id="s-sw-disp">82.5 kg</span>
       </div>
       <input id="s-sw" type="range" min="50" max="150" step="0.1" oninput="updatePrev()" style="-webkit-appearance:none;height:6px;background:#E2E8F0;border-radius:3px;outline:none;width:100%"/>
     </div>
@@ -107,11 +107,11 @@ try{ setup = JSON.parse(localStorage.getItem('t100_setup')||'{}'); }catch(e){}
 // Load current values
 document.getElementById('s-name').value = setup.name || '';
 document.getElementById('s-start').value = setup.startDate || '';
-document.getElementById('s-sw').value = setup.startWeight || 82.3;
+document.getElementById('s-sw').value = setup.startWeight || 82.5;
 document.getElementById('s-tw').value = setup.targetWeight || 75;
 
 // Banner
-const sw = setup.startWeight||82.3, tw = setup.targetWeight||75;
+const sw = setup.startWeight||82.5, tw = setup.targetWeight||75;
 document.getElementById('banner-text').textContent = (setup.name||'You') + ' · ' + sw + ' → ' + tw + ' kg in 100 days';
 if(setup.startDate){
   const s=new Date(setup.startDate),e=new Date(s);e.setDate(e.getDate()+99);

@@ -30,19 +30,19 @@ body{min-height:max(844px,100dvh)}
     <a href="more.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span></a>
     <div><div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">Weekly · Mon 7:55 AM</div><div class="text-[14px] font-semibold">Weight Log</div></div>
   </div>
-  <div class="font-mono text-[11px] bg-primary/10 text-primary px-3 py-1.5 rounded-full">82.3 → 75 kg</div>
+  <div class="font-mono text-[11px] bg-primary/10 text-primary px-3 py-1.5 rounded-full">82.5 → 75 kg</div>
 </header>
 <main class="pt-20 pb-28 max-w-lg mx-auto px-4 space-y-4">
 
   <!-- Hero: current vs target -->
   <div class="bg-primary rounded-[24px] p-5 text-white">
     <div class="flex items-center justify-between mb-4">
-      <div><div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-1">Starting weight</div><div class="font-bold text-[32px] leading-none">82.3 <span class="text-[18px] font-normal text-white/60">kg</span></div></div>
+      <div><div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-1">Starting weight</div><div class="font-bold text-[32px] leading-none">82.5 <span class="text-[18px] font-normal text-white/60">kg</span></div></div>
       <span class="material-symbols-outlined ms text-white/40 text-[28px]">arrow_forward</span>
       <div class="text-right"><div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-1">Target weight</div><div class="font-bold text-[32px] leading-none text-wellness-teal">75.0 <span class="text-[18px] font-normal text-wellness-teal/70">kg</span></div></div>
     </div>
     <div class="bg-white/10 rounded-xl p-3">
-      <div class="flex justify-between text-[11px] text-white/60 font-mono mb-1.5"><span>82.3 kg</span><span>7.3 kg to lose</span><span>75.0 kg</span></div>
+      <div class="flex justify-between text-[11px] text-white/60 font-mono mb-1.5"><span>82.5 kg</span><span>7.3 kg to lose</span><span>75.0 kg</span></div>
       <div class="h-2 bg-white/15 rounded-full overflow-hidden"><div class="h-full bg-wellness-teal rounded-full" style="width:0%"></div></div>
       <div class="text-center text-[11px] text-white/60 mt-1.5 font-mono">0% complete · 100 days ahead</div>
     </div>
@@ -55,7 +55,7 @@ body{min-height:max(844px,100dvh)}
     <div class="flex gap-3 mb-4">
       <div class="flex-1">
         <label class="text-[11px] text-on-surface-variant font-mono uppercase tracking-wide block mb-1.5">Weight (kg)</label>
-        <input id="wt-input" type="number" step="0.1" min="60" max="120" placeholder="82.3" class="w-full bg-surface-container-low border border-border-subtle rounded-xl px-4 py-3 font-mono font-bold text-[20px] text-on-surface text-center focus:outline-none focus:border-primary transition-colors"/>
+        <input id="wt-input" type="number" step="0.1" min="60" max="120" placeholder="82.5" class="w-full bg-surface-container-low border border-border-subtle rounded-xl px-4 py-3 font-mono font-bold text-[20px] text-on-surface text-center focus:outline-none focus:border-primary transition-colors"/>
       </div>
       <div class="flex-1">
         <label class="text-[11px] text-on-surface-variant font-mono uppercase tracking-wide block mb-1.5">Belly (cm) — optional</label>
@@ -132,7 +132,7 @@ function logWeight(){
   const wt=parseFloat(document.getElementById('wt-input').value);
   if(!wt||wt<50||wt>150){alert('Please enter a valid weight between 50 and 150 kg.');return;}
   const start=START_W,target=TARGET_W,loss=start-wt,pct=Math.round(loss/7.3*100);
-  const expected=82.3; // Day 1 baseline
+  const expected=82.5; // Day 1 baseline
   const status=wt<=expected?'On track':'Review this week';
   const div=document.getElementById('analysis-content');
   div.innerHTML=`
@@ -153,20 +153,20 @@ function logWeight(){
 let SETUP={};
 try{SETUP=JSON.parse(localStorage.getItem('t100_setup')||'{}');}catch(e){}
 if(!SETUP.setupDone){window.location.href='setup.html';}
-const START_W = SETUP.startWeight || 82.3;
+const START_W = SETUP.startWeight || 82.5;
 const TARGET_W = SETUP.targetWeight || 75.0;
 const USER_NAME = SETUP.name || 'Praveen';
-const START_DATE = SETUP.startDate || '2026-07-06';
+const START_DATE = SETUP.startDate || '2026-07-07';
 
 // Update hardcoded display values
 window.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('.font-bold.text-\[32px\]').forEach(el=>{
     const t=el.innerHTML;
-    if(t.includes('82.3')) el.innerHTML=t.replace('82.3', START_W.toFixed(1));
+    if(t.includes('82.5')) el.innerHTML=t.replace('82.5', START_W.toFixed(1));
     if(t.includes('75.0')) el.innerHTML=t.replace('75.0', TARGET_W.toFixed(1));
   });
   document.querySelectorAll('.font-mono').forEach(el=>{
-    if(el.textContent.trim()==='82.3 → 75 kg') el.textContent=START_W.toFixed(1)+' → '+TARGET_W.toFixed(1)+' kg';
+    if(el.textContent.trim()==='82.5 → 75 kg') el.textContent=START_W.toFixed(1)+' → '+TARGET_W.toFixed(1)+' kg';
   });
   // End date
   const end=new Date(START_DATE);end.setDate(end.getDate()+99);
@@ -212,14 +212,14 @@ function renderChart(){
   canvas.getContext('2d');
   const W=canvas.offsetWidth||300,H=160;
   canvas.width=W;canvas.height=H;
-  // Target line at 75, start at 82.3
-  const allWts=[82.3,...entries.map(e=>e.wt),75];
+  // Target line at 75, start at 82.5
+  const allWts=[82.5,...entries.map(e=>e.wt),75];
   const minW=Math.min(...allWts)-0.5,maxW=Math.max(...allWts)+0.5;
   const xStep=entries.length>1?(W-40)/(entries.length-1):W-40;
   const yScale=(H-30)/(maxW-minW);
   // Grid
   ctx.strokeStyle='#E2E8F0';ctx.lineWidth=1;
-  [82.3,80,78,76,75].forEach(w=>{
+  [82.5,80,78,76,75].forEach(w=>{
     const y=H-10-(w-minW)*yScale;
     ctx.beginPath();ctx.moveTo(30,y);ctx.lineTo(W,y);ctx.stroke();
     ctx.fillStyle='#9ca3af';ctx.font='9px monospace';

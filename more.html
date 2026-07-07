@@ -22,17 +22,17 @@
   <div class="flex items-center gap-3">
     <a href="index.html" class="w-9 h-9 rounded-full hover:bg-surface-container flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined ms text-on-surface-variant text-[20px]">arrow_back</span></a>
     <div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center font-bold text-sm text-on-primary-container border-2 border-white shadow-sm flex-shrink-0">PK</div>
-    <div><div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">Transform 100 · 82.3 → 75 kg</div><div class="text-[14px] font-semibold">All Screens</div></div>
+    <div><div class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">Transform 100 · 82.5 → 75 kg</div><div class="text-[14px] font-semibold">All Screens</div></div>
   </div>
-  <div class="font-mono text-[11px] text-on-surface-variant bg-surface-container px-3 py-1.5 rounded-full">Day 1 · Wk 1</div>
+  <div class="font-mono text-[11px] text-on-surface-variant bg-surface-container px-3 py-1.5 rounded-full" id="more-day-badge">Day 1 · Wk 1</div>
 </header>
 <main class="pt-20 pb-28 max-w-lg mx-auto px-4 space-y-4">
 
   <!-- Mission banner -->
   <div class="bg-primary rounded-[24px] px-5 py-4 text-white">
     <div class="font-mono text-[10px] text-white/60 uppercase tracking-widest mb-1">Your mission</div>
-    <div class="font-bold text-[18px]">82.3 → 75 kg in 100 days</div>
-    <div class="text-[13px] text-white/70 mt-0.5">Started 6 Jul 2026 · Ends 14 Oct 2026 · 7.3 kg to lose</div>
+    <div class="font-bold text-[18px]" id="more-mission-title">82.5 → 75 kg in 100 days</div>
+    <div class="text-[13px] text-white/70 mt-0.5" id="more-mission-sub">Started 7 Jul 2026 · Ends 14 Oct 2026 · 7.3 kg to lose</div>
   </div>
 
   <!-- Daily core screens -->
@@ -142,5 +142,40 @@
   <a href="tracker.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"><span class="material-symbols-outlined ms text-[22px]">analytics</span><span class="text-[9px] font-mono uppercase tracking-tighter">Tracker</span></a>
   <a href="more.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl bg-primary-container text-on-primary-container"><span class="material-symbols-outlined ms-f text-[22px]">apps</span><span class="text-[9px] font-mono uppercase tracking-tighter">More</span></a>
 </nav>
+<script>
+(function(){
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let setup = {};
+  try { setup = JSON.parse(localStorage.getItem('t100_setup') || '{}'); } catch(e) {}
+
+  const startWt  = setup.startWeight  || 82.5;
+  const targetWt = setup.targetWeight || 75.0;
+  const startDate = setup.startDate ? new Date(setup.startDate + 'T00:00:00') : new Date('2026-07-07T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dayNum  = Math.max(1, Math.floor((today - startDate) / 86400000) + 1);
+  const weekNum = Math.ceil(dayNum / 7);
+  const endDate = new Date(startDate); endDate.setDate(startDate.getDate() + 99);
+  const name = setup.name || 'Praveen';
+
+  const fmtDate = d => d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+  const diff = (startWt - targetWt).toFixed(1);
+
+  // Day badge
+  const badge = document.getElementById('more-day-badge');
+  if (badge) badge.textContent = 'Day ' + dayNum + ' · Wk ' + weekNum;
+
+  // Mission title
+  const title = document.getElementById('more-mission-title');
+  if (title) title.textContent = startWt + ' → ' + targetWt + ' kg in 100 days';
+
+  // Mission sub
+  const sub = document.getElementById('more-mission-sub');
+  if (sub) sub.textContent = 'Started ' + fmtDate(startDate) + ' · Ends ' + fmtDate(endDate) + ' · ' + diff + ' kg to lose';
+
+  // Header name if exists
+  const hdr = document.querySelector('.text-\\[14px\\].font-semibold');
+  // Leave as "All Screens" — no change needed
+})();
+</script>
 </body>
 </html>
